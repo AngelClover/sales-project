@@ -1,12 +1,15 @@
 # sales-project
 
-> A Vue.js project
+> A Vue.js project for gtah
 
 ## Build Setup
 
 ``` bash
 # install dependencies
 npm install
+
+# build semantic
+cd src/semantic && gulp build && cd ../..
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -15,4 +18,5 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Don't forgot at last
+ + change 'Angela' to brand name
