@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 //import VueValidator from 'vue-validator'
 //import { sync } from 'vuex-router-sync'
 //import store from './vuex/store'
-//import routes from './routes'
+import routes from './routes'
 //import App from './App'
 import App from './components/App.vue'
 //import AppNav from './components/AppNav.vue'
@@ -27,13 +27,16 @@ configRouter(router)
 //sync(store, router)
 const Foo = { template: '<div>foo</div>' }
 const Bar = { template: '<div>bar</div>' }
-const routes = [
+const routes2 = [
       { path: '/foo', component: Foo },
       { path: '/bar', component: Bar }
 ]
+console.log(routes);
+console.log(routes2);
 const router = new VueRouter({
-    routes
-})
+    routes : routes.routes
+    //routes: routes2
+});
 console.log(router);
 
 //router.start(Vue.extend(App), '#root')
