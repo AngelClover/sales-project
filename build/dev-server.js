@@ -7,6 +7,7 @@ var webpack = require('webpack')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
+var mock = require('mockjs')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -32,6 +33,14 @@ compiler.plugin('compilation', function (compilation) {
     hotMiddleware.publish({ action: 'reload' })
     cb()
   })
+})
+
+mock.Random.integer()
+console.log('mock', mock.mock('@integer'))
+app.get('/integer', (req, res) => {
+    var t = mock.mock('@integer')
+    console.log("back mock", t, typeof(t))
+    res.send(JSON.stringify(t))
 })
 
 // proxy api requests
@@ -67,6 +76,6 @@ module.exports = app.listen(port, function (err) {
 
   // when env is testing, don't need open it
   if (process.env.NODE_ENV !== 'testing') {
-    opn(uri)
+    //opn(uri, {app: ['google chrome', '--incognito']});
   }
 })
