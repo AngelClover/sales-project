@@ -1,15 +1,19 @@
 <template>
     <div>
         <p>
-        Welcome Home
+            This is store page.
         </p>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => {
+    data : () => {
         return {}
     }
 }
 </script>
+
+<style>
+</style>
+

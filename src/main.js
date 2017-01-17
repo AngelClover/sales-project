@@ -6,11 +6,13 @@ import VueRouter from 'vue-router'
 //import { sync } from 'vuex-router-sync'
 //import store from './vuex/store'
 import routes from './routes'
+//var routers = require('./routes')
 //import App from './App'
 import App from './components/App.vue'
 //import AppNav from './components/AppNav.vue'
 import './semantic/dist/semantic.css'
 //import './semantic/dist/semantic.js'
+import Home from './components/Home.vue'
 //
 
 Vue.use(VueRouter)
@@ -25,30 +27,44 @@ const router = new VueRouter({
 configRouter(router)
 */
 //sync(store, router)
+/*
 const Foo = { template: '<div>foo</div>' }
 const Bar = { template: '<div>bar</div>' }
-const routes2 = [
+const routes = [
+    {path: '/home', name: 'home',  component:  Home},
       { path: '/foo', component: Foo },
       { path: '/bar', component: Bar }
 ]
-console.log(routes);
-console.log(routes2);
+//console.log(routes2);
+console.info('target', routes);
+console.info('routers', routers)
+console.info('routers.routes', routers.routes);
+console.info('json', JSON.stringify(routers))
+*/
 const router = new VueRouter({
-    routes : routes.routes
+    //els: '#app',
+    //mode: 'history',
+    //routes : routes.routes
     //routes: routes2
+    routes
 });
 console.log(router);
 
 //router.start(Vue.extend(App), '#root')
 //window.router = router
-const app = new Vue({
+new Vue({
+    el: '#root',
     router,
+    template: '<App/>',
     components: {
         App
     }
-}).$mount('#root')
+    //render: h => h(App)
+    //...App
+})
 console.log("Angel print")
-console.log(app);
+console.log(App);
+console.log(app)
 /*
 new Vue({
   el: '#app',

@@ -22,6 +22,13 @@
                     <div class="title">
                         label 3
                     </div>
+                    <div>
+                    <p>
+                        <router-link to="/home">
+                            Home
+                        </router-link>
+                    </p>
+                    </div>
                 </div>
             </div>
 </template>

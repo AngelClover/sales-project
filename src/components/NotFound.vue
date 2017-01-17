@@ -1,15 +1,19 @@
 <template>
     <div>
         <p>
-        Welcome Home
+            This is 404 page.
         </p>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => {
+    data : () => {
         return {}
     }
 }
 </script>
+
+<style>
+</style>
+

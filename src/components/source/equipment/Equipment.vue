@@ -1,15 +1,19 @@
 <template>
     <div>
         <p>
-        Welcome Home
+            this is equipment page.
         </p>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => {
+    data : () => {
         return {}
     }
 }
 </script>
+
+<style>
+</style>
+

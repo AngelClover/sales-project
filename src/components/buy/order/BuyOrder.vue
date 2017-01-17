@@ -1,15 +1,19 @@
 <template>
     <div>
         <p>
-        Welcome Home
+            This is buy order page.
         </p>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => {
+    data : () => {
         return {}
     }
 }
 </script>
+
+<style>
+</style>
+
