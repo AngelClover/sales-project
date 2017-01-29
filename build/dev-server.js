@@ -7,7 +7,8 @@ var webpack = require('webpack')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
-var mock = require('mockjs')
+//var mock = require('mockjs')
+var mockConfig = require('../mock')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -35,6 +36,7 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
+/*
 mock.Random.integer()
 console.log('mock', mock.mock('@integer'))
 app.get('/integer', (req, res) => {
@@ -42,6 +44,8 @@ app.get('/integer', (req, res) => {
     console.log("back mock", t, typeof(t))
     res.send(JSON.stringify(t))
 })
+*/
+mockConfig(app)
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {

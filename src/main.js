@@ -3,8 +3,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 //import VueValidator from 'vue-validator'
-//import { sync } from 'vuex-router-sync'
-//import store from './vuex/store'
+import { sync } from 'vuex-router-sync'
+import store from './vuex/store'
 import routes from './routes'
 //var routers = require('./routes')
 //import App from './App'
@@ -13,9 +13,11 @@ import App from './components/App.vue'
 import './semantic/dist/semantic.css'
 //import './semantic/dist/semantic.js'
 import Home from './components/Home.vue'
+import VueResource from 'vue-resource'
 //
 
 Vue.use(VueRouter)
+Vue.use(VueResource)
 //Vue.use(VueValidator)
 //Object.keys(filters).forEach(k => Vue.filter(k, filters[k]))
 /*
@@ -26,35 +28,18 @@ const router = new VueRouter({
 })
 configRouter(router)
 */
-//sync(store, router)
-/*
-const Foo = { template: '<div>foo</div>' }
-const Bar = { template: '<div>bar</div>' }
-const routes = [
-    {path: '/home', name: 'home',  component:  Home},
-      { path: '/foo', component: Foo },
-      { path: '/bar', component: Bar }
-]
-//console.log(routes2);
-console.info('target', routes);
-console.info('routers', routers)
-console.info('routers.routes', routers.routes);
-console.info('json', JSON.stringify(routers))
-*/
 const router = new VueRouter({
-    //els: '#app',
-    //mode: 'history',
-    //routes : routes.routes
-    //routes: routes2
     routes
 });
 console.log(router);
+sync(store, router)
 
 //router.start(Vue.extend(App), '#root')
 //window.router = router
 new Vue({
     el: '#root',
     router,
+    store,
     template: '<App/>',
     components: {
         App
