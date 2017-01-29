@@ -20,3 +20,17 @@ npm run build
 
 ## Don't forgot at last
  + change 'Angela' to brand name
+
+## api between front and back
+ + in mock/ dir.
+ + or on http://localhost:8080/api/\*
+
+## Updates
+
+ ##### 30, Jan, 2017
+ + add ListView
+ + add Vuex1.0 structure
+ + add in some Vue2.0 feature
+ + add mockjs 
+ + add VueResource
+ + add equipmentList
