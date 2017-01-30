@@ -1,9 +1,14 @@
+/*
 import {
     GET_EQUIPMENT_LIST_SUCCESS,
     GET_EQUIPMENT_LIST_FAILURE
 } from '../types'
+*/
 //import {getEquipmentList} from '../actions'
 import api from '../../api'
+
+const GET_EQUIPMENT_LIST_SUCCESS = "GET_EQUIPMENT_LIST_SUCCESS"
+const GET_EQUIPMENT_LIST_FAILURE = "GET_EQUIPMENT_LIST_FAILURE"
 
 const state = {
     title : [],
@@ -26,17 +31,17 @@ const mutations = {
     }
 }
 
+/*
 const getters = {
-    /*
-    title : ({equipmentList}) => equipmentList.title,
-    content : ({equipmentList}) => equipmentList.content,
-    preference : ({equipmentList}) => equipmentList.preference,
-    */
     title : function(state) { console.log('title in getters', state); return state.title},
     content :  ({state}) => state.content, 
-    //content :  (state) => state.content, 
-    //content : function(state) { return state.content },
     preference : (state) => state.preference,
+}
+*/
+const getters = {
+    equipmentTitle : (state) => state.title,
+    equipmentContent :  (state) => state.content, 
+    equipmentPreference : (state) => state.preference,
 }
 
 export const getEquipmentList = ({commit}) => {

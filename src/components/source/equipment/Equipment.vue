@@ -82,13 +82,18 @@ export default {
         ])
     */
         title() {
-            return this.$store.state.equipmentList.title
+            //console.log('in computed title', this.$store.getters.title)
+            //console.log('in computed title', this.$store.state.equipmentList.getters.title)
+            return this.$store.getters.equipmentTitle
+            //return this.$store.state.equipmentList.title
         },
         content() {
-            return this.$store.state.equipmentList.content
+            return this.$store.getters.equipmentContent
+            //return this.$store.state.equipmentList.content
         },
         preference() {
-            return this.$store.state.equipmentList.preference
+            return this.$store.getters.equipmentPreference
+            //return this.$store.state.equipmentList.preference
         }
 
 
