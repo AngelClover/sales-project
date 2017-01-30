@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import equipmentList from './modules/equipment.list'
-import {getEquipmentList} from './actions'
+//import {getEquipmentList} from './actions'
 
 const debug = process.env.NODE_ENV !== 'production'
 Vue.use(Vuex)
@@ -16,9 +16,7 @@ export default new Vuex.Store({
     },
     //middlewares,
     strict : debug,
-    actions : {
-        getEquipmentList,
-    }
+    //actions : { getEquipmentList, }
 
 
 })
