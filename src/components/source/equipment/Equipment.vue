@@ -17,7 +17,7 @@
 <script>
 import ListView from '../../../utils/ListView.vue'
 //import api from '../../../api'
-import { getEquipmentList } from '../../../vuex/actions'
+//import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     /*
@@ -98,8 +98,8 @@ export default {
         //console.log(getEquipmentList)
         //if (this.$store.state.equipmentList.title.length < 1){
         if (this.$store.state.equipmentList.title.length < 1){
-            this.$store.dispatch('getEquipmentList')
-            //getEquipmentList()
+            //this.$store.dispatch('getEquipmentList')
+            this.getEquipmentList()
             //getEquipmentList()
         }
     },
@@ -111,7 +111,9 @@ export default {
             }
             return ret
         },
-        getEquipmentList, 
+        getEquipmentList (){
+            this.$store.dispatch('getEquipmentList')
+        }
         /*
         ...mapActions([
                 getEquipmentList
