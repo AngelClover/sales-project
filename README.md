@@ -34,3 +34,7 @@ npm run build
  + add mockjs 
  + add VueResource
  + add equipmentList
+
+ ##### 31, Jan, 2017
+ + add filter && sort
+ + little decorate on list

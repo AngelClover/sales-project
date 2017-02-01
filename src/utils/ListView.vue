@@ -100,7 +100,8 @@ export default {
         filteredContent : function() {
             //console.log('filteredContent computed')
             var sortKey = this.sortKey
-            var filterKey = this.filterKey && this.filterKey.toLowerCase()
+            //var filterkey = this.filterkey && this.filterkey.tolowercase()
+            var filterKey = this.searchQuery && this.searchQuery.toLowerCase()
             if (this.sortOrders[sortKey] == undefined){
                 this.initSortOrders()
             }
