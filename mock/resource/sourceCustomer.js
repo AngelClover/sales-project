@@ -2,7 +2,7 @@ var Mock = require('mockjs')
 
 function adjustTitle(title){
     title['attr0'].modifiable = false
-    title['attr3'].options = ['设备', '试剂', '耗材']
+    title['attr2'].options = ['医院', '分销商']
 }
 function getContent(title){
     var utils = require('./utils')
@@ -10,14 +10,16 @@ function getContent(title){
     return content
 }
 function getTitle(){
-    var basicInfoList = ['产品编号(系统自分配)', '产品信息', '产品简称', '产品分类(设备/试剂/耗材等)', '规格', '型号', '品牌', '厂家', '单位']
-    var relatedInfoList = ['资质文件', '产品类型（如3类6840）', '注册证号有效期（第一类医疗器械备案凭证、二三类医疗器械注册证）', '授权书', '授权书有效期']
+    var basicInfoList = ['客户编号(系统自分配)', '客户名称', '客户类型（医院、分销商）', '简称', '曾用名', '成立日期', '注册资金', '法人', '收货地址']
+    var contactList = ['联系人', '手机', '电话', '传真', '邮箱', '地址']
+    var relatedInfoList = ['资质文件', '营业执照注册号', '营业期限', '组织机构代码证号码', '有效期',  '开户许可证', '医疗器械经营企业备案证书（2类）/医疗器械经营许可证（3类，号码，许可期限，到期提醒）', '税务登记证']
+    var bankInfoList = ['税号', '是否一般纳税人', '开户行', '账户', '地址', '电话']
     var approveCharacter = '质量部长质量负责人'
     
     //console.log('basic:', basicInfoList.length, basicInfoList)
     //console.log('related:', relatedInfoList.length, relatedInfoList)
 
-    var titleList = basicInfoList.concat(relatedInfoList)
+    var titleList = basicInfoList.concat(contactList).concat(relatedInfoList).concat(bankInfoList)
     //console.log('titleList:', titleList.length, titleList)
     var utils = require('./utils')
     //console.log('utils', utils)
@@ -25,19 +27,12 @@ function getTitle(){
     adjustTitle(title)
     return title
 }
-function mockEquipment(){
+
+function mockCompany(){
     var title = getTitle()
-    //console.log('title:', title)
-
-    //var len = titleList.length
-    
-    //Mock.Random.cparagraph(2, 5)
-    //console.log('cpara test', Mock.mock('@cword(5)'))
-
+    Mock.Random.cparagraph(2, 5)
     var content = getContent(title)
-    //console.log(content)
 
-    //var listUnit2 = { 'id|+1': 1 }
     var data = Mock.mock({
         title,
         'content|1-20': [
@@ -49,7 +44,7 @@ function mockEquipment(){
     return data
 }
 function getResponse(req){
-    return mockEquipment()
+    return mockCompany()
 }
 
 function postResponse(req){
@@ -69,8 +64,6 @@ function deleteResponse(req){
         originInput : "nothing"
     }
 }
-
-
 module.exports = {
     get : getResponse,
     post : postResponse,
