@@ -14,6 +14,7 @@
 
 ###api细分
 + 有关表的之间的步骤审批等操作，以一个字段形式放在表中，以修改UPDATE字段数据的形式来呈现。
+
 ####表数据，以equipment为例
 + (GET/POST/PUT/DELETE) api/equipment [source设备数据]
     + GET为请求
@@ -41,6 +42,7 @@
 + api/logistic [物流数据]
 + api/buyorder [采购单数据]
 + api/saleorder [销售单数据]
+
 #### log数据
 + GET api/log/equipment or api/equipment/log
     + 需要权限
