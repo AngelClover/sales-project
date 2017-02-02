@@ -14,30 +14,15 @@ function getTitle(){
     var relatedInfoList = ['资质文件', '产品类型（如3类6840）', '注册证号有效期（第一类医疗器械备案凭证、二三类医疗器械注册证）', '授权书', '授权书有效期']
     var approveCharacter = '质量部长质量负责人'
     
-    //console.log('basic:', basicInfoList.length, basicInfoList)
-    //console.log('related:', relatedInfoList.length, relatedInfoList)
-
     var titleList = basicInfoList.concat(relatedInfoList)
-    //console.log('titleList:', titleList.length, titleList)
     var utils = require('./utils')
-    //console.log('utils', utils)
     var title = utils.getMapFromArray(titleList)
     adjustTitle(title)
     return title
 }
 function mockEquipment(){
     var title = getTitle()
-    //console.log('title:', title)
-
-    //var len = titleList.length
-    
-    //Mock.Random.cparagraph(2, 5)
-    //console.log('cpara test', Mock.mock('@cword(5)'))
-
     var content = getContent(title)
-    //console.log(content)
-
-    //var listUnit2 = { 'id|+1': 1 }
     var data = Mock.mock({
         title,
         'content|1-20': [
@@ -45,7 +30,6 @@ function mockEquipment(){
         ],
         preference : []
     })
-    //console.log(data)
     return data
 }
 function getResponse(req){
@@ -53,7 +37,6 @@ function getResponse(req){
 }
 
 function postResponse(req){
-    //console.log('post req', req)
     return {
         query : req.query,
         params : req.params,

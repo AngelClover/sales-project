@@ -34,7 +34,7 @@ function getContentBasicSlot(title){
 
 
 
-function adjustTitle(title){
+function defaultAdjustTitle(title){
     title['attr0'].modifiable = false
 }
 function getContent(title){
@@ -42,16 +42,17 @@ function getContent(title){
     var content = utils.getContentBasicSlot(title)
     return content
 }
-function getTitle(titleList){
+function getTitle(titleList, cb){
     var utils = require('./utils')
     //console.log('utils', utils)
     var title = utils.getMapFromArray(titleList)
-    adjustTitle(title)
+    //adjustTitle(title)
+    cb(title)
     return title
 }
 
-function getResponse(columnsList){
-    var title = getTitle(columnsList)
+function getResponse(columnsList, cb){
+    var title = getTitle(columnsList, cb)
     //Mock.Random.cparagraph(2, 5)
     var content = getContent(title)
 
@@ -84,10 +85,11 @@ function deleteResponse(req){
     }
 }
 
-function defaultGenerator(columsList){
+function defaultGenerator(columsList, cb){
+    cb = cb || defaultAdjustTitle
     return {
         get : function(){
-            return getResponse(columsList)
+            return getResponse(columsList, cb)
         },
         post : postResponse,
         put : putResponse,
