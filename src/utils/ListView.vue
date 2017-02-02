@@ -15,14 +15,14 @@
             <th v-for="(item, index) in preference"
                 @click="sortBy(item)"
                 :class="{ active : sortKey == item}" >
-                {{title[item] | capitalize}}
+                {{title[item].name | capitalize}}
                 <span class="arrow" :class="sortOrders[item] > 0 ? 'asc' : 'dsc'">
                 </span>
             </th>
                 </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in filteredContent"> 
+            <tr v-for="(item, index) in filteredContent" @click=clickItem(item)> 
                 <!--
                 <td v-for="(val, key, index) in title">{{item[key]}}</td>
                 -->
@@ -34,6 +34,10 @@
 
         <br/>
 
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType="'show'" @close="showDetails = false">
+        </detail>
+
+        <div v-show=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
         <p> msg : {{msg}} </p>
@@ -45,12 +49,20 @@
         <p> sortKey : {{sortKey}} </p>
         <p> searchQuery : {{searchQuery}} </p>
         <p> filteredContent : {{filteredContent}} </p>
+        <p> showDetails : {{showDetails}} </p>
+        <p> detailContent : {{detailContent}} </p>
+        </div>
 
     </div>
 </template>
 
 <script>
+import Detail from './Detail.vue'
+
 export default {
+    components : {
+        Detail
+    },
     props: ['msg', 'title', 'content', 'initdata', 'pref'],
     /*
     data : function() {
@@ -74,6 +86,9 @@ export default {
             sortKey : '',
             sortOrders : {},
             searchQuery : '',
+            showDetails : false,
+            detailContent : {},
+            debug : false
         }
     },
     computed : {
@@ -147,7 +162,12 @@ export default {
             //this.$set('sortOrders', sortOrders)
             this.sortOrders = sortOrders
             return sortOrders
+       },
+       clickItem : function(item){
+            this.detailContent = item
+            this.showDetails = true
        }
+
    }
 }
 </script>
