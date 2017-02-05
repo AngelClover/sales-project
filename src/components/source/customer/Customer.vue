@@ -1,13 +1,15 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference>
-            <h3 slot="titlename" align=center> 采购订单管理 </h3>
+        <ListView msg="asd" :title=title :content=content :pref=preference >
+        <h3 slot="titlename" align=center> 首营客户管理 </h3>
         </ListView>
     </div>
 </template>
 
 <script>
 import ListView from '../../../utils/ListView.vue'
+//import api from '../../../api'
+//import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     components : {
@@ -15,21 +17,21 @@ export default {
     },
     computed : {
         title() {
-            return this.$store.getters.buyOrderTitle
+            return this.$store.getters.sourceCustomerTitle
         },
         content() {
-            return this.$store.getters.buyOrderContent
+            return this.$store.getters.sourceCustomerContent
         },
         preference() {
-            return this.$store.getters.buyOrderPreference
+            return this.$store.getters.sourceCustomerPreference
         }
 
 
     },
     created : function(){
         console.log('created this', this)
-        if (this.$store.state.buyOrderList.title.length < 1){
-            this.getBuyOrderList()
+        if (this.$store.state.sourceCustomerList.title.length < 1){
+            this.getCustomerList()
         }
     },
     methods : {
@@ -40,8 +42,8 @@ export default {
             }
             return ret
         },
-        getBuyOrderList (){
-            this.$store.dispatch('getBuyOrderList')
+        getCustomerList (){
+            this.$store.dispatch('getSourceCustomerList')
         }
     },
 

@@ -26,4 +26,8 @@ Vue.http.interceptors.push((request, next)=>{
 */
 
 export const EquipmentResource = Vue.resource(API_ROOT + 'api/equipment')
+export const SourceCompanyResource = Vue.resource(API_ROOT + 'api/sourcecompany')
+export const SourceCustomerResource = Vue.resource(API_ROOT + 'api/sourcecustomer')
+export const SaleOrderResource = Vue.resource(API_ROOT + 'api/saleorder')
+export const BuyOrderResource = Vue.resource(API_ROOT + 'api/buyorder')
 //export const UserResource = Vue.resource(API_ROOT + 'users{/id}')

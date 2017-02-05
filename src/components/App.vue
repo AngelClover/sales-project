@@ -8,9 +8,6 @@
       </div>
       -->
       <AppNav></AppNav>
-      <div>
-          <router-link to='/home'> home </router-link>
-      </div>
       <!--
       <router-view></router-view>
       -->

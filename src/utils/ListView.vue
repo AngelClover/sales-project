@@ -1,5 +1,6 @@
 <template>
     <div>
+        <slot name="titlename"> </slot>
         <div>
             <form id="search">
                 search : <input name="query" v-model="searchQuery">
@@ -31,6 +32,11 @@
             </tbody>
         </table>
 
+        <br/>
+        <div class="ui buttom" align=center>
+            <button > + </button>
+            <button> log </button>
+        </div>
 
         <br/>
 
@@ -166,7 +172,7 @@ export default {
        clickItem : function(item){
             this.detailContent = item
             this.showDetails = true
-       }
+       },
 
    }
 }

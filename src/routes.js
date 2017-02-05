@@ -20,10 +20,11 @@ import Login from './components/login/login.vue'
 import Register from './components/login/register.vue'
 import Logistic from './components/logistic/Logistic.vue'
 import Repair from './components/repair/Repair.vue'
-import SaleOrder from './components/repair/Repair.vue'
+import SaleOrder from './components/sale/order/SaleOrder.vue'
 import SinkCompany from './components/sink/Company.vue'
 import SourceCompany from './components/source/company/Company.vue'
 import SourceEquipment from './components/source/equipment/Equipment.vue'
+import StoreHouse from './components/storehouse/StoreHouse.vue'
 
 var routes = [
     //{path: '/home', component:  require('./components/Home.vue')},
@@ -39,6 +40,7 @@ var routes = [
     {path: '/sinkcompany', name: 'sinkcompany',  component:  SinkCompany},
     {path: '/sourcecompany', name: 'sourcecompany',  component:  SourceCompany},
     {path: '/equipment', name: 'equipment',  component:  SourceEquipment},
+    {path: '/storehouse', name: 'storehouse', component: StoreHouse},
     //{ path: '*', component: require('./components/NotFound.vue') }
     { path: '*', component: NotFound }
     

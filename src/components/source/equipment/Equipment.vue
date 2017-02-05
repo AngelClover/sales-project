@@ -1,15 +1,7 @@
 <template>
     <div>
-        <p>
-            this is equipment page.
-        </p>
-        <p>
-        added
-        </p>
-        <p>
-        -----------ListView below----------
-        </p>
         <ListView msg="asd" :title=title :content=content :pref=preference>
+            <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>
 </template>
@@ -20,92 +12,26 @@ import ListView from '../../../utils/ListView.vue'
 //import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'
 export default {
-    /*
-    data : function (){
-        var title = {
-            "a" : "A",
-            "b" : "B",
-            "c" : "C",
-            "d" : "D"
-        }
-        var content = []
-        for (var i = 0; i< 10; ++i){
-            var tmp = this.createContent(title, i.toString())
-            content.push(tmp)
-        }
-        //var preference = ["a", "d", "c"]
-        var preference = []
-        //for (var item in title){
-          //  preference.push(item)
-        //}
-        var tmpdata = {}
-        api.getEquipment().then(function(res){
-            console.log('inside res', res)
-            tmpdata = res.data.data
-            console.log('inside data', res.data)
-            console.log('inside body', res.body)
-            console.log('tmpdata inside body', tmpdata)
-        }, function(res){
-            console.log("get equip error")
-        })
-
-        console.log('tempdata', tmpdata)
-        return {
-            //title,
-            //content,
-            preference
-        }
-    },
-*/
     components : {
         ListView
     },
-    /*
-    vuex : {
-        getters : {
-            title : ({equipmentList}) => equipmentList.title,
-            content : ({equipmentList}) => equipmentList.content,
-            preference : ({equipmentList}) => equipmentList.preference,
-
-        },
-        actions : {
-            getEquipmentList
-        }
-    },
-    */
     computed : {
-    /*
-        ...mapGetters([
-            'title',
-            'content',
-            'preference'
-        ])
-    */
         title() {
-            //console.log('in computed title', this.$store.getters.title)
-            //console.log('in computed title', this.$store.state.equipmentList.getters.title)
             return this.$store.getters.equipmentTitle
-            //return this.$store.state.equipmentList.title
         },
         content() {
             return this.$store.getters.equipmentContent
-            //return this.$store.state.equipmentList.content
         },
         preference() {
             return this.$store.getters.equipmentPreference
-            //return this.$store.state.equipmentList.preference
         }
 
 
     },
     created : function(){
         console.log('created this', this)
-        //console.log(getEquipmentList)
-        //if (this.$store.state.equipmentList.title.length < 1){
         if (this.$store.state.equipmentList.title.length < 1){
-            //this.$store.dispatch('getEquipmentList')
             this.getEquipmentList()
-            //getEquipmentList()
         }
     },
     methods : {
@@ -119,11 +45,6 @@ export default {
         getEquipmentList (){
             this.$store.dispatch('getEquipmentList')
         }
-        /*
-        ...mapActions([
-                getEquipmentList
-        ])
-        */
     },
 
 }
