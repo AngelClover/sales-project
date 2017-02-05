@@ -79,6 +79,19 @@ function mockConfig(app){
     //
     addPath(app, 'buyorder', require('./resource/buyOrder'))
 
+    addPath(app, 'storehouse', require('./resource/storeHouse'))
+    addPath(app, 'repair', require('./resource/repair'))
+    addPath(app, 'logistic', require('./resource/logistic'))
+
+    addPath(app, 'log/equipment', require('./resource/log/logEquipment'))
+    addPath(app, 'log/sourcecompany', require('./resource/log/logSourceCompany'))
+    addPath(app, 'log/sourcecustomer', require('./resource/log/logSourceCustomer'))
+    addPath(app, 'log/buyorder', require('./resource/log/logBuyOrder'))
+    addPath(app, 'log/saleorder', require('./resource/log/logSaleOrder'))
+    addPath(app, 'log/storehouse', require('./resource/log/logStoreHouse'))
+    addPath(app, 'log/repair', require('./resource/log/logRepair'))
+    addPath(app, 'log/logistic', require('./resource/log/logLogistic'))
+
 }
 
 module.exports = mockConfig

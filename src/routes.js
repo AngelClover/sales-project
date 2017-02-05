@@ -23,6 +23,7 @@ import Repair from './components/repair/Repair.vue'
 import SaleOrder from './components/sale/order/SaleOrder.vue'
 import SinkCompany from './components/sink/Company.vue'
 import SourceCompany from './components/source/company/Company.vue'
+import SourceCustomer from './components/source/customer/Customer.vue'
 import SourceEquipment from './components/source/equipment/Equipment.vue'
 import StoreHouse from './components/storehouse/StoreHouse.vue'
 
@@ -39,6 +40,7 @@ var routes = [
     {path: '/sale', name: 'sale',  component:  SaleOrder},
     {path: '/sinkcompany', name: 'sinkcompany',  component:  SinkCompany},
     {path: '/sourcecompany', name: 'sourcecompany',  component:  SourceCompany},
+    {path: '/sourcecustomer', name: 'sourcecustomer',  component:  SourceCustomer},
     {path: '/equipment', name: 'equipment',  component:  SourceEquipment},
     {path: '/storehouse', name: 'storehouse', component: StoreHouse},
     //{ path: '*', component: require('./components/NotFound.vue') }
