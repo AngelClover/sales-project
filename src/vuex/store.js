@@ -6,8 +6,8 @@ import sourceCustomerList from './modules/source.customer.list'
 import saleOrderList from './modules/saleorder.list'
 import buyOrderList from './modules/buyorder.list'
 import storeHouseList from './modules/storehouse.list'
-import repair from './modules/repair.list'
-import logistic from './modules/logistic.list'
+import repairList from './modules/repair.list'
+import logisticList from './modules/logistic.list'
 //import {getEquipmentList} from './actions'
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -25,8 +25,8 @@ export default new Vuex.Store({
         saleOrderList,
         buyOrderList,
         storeHouseList,
-        repair,
-        logistic
+        repairList,
+        logisticList
     },
     //middlewares,
     strict : debug,
