@@ -8,4 +8,4 @@ var basicInfoList = ['操作编号(系统自分配)', '操作人', '操作表单
 
 var titleList = basicInfoList
 
-module.exports = require('./utils').defaultGenerator(titleList, adjustTitle)
+module.exports = require('../utils').defaultGenerator(titleList, adjustTitle)

@@ -6,6 +6,7 @@
         -->
             <div class="three wide column overlay">
                 <div class="ui styled accordion">
+                    <!--
                     <div class="title">
                         <i class="ui dropdown icon"></i> labal 1
                     </div>
@@ -15,6 +16,7 @@
                             <p> 1.2 </p>
                         </div>
                     </div>
+                    -->
                     <div v-show="modelList.indexOf('home') >= 0" class=title>
                         <p>
                         <router-link to="/home">
@@ -23,13 +25,15 @@
                         </p>
                     </div>
                     <div v-show="modelList.indexOf('source') >= 0">
-                        <div class=title>
-                            <i class="ui dropdown icon"></i> 首营审批
-                        </div>
-                        <div class=content>
-                            <div class="accordion transition ">
-                                <p> <router-link to="/equipment">首营设备</router-link> </p>
-                                <p> <router-link to="/sourcecompany">首营企业</router-link> </p>
+                        <div class="accordion">
+                            <div class="active title">
+                                <i class="ui dropdown icon"></i> 首营审批
+                            </div>
+                            <div class="active content">
+                                <div class="accordion transition ">
+                                    <p> <router-link to="/equipment">首营设备</router-link> </p>
+                                    <p> <router-link to="/sourcecompany">首营企业</router-link> </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -68,11 +72,13 @@
 </template>
 
 <script>
+//import '../semantic/dist/semantic.min.css'
+//import '../semantic/dist/semantic.min.js'
 export default {
     data : function (){
         return {
             //modelList : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
-            modelList : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
+            modelList : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
         }
     },
     computed : {
@@ -81,6 +87,17 @@ export default {
             console.log("indexOf", this.modelList.indexOf('Home'))
                 return this.modelList.indexOf('Home') >= 0
         }
+    },
+    created (){
+        /*
+        $('.accordion')
+            .accordion({
+                selector: {
+                    trigger: '.title .icon'
+                }
+            })
+        ;
+        */
     }
 }
 </script>

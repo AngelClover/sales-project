@@ -1,12 +1,11 @@
 <template>
     <div>
         <slot name="titlename"> </slot>
-        <div>
-            <form id="search">
-                search : <input name="query" v-model="searchQuery">
-            </form>
-            <br/>
+        <div class="ui transparent left icon input">
+                <input name="query" v-model="searchQuery" placeholder="Search.." type="text">
+                <i class="search icon"></i>
         </div>
+            <br/>
         <table>
             <thead>
                 <tr>

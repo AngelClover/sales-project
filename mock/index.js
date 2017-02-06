@@ -83,6 +83,7 @@ function mockConfig(app){
     addPath(app, 'repair', require('./resource/repair'))
     addPath(app, 'logistic', require('./resource/logistic'))
 
+    /*
     addPath(app, 'log/equipment', require('./resource/log/logEquipment'))
     addPath(app, 'log/sourcecompany', require('./resource/log/logSourceCompany'))
     addPath(app, 'log/sourcecustomer', require('./resource/log/logSourceCustomer'))
@@ -91,6 +92,7 @@ function mockConfig(app){
     addPath(app, 'log/storehouse', require('./resource/log/logStoreHouse'))
     addPath(app, 'log/repair', require('./resource/log/logRepair'))
     addPath(app, 'log/logistic', require('./resource/log/logLogistic'))
+    */
 
 }
 
