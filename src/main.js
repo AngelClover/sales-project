@@ -40,10 +40,8 @@ new Vue({
     el: '#root',
     router,
     store,
-    template: '<App/>',
-    components: {
-        App
-    }
+    //template: '<App/>',
+    //components: { App }
     //render: h => h(App)
     //...App
 })

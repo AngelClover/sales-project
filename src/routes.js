@@ -26,7 +26,35 @@ import SourceCompany from './components/source/company/Company.vue'
 import SourceCustomer from './components/source/customer/Customer.vue'
 import SourceEquipment from './components/source/equipment/Equipment.vue'
 import StoreHouse from './components/storehouse/StoreHouse.vue'
+import App from './components/App.vue'
 
+var routes = [
+    //{path: '/', component: App},
+    {path: '/login', component: Login},
+    {path: '/register', component: Register}, 
+    {path: '/', component: App,
+        children: [
+    //{path: '/home', component:  require('./components/Home.vue')},
+            {path: '/', component:  Home},
+            {path: '/home', name: 'home',  component:  Home},
+            {path: '/buy', name: 'buy',  component:  BuyOrder},
+            {path: '/finance', name: 'finance',  component:  Finance},
+            {path: '/login', name: 'login',  component:  Login},
+            {path: '/register', name: 'register',  component:  Register},
+            {path: '/logistic', name: 'logistic',  component:  Logistic},
+            {path: '/repair', name: 'repair',  component:  Repair},
+            {path: '/sale', name: 'sale',  component:  SaleOrder},
+            {path: '/sinkcompany', name: 'sinkcompany',  component:  SinkCompany},
+            {path: '/sourcecompany', name: 'sourcecompany',  component:  SourceCompany},
+            {path: '/sourcecustomer', name: 'sourcecustomer',  component:  SourceCustomer},
+            {path: '/equipment', name: 'equipment',  component:  SourceEquipment},
+            {path: '/storehouse', name: 'storehouse', component: StoreHouse},
+            { path: '*', component: NotFound }
+        ]
+    },
+]
+
+/*
 var routes = [
     //{path: '/home', component:  require('./components/Home.vue')},
     {path: '/', component:  Home},
@@ -47,6 +75,7 @@ var routes = [
     { path: '*', component: NotFound }
     
 ]
+*/
 console.log(Home)
 
 export default routes
