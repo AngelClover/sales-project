@@ -25,7 +25,7 @@
                         </p>
                     </div>
                     <div v-show="modelList.indexOf('source') >= 0">
-                        <div class="accordion">
+                        <div id="triggereg" class="accordion">
                             <div class="active title">
                                 <i class="ui dropdown icon"></i> 首营审批
                             </div>
@@ -90,14 +90,14 @@ export default {
     },
     created (){
         /*
-        $('.accordion')
-            .accordion({
+        $('.accordion') .accordion({
                 selector: {
                     trigger: '.title .icon'
                 }
             })
         ;
         */
+        //$('#triggereg').accordion()
     }
 }
 </script>

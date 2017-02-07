@@ -11,6 +11,8 @@
     "semantic": "cd src/semantic/ && gulp build"
   },
   "dependencies": {
+    "jquery": "^3.1.1",
+    "semantic-ui-css": "^2.2.4",
     "vue": "^2.1.0"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "mockjs": "^1.0.1-beta3",
     "opn": "^4.0.2",
     "ora": "^0.3.0",
+    "react-cookie": "^1.0.4",
     "semver": "^5.3.0",
     "shelljs": "^0.7.4",
     "url-loader": "^0.5.7",

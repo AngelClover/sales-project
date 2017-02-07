@@ -10,10 +10,15 @@ import routes from './routes'
 //import App from './App'
 import App from './components/App.vue'
 //import AppNav from './components/AppNav.vue'
-import './semantic/dist/semantic.css'
+//import './semantic/dist/semantic.css'
 //import './semantic/dist/semantic.js'
 import Home from './components/Home.vue'
 import VueResource from 'vue-resource'
+//import semantic from 'semantic'
+import 'jquery'
+import '../node_modules/semantic-ui-css/semantic.min.css'
+import '../node_modules/semantic-ui-css/semantic.min.js'
+
 //
 
 Vue.use(VueRouter)
@@ -46,8 +51,6 @@ new Vue({
     //...App
 })
 console.log("Angel print")
-console.log(App);
-console.log(app)
 /*
 new Vue({
   el: '#app',
