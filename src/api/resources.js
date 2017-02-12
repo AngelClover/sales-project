@@ -49,6 +49,8 @@ export const LogRepairResource = Vue.resource(API_ROOT + 'api/log/repair')
 export const LogisticResource = Vue.resource(API_ROOT + 'api/logistic')
 export const LogLogisticResource = Vue.resource(API_ROOT + 'api/log/logistic')
 
-export const UserResource = Vue.resource(API_ROOT + 'api/user/getme')
+export const UserMeResource = Vue.resource(API_ROOT + 'api/user/getme')
 export const AuthResource = Vue.resource(API_ROOT + 'api/auth')
+export const UserResource = Vue.resource(API_ROOT + 'api/user')
+
 

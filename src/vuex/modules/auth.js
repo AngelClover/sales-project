@@ -48,7 +48,13 @@ const getters = {
 
 export const getUserInfo = ({commit}) => {
     api.getMe().then(response => {
+        if (response.data.error != 0){
+            commit(USERINFO_SUCCESS, response.data.data)
+        }else{
+            commit(USERINFO_FAILURE)
+        }
     }, response => {
+        commit(USERINFO_FAILURE)
     })
 }
 
@@ -57,42 +63,49 @@ import Vue from 'vue'
 export const getLogin = (store, body) => {
     api.Login(body).then(response => {
         console.log('login succ', response)
-        if (response.status == 200){
-            if (response.data.error != 0){
-                //commit(LOGIN_FAILURE, response.data.msg)
-                showMsg(store, response.data.msg || '登录失败')
-                return
-            }
-            const token = response.data.data.token || ""
-            saveCookie('token', token)
-            //getUserInfo({commit})
-            store.commit(LOGIN_SUCCESS, {token: response.data.data.token})
-            showMsg(store, '登录成功,欢迎光临', 'success')
-            //store.router.go({path:'/'})
-            console.log('store router', store.rootState)
-            //console.log('router', router)
-            //router.push('/')
-            //console.log('Vue router', Vue)
-            //console.log('window', window)
-            //window.location.replace('/')
-            window.location.reload(true)
-            //TOknow : how to use $router.push here
-
-        }else{
-            //commit(LOGIN_FAILURE, { 'error':response.status, 'msg':response.statusText})
-            showMsg(store, response.statusText || '登录失败')
+        if (response.data.error != 0){
+            //commit(LOGIN_FAILURE, response.data.msg)
+            showMsg(store, response.data.msg || '登录失败')
+            return
         }
+        const token = response.data.data.token || ""
+        saveCookie('token', token)
+        getUserInfo({commit})
+        store.commit(LOGIN_SUCCESS, {token: response.data.data.token})
+        showMsg(store, '登录成功,欢迎光临', 'success')
+        console.log('store router', store.rootState)
+        //window.location.replace('/')
+        window.location.reload(true)
+        //TOknow : how to use $router.push here
+
     }, response => {
         console.log('login fail', response)
         //commit(LOGIN_FAILURE, { 'error':response.status, 'msg':response.statusText})
         showMsg(store, response.statusText || '登录失败')
-    }
-    )
+    })
+}
+
+export const register = (store, payload) => {
+    api.register(payload).then(response => {
+        if (response.data.error != 0){
+            showMsg(store, response.data.msg || '登录失败')
+        }else{
+            showMsg(store, '注册成功, 请用刚注册的用户名登录', 'success')
+            var pathname = window.location.pathname
+            console.log('register pathname', pathname)
+            window.location.replace('#/login')
+        }
+    }, response=> {
+        console.log('register fail', response)
+        showMsg(store, response.statusText || '注册失败')
+    })
+
 }
 
 const actions = {
     getLogin,
-    getUserInfo
+    getUserInfo,
+    register
 }
 
 export default{

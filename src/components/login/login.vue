@@ -33,7 +33,7 @@
     </form>
 
     <div class="ui fluid teal button">
-        <p> <router-link to="register"> 注册 </router-link> </p>
+        <p> <router-link to="/register"> 注册 </router-link> </p>
     </div>
   </div>
 </div>

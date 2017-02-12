@@ -16,6 +16,8 @@ module.exports = {
     get : function(){
         var data = Mock.mock(getOneUser())
         console.log(data)
-        return data
+        return {
+            user: data
+        }
     }
 }

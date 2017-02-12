@@ -99,6 +99,9 @@ function mockConfig(app){
     app.post('/api/auth', (req, res) => {
        res.send(addContext(require('./resource/auth').get()))
     })
+    app.post('/api/user', (req, res) => {
+        res.send(addContext({msg: 'success'}))
+    })
 
 }
 
