@@ -36,10 +36,12 @@
         <p> <router-link to="/register"> 注册 </router-link> </p>
     </div>
   </div>
+  <Toaster></Toaster>
 </div>
 </template>
 
 <script>
+import Toaster from '../toaster'
 export default {
     data : function() {
         return {
@@ -48,6 +50,9 @@ export default {
             error: false,
             msg: ""
         }
+    },
+    components : {
+        Toaster
     },
     methods : {
         login : function(){

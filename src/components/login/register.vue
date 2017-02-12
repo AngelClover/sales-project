@@ -40,10 +40,12 @@
           {{msg}}
       </div>
   </div>
+  <Toaster></Toaster>
 </div>
 </template>
 
 <script>
+import Toaster from '../toaster'
 export default {
     data : () => {
         return {
@@ -54,6 +56,9 @@ export default {
             error : false,
             msg : ""
         }
+    },
+    components : {
+        Toaster
     },
     methods : {
         check : function(){

@@ -34,11 +34,12 @@ export default {
           this.$refs.toast.setOptions({ maxToasts:3, position: position })
           this.$refs.toast.showToast(content, {
             theme: type,
-            timeLife: 2000,
+            timeLife: 5000,
             closeBtn: false
           })
         },
         hideMsg(){
+            console.log('hide msg')
             this.$store.dispatch('hideMsg')
         }
     },

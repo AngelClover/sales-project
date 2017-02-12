@@ -70,12 +70,13 @@ export const getLogin = (store, body) => {
         }
         const token = response.data.data.token || ""
         saveCookie('token', token)
-        getUserInfo({commit})
+        getUserInfo(store)
         store.commit(LOGIN_SUCCESS, {token: response.data.data.token})
         showMsg(store, '登录成功,欢迎光临', 'success')
         console.log('store router', store.rootState)
+        console.log('wait =============>')
         //window.location.replace('/')
-        window.location.reload(true)
+        setTimeout(window.location.reload(true), 5000)
         //TOknow : how to use $router.push here
 
     }, response => {

@@ -12,6 +12,7 @@
       <router-view></router-view>
       -->
       <AppView></AppView>
+      <Toaster></Toaster>
   </div>
 </template>
 
@@ -20,7 +21,7 @@
 import AppNav from '../frame/app-nav.vue'
 import AppView from '../frame/app-view.vue'
 import Home from './Home.vue'
-import Toaster from './Toaster/index.vue'
+import Toaster from './toaster/index.vue'
 import {isLogin} from '../utils/authService'
 
 export default {

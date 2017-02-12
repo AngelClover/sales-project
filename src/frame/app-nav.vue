@@ -32,7 +32,9 @@ export default {
     methods :{
         logout(){
             signOut()
-            this.$router.go('/')
+            this.$store.dispatch('showMsg', '登出成功', 'success')
+            console.log('wait =============>')
+            setTimeout(this.$router.go('/'), 5000)
         }
     }
 }
