@@ -26,11 +26,14 @@
       <div class="ui error message" v-show=error>
           {{msg}}
       </div>
+      <div >
+          {{$store.getters.getToken}}
+      </div>
 
     </form>
 
     <div class="ui fluid teal button">
-        <p> <router-link to="/register"> 注册 </router-link> </p>
+        <p> <router-link to="register"> 注册 </router-link> </p>
     </div>
   </div>
 </div>
@@ -61,7 +64,11 @@ export default {
             this.error = false
             this.msg = ""
             console.log(this.username, this.password, this.error, this.msg)
+            this.$store.dispatch('getLogin', {username:this.username, password:this.password})
         }
+    },
+    created(){
+        console.log("login created")
     }
 }
 </script>

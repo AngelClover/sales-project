@@ -1,5 +1,6 @@
 import {EquipmentResource, SourceCompanyResource, SourceCustomerResource, SaleOrderResource, BuyOrderResource, StoreHouseResource, RepairResource, LogisticResource} from './resources'
 import {LogEquipmentResource, LogSourceCompanyResource, LogSourceCustomerResource, LogSaleOrderResource, LogBuyOrderResource, LogStoreHouseResource, LogRepairResource, LogLogisticResource} from './resources'
+import {UserResource, AuthResource} from './resources'
 
 export default {
     getEquipmentList: function() {
@@ -51,5 +52,12 @@ export default {
     getLogLogisticList: function(){
         return LogLogisticResource.get()
     },
+    //auth
+    getMe: function(){
+        return UserResource.get()
+    },
+    Login: function(body){
+        return AuthResource.save(body)
+    }
 
 }

@@ -38,3 +38,8 @@ npm run build
  ##### 31, Jan, 2017
  + add filter && sort
  + little decorate on list
+
+##### 7, Feb, 2017
+ + add many pages && mocks
+ + change pages to subroutein
+ + add login page

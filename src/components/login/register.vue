@@ -26,6 +26,12 @@
             <input type="password" placeholder="确认密码" v-model="password2" @input="check">
           </div>
         </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="flag icon"></i>
+            <input type="text" placeholder="昵称" v-model="nickname" @input="check">
+          </div>
+        </div>
         <div class="ui fluid large teal submit button" @click="register">注册</div>
       </div>
 
@@ -44,6 +50,7 @@ export default {
             username : "",
             password : "",
             password2 : "",
+            nickname : "",
             error : false,
             msg : ""
         }
@@ -76,6 +83,12 @@ export default {
         register : function(){
             console.log("register")
             console.log(this.username, this.password, this.password2)
+            this.$store.dispatch('register', {
+                username: this.username,
+                nickname: this.nickname,
+                password: this.password,
+                password2: this.password2
+            })
         }
     }
 }

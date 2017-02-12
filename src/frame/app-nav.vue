@@ -2,6 +2,7 @@
     <div class="ui container">
         <div class="ui menu inverted" id="headermenu">
             <div class="header item">Angela</div>
+            <div class="right item" @click=logout>logout </div>
             <div class="right menu">
                 <div class="ui dropdown item">
                     用户username
@@ -21,10 +22,17 @@
 </template>
 
 <script>
+import {signOut} from '../utils/authService'
 export default {
     data: () => {
         return {
             name : 'app-nav'
+        }
+    },
+    methods :{
+        logout(){
+            signOut()
+            this.$router.go('/')
         }
     }
 }
