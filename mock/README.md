@@ -55,8 +55,11 @@
     + GET
     + 需要兼容api/user/:id的操作
         + *权限check留意*
+    + 增加api/user/me
+        + 返回结果与相应的api/user/myid一致
 + api/action/login
 + api/action/register
++ api/auth
 
 
 

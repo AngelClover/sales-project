@@ -12,8 +12,9 @@ Vue.http.interceptors.push((request, next)=>{
   // 这里对请求体进行处理
   request.headers = request.headers || {}
   if (getCookie('token')) {
-    request.headers.Authorization = 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, '')
+    request.headers.set('Authorization', 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, ''))
   }
+  console.log('request headers', request.headers)
   next((response) => {
     // 这里可以对响应的结果进行处理
     if (response.status === 401) {
@@ -48,4 +49,9 @@ export const LogRepairResource = Vue.resource(API_ROOT + 'api/log/repair')
 
 export const LogisticResource = Vue.resource(API_ROOT + 'api/logistic')
 export const LogLogisticResource = Vue.resource(API_ROOT + 'api/log/logistic')
-//export const UserResource = Vue.resource(API_ROOT + 'users{/id}')
+
+export const UserMeResource = Vue.resource(API_ROOT + 'api/user/getme')
+export const AuthResource = Vue.resource(API_ROOT + 'api/auth')
+export const UserResource = Vue.resource(API_ROOT + 'api/user')
+
+

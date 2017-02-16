@@ -26,6 +26,9 @@
       <div class="ui error message" v-show=error>
           {{msg}}
       </div>
+      <div >
+          {{$store.getters.getToken}}
+      </div>
 
     </form>
 
@@ -33,10 +36,12 @@
         <p> <router-link to="/register"> 注册 </router-link> </p>
     </div>
   </div>
+  <Toaster></Toaster>
 </div>
 </template>
 
 <script>
+import Toaster from '../toaster'
 export default {
     data : function() {
         return {
@@ -45,6 +50,9 @@ export default {
             error: false,
             msg: ""
         }
+    },
+    components : {
+        Toaster
     },
     methods : {
         login : function(){
@@ -61,7 +69,11 @@ export default {
             this.error = false
             this.msg = ""
             console.log(this.username, this.password, this.error, this.msg)
+            this.$store.dispatch('getLogin', {username:this.username, password:this.password})
         }
+    },
+    created(){
+        console.log("login created")
     }
 }
 </script>

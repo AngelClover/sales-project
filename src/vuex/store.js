@@ -8,6 +8,8 @@ import buyOrderList from './modules/buyorder.list'
 import storeHouseList from './modules/storehouse.list'
 import repairList from './modules/repair.list'
 import logisticList from './modules/logistic.list'
+import auth from './modules/auth'
+import msg from './modules/toast'
 //import {getEquipmentList} from './actions'
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -26,7 +28,9 @@ export default new Vuex.Store({
         buyOrderList,
         storeHouseList,
         repairList,
-        logisticList
+        logisticList,
+        auth,
+        msg
     },
     //middlewares,
     strict : debug,
