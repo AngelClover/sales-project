@@ -10,14 +10,11 @@ from errors import bad_request
 
 
 @api.route('/equipments/headers', methods=['GET', 'POST'])
-def get_headers():
+def get_equipment_headers():
     return jsonify({
             'error' : 0,
             'msg' : '',
-            'data' : {
-                'headers' : [('id', '产品编号'), ('info', u'产品信息'), ('abbr', u'产品简称'), ('type', u'产品分类'),
-                        ('spec', u'产品规格'), ('model', u'产品型号'), ('producer', u'厂家')]
-            }
+            'data' : Equipment.get_headers()
             })
 
 @api.route('/equipments/', methods=['GET'])

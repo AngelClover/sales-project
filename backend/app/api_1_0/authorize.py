@@ -7,6 +7,13 @@ from .. import db
 from .errors import bad_request, unauthorized, forbidden
 from decorators import permission_required
 
+@api.route('/authorize/permissions', methods=['GET', 'POST'])
+def get_permissions():
+    return jsonify({
+            'error' : 0,
+            'msg' : 'successful',
+            'data' : Permission.to_json()
+            })
 
 @api.route('/authorize/<int:id>', methods=['POST'])
 @permission_required(Permission.ADMINISTER)

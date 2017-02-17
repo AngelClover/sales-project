@@ -37,16 +37,90 @@ class Equipment(db.Model):
             'state' : self.state
         } 
         return equip_json
+    
+    @staticmethod
+    def get_headers():
+        return { 'id' : u'产品编号',
+            'info' : u'产品信息',
+            'abbr' : u'产品简称',
+            'type' : u'产品分类',
+            'spec' : u'产品规格',
+            'model' : u'产品型号',
+            'producer' : u'厂家'
+        }
+
+class Producer(db.Model):
+    __tablename__ = 'producer'
+    id = db.Column(db.Integer, primary_key=True)#首营企业编号
+    name = db.Column(db.String(256))#供应商名称
+    register_capital = db.Column(db.Integer)#注册资金
+    abbr = db.Column(db.String(256))#简称
+    type = db.Column(db.String(256))#供应商类型(设备/试剂/耗材等)
+    ever_name = db.Column(db.String(256))#曾用名
+    legal_representor = db.Column(db.String(256))#法人代表
+    location = db.Column(db.String(1024))#住所
+    establish_date = db.Column(db.Date)#成立日期
+    
+    def to_json(self):
+        producer_json = { 'id' : self.id,
+            'name' : self.name,
+            'register_capital' : self.register_capital,
+            'abbr' : self.abbr,
+            'type' : self.type,
+            'ever_name' : self.ever_name,
+            'legal_representor' : self.legal_representor,
+            'location' : self.location,
+            'establish_date' : self.establish_date
+        }
+        return producer_json
+    
+    @staticmethod
+    def get_headers():
+        headers = {
+            'id' : u'首营企业编号(系统自动分配)',
+            'name' : u'供应商名称',
+            'register_capital' : u'注册资金',
+            'abbr' : u'简称',
+            'type' : u'供应商类型(设备/试剂/耗材等)',
+            'ever_name' : u'曾用名',
+            'legal_representor' : u'法人代表',
+            'location' : u'住所',
+            'establish_date' : u'成立日期'
+        }
+        return headers
+
 
 class Permission:
     EQUIPMENT_WRITE = 0x01
     EQUIPMENT_APPROVE = 0x03
     ENTERPRISE_WRITE = 0x04
+    ENTERPRISE_APPROVE = 0x0c
     PURCHASE_ORDER_WRITE = 0x10
     PURCHASE_ORDER_APPROVE = 0x30
     SALES_ORDER_WRITE = 0x40
     SALES_ORDER_APPROVE = 0xc0
-    ADMINISTER = 0xffff
+    STORE_WRITE = 0x100
+    STORE_APPROVE = 0x300
+    REPAIR_WRITE = 0x400
+    REPAIR_APPROVE = 0xc00
+    LOGISTIC_WRITE = 0x1000
+    LOGISTIC_APPROVE = 0x3000
+    FINANCE_WRITE = 0x4000
+    FINANCE_APPROVE = 0xc000
+    ADMINISTER = 0xffffffff
+    
+    @staticmethod
+    def to_json():
+        return {
+            u'首营设备':  {u'创建申请' : 0x01, u'审批&删除' : 0x03},
+            u'首营企业': {u'创建申请': 0x04, u'审批&删除': 0x0c},
+            u'采购订单': {u'创建申请': 0x10, u'审批&删除': 0x30},
+            u'销售订单': {u'创建申请': 0x40, u'审批&删除': 0xc0},
+            u'仓库管理': {u'创建申请': 0x100, u'审批&删除': 0x300},
+            u'维修管理': {u'创建申请': 0x400, u'审批&删除': 0xc00},
+            u'物流管理': {u'创建申请': 0x1000, u'审批&删除': 0x3000},
+            u'财务管理': {u'创建申请': 0x4000, u'审批&删除': 0xc000}
+        }
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -61,6 +135,9 @@ class User(db.Model):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        if username == current_app.config['FLASKY_ADMIN']:
+            self.permission = Permission.ADMINISTER
+        
 
     @property
     def password(self):
@@ -176,3 +253,7 @@ def init_db():
     for table in table_names:
         db.engine.execute("alter table %s convert to character set utf8" % table)
     print table_names
+
+    admin = User(current_app.config['FLASKY_ADMIN'], current_app.config['FLASKY_ADMIN'], current_app.config['FLASKY_ADMIN_PASSWORD'])
+    db.session.add(admin)
+    db.session.commit()

@@ -13,6 +13,7 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[sales]'
     FLASKY_MAIL_SENDER = 'sale admin agelaclover&others'
     FLASKY_ADMIN = 'admin'
+    FLASKY_ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'angel.clover'
     FLASKY_POSTS_PER_PAGE = 20
     FLASKY_FOLLOWERS_PER_PAGE = 50
     FLASKY_COMMENTS_PER_PAGE = 30
