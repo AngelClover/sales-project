@@ -19,9 +19,11 @@
                             </table>
                         </div>
                         <div class="detail-footer">
+                            <center>
                             <button class="modal-default-button" @click="$emit('close')">
                                 OK
                             </button>
+                            </center>
                         </div>
                     </div>
                 </div>
@@ -49,6 +51,12 @@ export default {
 </script>
 
 <style>
+table {
+  width: 90%;
+  overflow: scroll;
+  margin-left:auto;
+  margin-right:auto;
+}
 .detail-mask{
   position: fixed;
   z-index: 5000;
@@ -59,11 +67,13 @@ export default {
   background-color: rgba(0, 0, 0, .5);
   display: table;
   transition: opacity .3s ease;
+  overflow: scroll;
 }
 .detail-wrapper {
   display: table-cell;
   vertical-align: middle;
   z-index: 6000;
+  overflow: scroll;
 }
 
 .detail-container {
@@ -75,6 +85,8 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  height:90%;
+  overflow: scroll;
 }
 
 .detail-header h3 {

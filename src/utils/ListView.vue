@@ -6,6 +6,7 @@
                 <i class="search icon"></i>
         </div>
             <br/>
+            <div class='table-container'>
         <table>
             <thead>
                 <tr>
@@ -30,6 +31,7 @@
             </tr>
             </tbody>
         </table>
+            </div>
 
         <br/>
         <div class="ui buttom" align=center>
@@ -182,6 +184,17 @@ table {
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.table-container{
+  border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+  width: 80%;
+  height:70%;
+  overflow: scroll;
 }
 
 th {
@@ -231,5 +244,7 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
+
+
 </style>
 
