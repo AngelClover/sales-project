@@ -8,7 +8,7 @@ from .errors import bad_request, unauthorized, forbidden
 from decorators import permission_required
 
 
-@api.route('/authorize/<int:id>')
+@api.route('/authorize/<int:id>', methods=['POST'])
 @permission_required(Permission.ADMINISTER)
 def authorize(id):
     user = User.query.get(id)

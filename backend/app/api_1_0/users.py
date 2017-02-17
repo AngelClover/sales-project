@@ -1,10 +1,12 @@
 #-*- coding:utf-8 -*-
 
-from flask import jsonify, request, current_app, url_for
+from flask import jsonify, request, current_app, url_for, g
+from flask_login import login_required
 from . import api
-from ..models import User
+from ..models import User, AnonymousUser
 from .. import db
 from .errors import bad_request, unauthorized, forbidden
+from .authentication import auth
 
 
 @api.route('/users/<int:id>')
@@ -62,6 +64,7 @@ def delete_user(id):
             })
 
 @api.route('/users/<int:id>', methods=['PUT'])
+@auth.login_required
 def change_user(id):
     user = User.query.get(id)
     if user is None:
@@ -85,4 +88,28 @@ def change_user(id):
             'data' : {}
             })
 
+@api.route('/users/login_token', methods=['GET', 'POST'])
+@auth.login_required
+def get_login_token():
+    if isinstance(g.current_user, AnonymousUser) or g.token_used:
+        return unauthorized('Invalid credentials')
+    return jsonify({
+            'error' : 0,
+            'msg' : 'successful',
+            'data' : {'user' : g.current_user.to_json(),
+            'token' : g.current_user.generate_auth_token(expiration=3600),
+            'expiration' : 3600
+            }
+            })
+
+@api.route('/users/get_me', methods=['GET', 'POST'])
+@auth.login_required
+def get_me():
+    if isinstance(g.current_user, AnonymousUser) or g.token_used:
+        return unauthorized('Invalid credentials')
+    return jsonify({
+            'error' : 0,
+            'msg' : 'successful',
+            'data' : {'user' : g.current_user.to_json()}
+            })
 
