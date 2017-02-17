@@ -10,6 +10,7 @@ import repairList from './modules/repair.list'
 import logisticList from './modules/logistic.list'
 import auth from './modules/auth'
 import msg from './modules/toast'
+import user from './modules/user'
 //import {getEquipmentList} from './actions'
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -30,7 +31,8 @@ export default new Vuex.Store({
         repairList,
         logisticList,
         auth,
-        msg
+        msg,
+        user
     },
     //middlewares,
     strict : debug,

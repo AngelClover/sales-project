@@ -1,11 +1,9 @@
 import api from '../../api'
+import {getUserInfo} from './user'
 
 const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 const LOGIN_FAILURE = "LOGIN_FAILURE"
-const USERINFO_SUCCESS = "USERINFO_SUCCESS"
-const USERINFO_FAILURE = "USERINFO_FAILURE"
 const LOGOUT_USER = "LOGOUT_USER"
-const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS"
 
 import {getCookie, saveCookie} from '../../utils/authService'
 import {showMsg, hideMsg} from './toast'
@@ -26,40 +24,20 @@ const mutations = {
         state.user = null
         state.token = null
     },
-    [USERINFO_SUCCESS](state, action){
-        state.user = action.user
-    },
-    [USERINFO_FAILURE](state, action){
-        state.user = null
-    },
     [LOGOUT_USER](state, action){
         state.token = getCookie('token') || null
-        state.user = null
         state.token = null
+        console.log('clear token')
     },
-    [UPDATE_USER_SUCCESS](state, action){
-        state.user = action.user
-    }
 }
 
 const getters = {
     getToken : (state) => {return state.token = getCookie('token') || null }
 }
 
-export const getUserInfo = ({commit}) => {
-    api.getMe().then(response => {
-        if (response.data.error != 0){
-            commit(USERINFO_SUCCESS, response.data.data)
-        }else{
-            commit(USERINFO_FAILURE)
-        }
-    }, response => {
-        commit(USERINFO_FAILURE)
-    })
-}
 
 //import router from '../../router'
-import Vue from 'vue'
+//import Vue from 'vue'
 export const getLogin = (store, body) => {
     api.Login(body).then(response => {
         console.log('login succ', response)
@@ -103,10 +81,14 @@ export const register = (store, payload) => {
 
 }
 
+export const logOut = ({commit}) => {
+    commit(LOGOUT_USER)
+}
+
 const actions = {
     getLogin,
-    getUserInfo,
-    register
+    register,
+    logOut
 }
 
 export default{
