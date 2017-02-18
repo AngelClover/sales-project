@@ -35,13 +35,13 @@
 
         <br/>
         <div class="ui buttom" align=center>
-            <button > + </button>
-            <button> log </button>
+            <button @click=createAction> + </button>
+            <button @click=showLogTips> log </button>
         </div>
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType="'show'" @close="showDetails = false" :savecb=savecb>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :updatecb=updatecb :savecb=savecb :removecb=removecb>
         </detail>
 
         <div v-show=debug>
@@ -70,7 +70,7 @@ export default {
     components : {
         Detail
     },
-    props: ['msg', 'title', 'content', 'initdata', 'pref', 'savecb'],
+    props: ['msg', 'title', 'content', 'initdata', 'pref', 'savecb', 'updatecb', 'removecb'],
     /*
     data : function() {
         var preference = []
@@ -95,7 +95,8 @@ export default {
             searchQuery : '',
             showDetails : false,
             detailContent : {},
-            debug : false
+            debug : false,
+            actionType : 'show'
         }
     },
     computed : {
@@ -174,6 +175,13 @@ export default {
             this.detailContent = item
             this.showDetails = true
        },
+       createAction(){
+           this.actionType='create'
+           this.showDetails = true
+       },
+       showLogTips(){
+           this.$store.dispatch('showMsg', '此功能暂不开放', 'info')
+       }
 
    }
 }

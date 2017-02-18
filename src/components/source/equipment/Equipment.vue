@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :savecb=saveEquipment>
+        <ListView msg="asd" :title=title :content=content :pref=preference :updatecb=updateEquipment :savecb=saveEquipment :removecb=removeEquipment>
             <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>
@@ -45,11 +45,19 @@ export default {
         getEquipmentList (){
             this.$store.dispatch('getEquipmentList')
         },
-        saveEquipment(content){
-            console.log('save equipment', content)
-            this.$store.dispatch('updateEquipment')
+        updateEquipment(content){
+            //console.log('save equipment', content)
+            this.$store.dispatch('updateEquipment', content)
             this.getEquipmentList()
-        }
+        },
+        saveEquipment(content){
+            this.$store.dispatch('saveEquipment', content)
+            this.getEquipmentList()
+        },
+        removeEquipment(content){
+            this.$store.dispatch('removeEquipment', {id:content.id})
+            this.getEquipmentList()
+        },
     },
 
 }

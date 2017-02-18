@@ -3,7 +3,7 @@
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
-                    <div class="detail-container" @click="" v-show=showContent>
+                    <div class="detail-container" @click="" v-show="showContent && actionType == 'show'">
                         <div class="detail-header">
                             详细信息
                         </div>
@@ -28,9 +28,12 @@
                             </center>
                         </div>
                     </div>
-                    <div class="detail-container modifier" @click="" v-show=!showContent>
-                        <div class="detail-header">
+                    <div class="detail-container modifier" @click="" v-show="!showContent || actionType == 'create'">
+                        <div class="detail-header" v-show="actionType == 'show'">
                             修改
+                        </div>
+                        <div class="detail-header" v-show="actionType == 'create'">
+                            新建
                         </div>
                         <div class="detail-body">
                             <table>
@@ -50,8 +53,11 @@
                             <button class="modal-default-button" @click="closeModifier">
                                 放弃
                             </button>
-                            <button class="modal-default-button" @click="realModify">
+                            <button class="modal-default-button" @click="realModify" v-show="actionType == 'show'">
                                 修改
+                            </button>
+                            <button class="modal-default-button" @click="realModify" v-show="actionType == 'create'">
+                                新建
                             </button>
                             </center>
                         </div>
@@ -71,7 +77,7 @@
 
 <script>
 export default {
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'savecb'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'savecb', 'updatecb', 'removecb'],
     data: function() {
         return {
             debug : true,
@@ -87,13 +93,26 @@ export default {
         closeModifier(){
             this.newContent = {}
             this.showContent = true
+            if (this.actionType == 'create'){
+                this.$emit('close')
+            }
+            
         },
         realModify(){
-            if (this.newContent == this.detailContent){
+            console.log("!!!!", this.cmp(this.newContent, this.detailContent))
+            if (this.cmp(this.newContent, this.detailContent)){
+                this.$store.dispatch('showMsg', '无修改', 'info')
                 this.closeModifier()
             }else{
                 this.showContent = true
-                this.savecb(this.newContent)
+                if (this.actionType == 'create'){
+                    this.savecb(this.newContent)
+                    this.closeModifier()
+                }else if(this.actionType == 'show'){
+                    this.updatecb(this.newContent)
+                }else{
+                    console.log('error actionType', this.actionType)
+                }
             }
         },
         deepCopy : function(source) { 
@@ -102,7 +121,57 @@ export default {
                 result[key] = typeof source[key] === 'object' ? deepCoyp(source[key]): source[key];
             } 
             return result; 
-        }
+        },
+        cmp : function( x, y ) {  
+            // If both x and y are null or undefined and exactly the same  
+            if ( x === y ) {  
+                return true;  
+            }  
+
+            // If they are not strictly equal, they both need to be Objects  
+            if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) {  
+                return false;  
+            }  
+
+            // They must have the exact same prototype chain, the closest we can do is  
+            // test the constructor.  
+            if ( x.constructor !== y.constructor ) {  
+                return false;  
+            }  
+
+            for ( var p in x ) {  
+                // Inherited properties were tested using x.constructor === y.constructor  
+                if ( x.hasOwnProperty( p ) ) {  
+                    // Allows comparing x[ p ] and y[ p ] when set to undefined  
+                    if ( ! y.hasOwnProperty( p ) ) {  
+                        return false;  
+                    }  
+
+                    // If they have the same strict value or identity then they are equal  
+                    if ( x[ p ] === y[ p ] ) {  
+                        continue;  
+                    }  
+
+                    // Numbers, Strings, Functions, Booleans must be strictly equal  
+                    if ( typeof( x[ p ] ) !== "object" ) {  
+                        return false;  
+                    }  
+
+                    // Objects and Arrays must be tested recursively  
+                    if ( ! Object.equals( x[ p ],  y[ p ] ) ) {  
+                        return false;  
+                    }  
+                }  
+            }  
+
+            for ( p in y ) {  
+                // allows x[ p ] to be set to undefined  
+                if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) {  
+                    return false;  
+                }  
+            }  
+            return true;  
+        }  
     }
 
 }

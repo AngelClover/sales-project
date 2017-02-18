@@ -7,8 +7,17 @@ export default {
         return EquipmentResource.get()
     },
     updateEquipment: function(payload) {
-        return EquipmentResource.update({id:payload})
+        return EquipmentResource.update({id:payload.id})
     },
+    saveEquipment: function(payload) {
+        //TODO: api need uri but how to get uri
+        //this will be right?
+        return EquipmentResource.save(payload)
+    },
+    removeEquipment: function(payload) {
+        return EquipmentResource.remove({id:payload})
+    },
+
     getSourceCompanyList: function() {
         return SourceCompanyResource.get()
     },

@@ -68,23 +68,54 @@ const updateEquipment = ({dispatch}, payload) => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                //commit(SAVE_EQUIPMENT_FAILURE, response.data.msg)
                 dispatch('showMsg', response.data.error + response.data.msg)
             }
-            //commit(SAVE_EQUIPMENT_SUCCESS, response.data.data)
+            dispatch('showMsg', '修改成功', 'success')
         }else{
             dispatch('showMsg', response.status + response.statusText)
         }
     }, response => {
-        //console.log('save response fail', response)
         dispatch('showMsg', response.status + response.statusText)
-        //commit(SAVE_EQUIPMENT_FAILURE)
+    })
+}
+const saveEquipment = ({dispatch}, payload) => {
+    api.saveEquipment(payload).then(response => {
+        console.log('save response succ', response)
+        if (response.status == 200){
+            if (response.data.error != 0){
+                dispatch('showMsg', response.data.error + response.data.msg)
+            }else{
+                dispatch('showMsg', '添加成功', 'success')
+            }
+        }else{
+            dispatch('showMsg', response.status + response.statusText)
+        }
+    }, response => {
+        dispatch('showMsg', response.status + response.statusText)
+    })
+}
+const removeEquipment = ({dispatch}, payload) => {
+    api.removeEquipment(payload).then(response => {
+        console.log('save response succ', response)
+        if (response.status == 200){
+            if (response.data.error != 0){
+                dispatch('showMsg', response.data.error + response.data.msg)
+            }else{
+                dispatch('showMsg', '删除成功', 'success')
+            }
+        }else{
+            dispatch('showMsg', response.status + response.statusText)
+        }
+    }, response => {
+        dispatch('showMsg', response.status + response.statusText)
     })
 }
 
 const actions = {
     getEquipmentList,
     updateEquipment,
+    saveEquipment,
+    removeEquipment
     /*
     getEquipmentList : async ({commit}) => {
         console.log('angel commit in module dispatch')
