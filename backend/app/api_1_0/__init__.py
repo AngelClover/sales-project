@@ -2,4 +2,4 @@ from flask import Blueprint
 
 api = Blueprint('api', __name__)
 
-from . import authentication, equipment, users, authorize
+from . import authentication, equipment, users, permission, producer

@@ -1,18 +1,23 @@
 #-*- coding:utf-8 -*-
 
-from flask import jsonify, request, current_app, url_for
+from flask import jsonify, request, current_app, url_for, g
+from flask_login import login_required
 from . import api
-from ..models import User
+from ..models import User, AnonymousUser
 from .. import db
 from .errors import bad_request, unauthorized, forbidden
+from .authentication import auth
+from .decorators import permission_required, admin_required
 
 
 @api.route('/users/<int:id>')
+@admin_required()
 def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify(user.to_json())
 
-@api.route('/users/', methods=['POST'])
+@api.route('/users', methods=['POST'])
+@admin_required()
 def new_user():
     user_json = request.get_json()
     if user_json is None:
@@ -44,6 +49,7 @@ def new_user():
             })
 
 @api.route('/users/<int:id>', methods=['DELETE'])
+@admin_required()
 def delete_user(id):
     user = User.query.get(id)
     if user is None:
@@ -62,6 +68,7 @@ def delete_user(id):
             })
 
 @api.route('/users/<int:id>', methods=['PUT'])
+@auth.login_required
 def change_user(id):
     user = User.query.get(id)
     if user is None:
@@ -85,4 +92,28 @@ def change_user(id):
             'data' : {}
             })
 
+@api.route('/users/login_token', methods=['GET', 'POST'])
+@auth.login_required
+def get_login_token():
+    if isinstance(g.current_user, AnonymousUser) or g.token_used:
+        return unauthorized('AnonymousUser or already has a token')
+    return jsonify({
+            'error' : 0,
+            'msg' : 'successful',
+            'data' : {'user' : g.current_user.to_json(),
+            'token' : g.current_user.generate_auth_token(expiration=3600),
+            'expiration' : 3600
+            }
+            })
+
+@api.route('/users/me', methods=['GET', 'POST'])
+@auth.login_required
+def get_me():
+    if isinstance(g.current_user, AnonymousUser) or g.token_used:
+        return unauthorized('Invalid credentials')
+    return jsonify({
+            'error' : 0,
+            'msg' : 'successful',
+            'data' : {'user' : g.current_user.to_json()}
+            })
 

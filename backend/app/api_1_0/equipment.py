@@ -9,30 +9,28 @@ from decorators import permission_required
 from errors import bad_request
 
 
-@api.route('/equipments/headers', methods=['GET', 'POST'])
-def get_headers():
+@api.route('/equipment/headers', methods=['GET', 'POST'])
+def get_equipment_headers():
     return jsonify({
             'error' : 0,
             'msg' : '',
-            'data' : {
-                'headers' : [('id', '产品编号'), ('info', u'产品信息'), ('abbr', u'产品简称'), ('type', u'产品分类'),
-                        ('spec', u'产品规格'), ('model', u'产品型号'), ('producer', u'厂家')]
-            }
+            'data' : Equipment.get_ordered_headers()
             })
 
-@api.route('/equipments/', methods=['GET'])
+@api.route('/equipment/', methods=['GET'])
 def get_equipments():
     equips = Equipment.query.all()
     return jsonify({
             'error' : 0,
             'msg' : '',
             'data' : {
+            'headers': Equipment.get_ordered_headers(),
             'equipments': [equip.to_json() for equip in equips]
             }
             })
         
 
-@api.route('/equipments/<int:id>', methods=['GET'])
+@api.route('/equipment/<int:id>', methods=['GET'])
 def get_equipment(id):
     equip = Equipment.query.get_or_404(id)
     return jsonify({
@@ -44,8 +42,8 @@ def get_equipment(id):
             })
 
 
-@api.route('/equipments/', methods=['POST'])
-@permission_required(Permission.EQUIPMENT_WRITE)
+@api.route('/equipment/', methods=['POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['write'])
 def new_equipment():
     equip_json = request.get_json()
     if equip_json is None:
@@ -78,8 +76,8 @@ def new_equipment():
             'data' : equip.to_json()
             })
 
-@api.route('/equipments/<int:id>', methods=['PUT'])
-@permission_required(Permission.EQUIPMENT_APPROVE)
+@api.route('/equipment/<int:id>', methods=['PUT'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['approve'])
 def edit_equipment(id):
     equip = Equipment.query.get_or_404(id)
 
@@ -111,8 +109,8 @@ def edit_equipment(id):
             'data' : equip.to_json()
             })
  
-@api.route('/equipments/approve/<int:id>', methods=['GET', 'POST'])
-@permission_required(Permission.EQUIPMENT_APPROVE)
+@api.route('/equipment/approve/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['approve'])
 def approve_new_equipment(id):
     equip = Equipment.query.get(id)
     if equip is None:
@@ -125,8 +123,8 @@ def approve_new_equipment(id):
             'data' : equip.to_json()
             })
 
-@api.route('/equipments/<int:id>', methods=['DELETE'])
-@permission_required(Permission.EQUIPMENT_APPROVE)
+@api.route('/equipment/<int:id>', methods=['DELETE'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['approve'])
 def delete_equipment(id):
     equip = Equipment.query.get(id)
     if equip is None:

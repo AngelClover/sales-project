@@ -21,11 +21,11 @@ function getContentBasicSlot(title){
     var ret = {}
     for (var key in title){
         if (counter == 0){
-            ret[key + '|+1'] = 1
-        }else if (title[key].options && title[key].options.length > 0){
-            ret[key + '|1'] = title[key].options
+            ret[title[key] + '|+1'] = 1
+        //}else if (title[key].options && title[key].options.length > 0){
+        //    ret[key + '|1'] = title[key].options
         }else{
-            ret[key] = '@cword(2,5)'
+            ret[title[key]] = '@cword(2,5)'
         }
         counter++
     }

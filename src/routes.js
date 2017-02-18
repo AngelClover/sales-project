@@ -25,7 +25,7 @@ import SinkCompany from './components/sink/Company.vue'
 import SourceCompany from './components/source/company/Company.vue'
 import SourceCustomer from './components/source/customer/Customer.vue'
 import SourceEquipment from './components/source/equipment/Equipment.vue'
-import StoreHouse from './components/storehouse/StoreHouse.vue'
+import StoreHouse from './components/storehouse/storeHouse.vue'
 import App from './components/App.vue'
 
 var routes = [
