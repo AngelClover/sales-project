@@ -27,9 +27,9 @@ const mutations = {
     },
     [GET_EQUIPMENT_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.title = response_data.title
-        state.content = response_data.content
-        state.preference = response_data.preference
+        state.title = response_data.headers
+        state.content = response_data.equipments
+        //state.preference = response_data.preference
     },
 }
 

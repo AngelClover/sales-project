@@ -35,13 +35,6 @@ export default {
         }
     },
     methods : {
-            createContent : (title, suffix)=>{
-            var ret = {}
-            for (var item in title){
-                ret[item] = title[item] + suffix
-            }
-            return ret
-        },
         getEquipmentList (){
             this.$store.dispatch('getEquipmentList')
         },

@@ -11,7 +11,7 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value.name}}</td>
+                                        <td>{{value}}</td>
                                         <td>{{detailContent[key]}}</td>
                                     </tr>
                                 </tbody>
@@ -39,7 +39,7 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value.name}}</td>
+                                        <td>{{value}}</td>
                                         <td>
                                             <input v-model=newContent[key]>
                                             </input>

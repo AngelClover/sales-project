@@ -23,35 +23,35 @@ Vue.http.interceptors.push((request, next)=>{
     }
   })
 })
+const apiBase = 'api/v1.0/'
 
-export const EquipmentResource = Vue.resource(API_ROOT + 'api/equipment{/id}')
-export const LogEquipmentResource = Vue.resource(API_ROOT + 'api/log/equipment')
+export const EquipmentResource = Vue.resource(API_ROOT + apiBase + 'equipment{/id}')
+export const LogEquipmentResource = Vue.resource(API_ROOT + apiBase + 'log/equipment')
 
-export const SourceCompanyResource = Vue.resource(API_ROOT + 'api/sourcecompany')
-export const LogSourceCompanyResource = Vue.resource(API_ROOT + 'api/log/sourcecompany')
+export const SourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'sourcecompany')
+export const LogSourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecompany')
 
-export const SourceCustomerResource = Vue.resource(API_ROOT + 'api/sourcecustomer')
-export const LogSourceCustomerResource = Vue.resource(API_ROOT + 'api/log/sourcecustomer')
-
-
-export const SaleOrderResource = Vue.resource(API_ROOT + 'api/saleorder')
-export const LogSaleOrderResource = Vue.resource(API_ROOT + 'api/log/saleorder')
-
-export const BuyOrderResource = Vue.resource(API_ROOT + 'api/buyorder')
-export const LogBuyOrderResource = Vue.resource(API_ROOT + 'api/log/buyorder')
+export const SourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'sourcecustomer')
+export const LogSourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecustomer')
 
 
-export const StoreHouseResource = Vue.resource(API_ROOT + 'api/storehouse')
-export const LogStoreHouseResource = Vue.resource(API_ROOT + 'api/log/storehouse')
+export const SaleOrderResource = Vue.resource(API_ROOT + apiBase + 'saleorder')
+export const LogSaleOrderResource = Vue.resource(API_ROOT + apiBase + 'log/saleorder')
 
-export const RepairResource = Vue.resource(API_ROOT + 'api/repair')
-export const LogRepairResource = Vue.resource(API_ROOT + 'api/log/repair')
+export const BuyOrderResource = Vue.resource(API_ROOT + apiBase + 'buyorder')
+export const LogBuyOrderResource = Vue.resource(API_ROOT + apiBase + 'log/buyorder')
 
-export const LogisticResource = Vue.resource(API_ROOT + 'api/logistic')
-export const LogLogisticResource = Vue.resource(API_ROOT + 'api/log/logistic')
 
-//export const UserMeResource = Vue.resource(API_ROOT + 'api/user/getme')
-export const AuthResource = Vue.resource(API_ROOT + 'api/auth')
-export const UserResource = Vue.resource(API_ROOT + 'api/user{/id}')
+export const StoreHouseResource = Vue.resource(API_ROOT + apiBase + 'storehouse')
+export const LogStoreHouseResource = Vue.resource(API_ROOT + apiBase + 'log/storehouse')
+
+export const RepairResource = Vue.resource(API_ROOT + apiBase + 'repair')
+export const LogRepairResource = Vue.resource(API_ROOT + apiBase + 'log/repair')
+
+export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic')
+export const LogLogisticResource = Vue.resource(API_ROOT + apiBase + 'log/logistic')
+
+export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')
+export const UserResource = Vue.resource(API_ROOT + apiBase + 'user{/id}')
 
 

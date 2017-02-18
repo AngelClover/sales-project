@@ -16,7 +16,7 @@
             <th v-for="(item, index) in preference"
                 @click="sortBy(item)"
                 :class="{ active : sortKey == item}" >
-                {{title[item].name | capitalize}}
+                {{title[item] | capitalize}}
                 <span class="arrow" :class="sortOrders[item] > 0 ? 'asc' : 'dsc'">
                 </span>
             </th>
@@ -71,23 +71,6 @@ export default {
         Detail
     },
     props: ['msg', 'title', 'content', 'initdata', 'pref', 'savecb', 'updatecb', 'removecb'],
-    /*
-    data : function() {
-        var preference = []
-        if (this.pref == undefined || this.pref.length == 0){
-            if (this.title && this.title.length > 1){
-                for (var item in this.title){
-                    preference.push(item)
-                }
-            }
-        }else{
-            preference = pref
-        }
-        return {
-            preference
-        }
-    },
-    */
     data : function(){
         return {
             sortKey : '',
