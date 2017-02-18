@@ -202,21 +202,28 @@ tr {
     cursor: pointer;
 }
 tr:hover{
-    background-color: #42b983;
+    background-color: #42b983!important;
 }
 
-/*
+table tr:nth-child(odd){
+    background: #ccc;
+}
+table tr:hover tr:nth-child(odd){
+    background: none;
+}
+
 tr:hover td{
     background: none;
 }
 
+/*
 td {
   background-color: #f9f9f9;
 }
 */
 
 td:hover{
-    background-color: #32a963
+    background-color: #32a963!important;
 }
 
 th, td {
