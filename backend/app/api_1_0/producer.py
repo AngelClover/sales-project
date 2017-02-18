@@ -8,7 +8,7 @@ from . import api
 from decorators import permission_required
 from errors import bad_request
 
-@api.route('/producers/headers', methods=['GET', 'POST'])
+@api.route('/producer/headers', methods=['GET', 'POST'])
 def get_producer_headers():
     return jsonify({
             'error' : 0,

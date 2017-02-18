@@ -5,9 +5,9 @@ from . import api
 from ..models import User, Permission
 from .. import db
 from .errors import bad_request, unauthorized, forbidden
-from decorators import permission_required
+from decorators import permission_required, admin_required
 
-@api.route('/authorize/permissions', methods=['GET', 'POST'])
+@api.route('/permission', methods=['GET', 'POST'])
 def get_permissions():
     return jsonify({
             'error' : 0,
@@ -15,8 +15,8 @@ def get_permissions():
             'data' : Permission.to_json()
             })
 
-@api.route('/authorize/<int:id>', methods=['POST'])
-@permission_required(Permission.ADMINISTER)
+@api.route('/permission/authorize/<int:id>', methods=['GET', 'POST'])
+@admin_required()
 def authorize(id):
     user = User.query.get(id)
     if user is None:
@@ -34,8 +34,8 @@ def authorize(id):
             'data' : {}
             })
 
-@api.route('/unauthorize/<int:id>')
-@permission_required(Permission.ADMINISTER)
+@api.route('/permission/unauthorize/<int:id>', methods=['GET', 'POST'])
+@admin_required()
 def unauthorize(id):
     user = User.query.get(id)
     if user is None:

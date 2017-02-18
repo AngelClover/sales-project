@@ -48,6 +48,16 @@ class Equipment(db.Model):
             'model' : u'产品型号',
             'producer' : u'厂家'
         }
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'产品编号'),
+            ('info', u'产品信息'),
+            ('abbr' , u'产品简称'),
+            ('type', u'产品分类'),
+            ('spec' , u'产品规格'),
+            ('model', u'产品型号'),
+            ('producer', u'厂家')
+        ]
 
 class Producer(db.Model):
     __tablename__ = 'producer'
@@ -91,26 +101,67 @@ class Producer(db.Model):
 
 
 class Permission:
-    EQUIPMENT_WRITE = 0x01
-    EQUIPMENT_APPROVE = 0x03
-    ENTERPRISE_WRITE = 0x04
-    ENTERPRISE_APPROVE = 0x0c
-    PURCHASE_ORDER_WRITE = 0x10
-    PURCHASE_ORDER_APPROVE = 0x30
-    SALES_ORDER_WRITE = 0x40
-    SALES_ORDER_APPROVE = 0xc0
-    STORE_WRITE = 0x100
-    STORE_APPROVE = 0x300
-    REPAIR_WRITE = 0x400
-    REPAIR_APPROVE = 0xc00
-    LOGISTIC_WRITE = 0x1000
-    LOGISTIC_APPROVE = 0x3000
-    FINANCE_WRITE = 0x4000
-    FINANCE_APPROVE = 0xc000
-    ADMINISTER = 0xffffffff
+
+    MODULE_PERMISSION_LIST = [
+        ('equipment', {
+         'read' : 0x01,
+         'write' : 0x02,
+         'approve' : 0x04
+         }),
+        ('enterprise', {
+         'read' : 0x08,
+         'write' : 0x10,
+         'approve' : 0x20
+         }),
+        ('purchase', {
+         'read' : 0x40,
+         'write' : 0x80,
+         'approve' : 0x100
+         }),
+        ('sale', {
+         'read' : 0x200,
+         'write' : 0x400,
+         'approve' : 0x800
+         }),
+        ('store', {
+         'read' : 0x1000,
+         'write' : 0x2000,
+         'approve' : 0x4000
+         }),
+        ('repair', {
+         'read' : 0x8000,
+         'write' : 0x10000,
+         'approve' : 0x20000
+         }),
+        ('logistic', {
+         'read' : 0x40000,
+         'write' : 0x80000,
+         'approve' : 0x100000
+         }),
+        ('finance', {
+         'read' : 0x200000,
+         'write' : 0x400000,
+         'approve' : 0x800000
+         }),
+        ('administer', 0xffffffff)
+    ]
+
+    MODULE_PERMISSION_DICT = dict(MODULE_PERMISSION_LIST)
+
+    @staticmethod
+    def get_modules(permissions):
+        modules = []
+        for module_perm in Permission.MODULE_PERMISSION_LIST:
+            if module_perm[0] == 'administer':
+                if (module_perm[1] & permissions == module_perm[1]):
+                    modules.append(module_perm[0])
+            elif ((module_perm[1]['read'] & permissions) == module_perm[1]['read']):
+                modules.append(module_perm[0])
+        return modules
     
     @staticmethod
     def to_json():
+        return Permission.MODULE_PERMISSION_LIST
         return {
             u'首营设备':  {u'创建申请' : 0x01, u'审批&删除' : 0x03},
             u'首营企业': {u'创建申请': 0x04, u'审批&删除': 0x0c},
@@ -123,20 +174,20 @@ class Permission:
         }
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    permission = db.Column(db.Integer, default=0)
+    permission = db.Column(db.BigInteger, default=0)
 
     def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
         if username == current_app.config['FLASKY_ADMIN']:
-            self.permission = Permission.ADMINISTER
+            self.permission = Permission.MODULE_PERMISSION_DICT['administer']
         
 
     @property
@@ -150,7 +201,8 @@ class User(db.Model):
     def to_json(self):
         user_json = {'id' : self.id,
             'email' : self.email,
-            'username' : self.username
+            'username' : self.username,
+            'module' : Permission.get_modules(self.permission)
         }
         return user_json
 
@@ -213,7 +265,7 @@ class User(db.Model):
         return True
     
     def can(self, permissions):
-        return self.permission == permissions
+        return (self.permission & permissions) == permissions
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)

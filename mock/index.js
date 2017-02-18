@@ -57,16 +57,16 @@ function mockConfig(app){
 
     //for example
     //sourceEquipment
-    app.get('/api/equipment', (req, res) => {
+    app.get('/api/v1.0/equipment', (req, res) => {
         res.send(addContext(mockEquipment.get()))
     })
-    app.post('/api/equipment', (req, res) => {
+    app.post('/api/v1.0/equipment', (req, res) => {
         res.send(addGoodContext(mockEquipment.post(req)))
     })
-    app.put('/api/equipment', (req, res) => {
+    app.put('/api/v1.0/equipment', (req, res) => {
         res.send(addGoodContext(mockEquipment.put(req)))
     })
-    app.delete('/api/equipment', (req, res) => {
+    app.delete('/api/v1.0/equipment', (req, res) => {
         res.send(addGoodContext(mockEquipment.delete(req)))
     })
     //sourceCompany
@@ -93,16 +93,32 @@ function mockConfig(app){
     addPath(app, 'log/repair', require('./resource/log/logRepair'))
     addPath(app, 'log/logistic', require('./resource/log/logLogistic'))
     */
-    app.get('/api/user/getme', (req, res) => {
+    app.get('/api/v1.0/user/me', (req, res) => {
        res.send(addContext(require('./resource/user').get()))
     })
-    app.post('/api/auth', (req, res) => {
-       res.send(addContext(require('./resource/auth').get()))
+    app.get('/api/v1.0/user/login_token', (req, res) => {
+       res.send(addContext(require('./resource/user').get_token()))
     })
     app.post('/api/user', (req, res) => {
         res.send(addContext({msg: 'success'}))
     })
 
+    //auth
+    app.get('/api/v1.0/permission/authorize/:id', (req, res) => {
+        res.send(addContext(require('./resource/auth').authorize(req.params.id)))
+    })
+    app.get('/api/v1.0/permission/unauthorize/:id', (req, res) => {
+        res.send(addContext(require('./resource/auth').authorize(req.params.id)))
+    })
+    app.get('/api/v1.0/permission', (req, res) => {
+        res.send(addContext(require('./resource/auth').permission()))
+    })
+
+
+    app.post('/api/auth', (req, res) => {
+       res.send(addContext(require('./resource/auth').get()))
+    })
+    
 }
 
 module.exports = mockConfig

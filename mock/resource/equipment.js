@@ -5,11 +5,14 @@ function adjustTitle(title){
     title['attr3'].options = ['设备', '试剂', '耗材']
 }
 function getContent(title){
+    title = ['id', 'info', 'abbr', 'type', 'spec', 'model', 'producer'] 
     var utils = require('./utils')
     var content = utils.getContentBasicSlot(title)
     return content
 }
 function getTitle(){
+    var title_dict = {'id': '产品编号', 'info': '产品信息', 'abbr': '产品简称', 'type' : '产品分类', 'spec': '产品规格', 'model': '产品型号', 'producer': '厂家'}
+    return title_dict
     var basicInfoList = ['产品编号(系统自分配)', '产品信息', '产品简称', '产品分类(设备/试剂/耗材等)', '规格', '型号', '品牌', '厂家', '单位']
     var relatedInfoList = ['资质文件', '产品类型（如3类6840）', '注册证号有效期（第一类医疗器械备案凭证、二三类医疗器械注册证）', '授权书', '授权书有效期']
     var approveCharacter = '质量部长质量负责人'
@@ -23,12 +26,13 @@ function getTitle(){
 function mockEquipment(){
     var title = getTitle()
     var content = getContent(title)
+    console.log(content)
     var data = Mock.mock({
-        title,
-        'content|1-20': [
+        'headers' : title,
+        'equipments|1-20': [
             content
-        ],
-        preference : []
+        ]
+        //preference : []
     })
     return data
 }
