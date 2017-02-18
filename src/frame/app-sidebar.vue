@@ -17,14 +17,14 @@
                         </div>
                     </div>
                     -->
-                    <div v-show="userInfo.modelList.indexOf('home') >= 0" class=title>
+                    <div v-show="userInfo.module.indexOf('home') >= 0" class=title>
                         <p>
                         <router-link to="/home">
                             Home
                         </router-link>
                         </p>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('source') >= 0">
+                    <div v-show="userInfo.module.indexOf('source') >= 0">
                         <div id="triggereg" class="accordion">
                             <div class="active title">
                                 <i class="ui dropdown icon"></i> 首营审批
@@ -37,32 +37,32 @@
                             </div>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('buy') >= 0">
+                    <div v-show="userInfo.module.indexOf('buy') >= 0">
                         <div class="title">
                             <p> <router-link to="/buy"> 采购订单管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('sale') >= 0">
+                    <div v-show="userInfo.module.indexOf('sale') >= 0">
                         <div class="title">
                             <p> <router-link to="/sale"> 销售订单管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('storehouse') >= 0">
+                    <div v-show="userInfo.module.indexOf('storehouse') >= 0">
                         <div class="title">
                             <p> <router-link to="/storehouse"> 仓库管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('repair') >= 0">
+                    <div v-show="userInfo.module.indexOf('repair') >= 0">
                         <div class="title">
                             <p> <router-link to="/repair"> 维修管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('logistic') >= 0">
+                    <div v-show="userInfo.module.indexOf('logistic') >= 0">
                         <div class="title">
                             <p> <router-link to="/logistic"> 物流管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.modelList.indexOf('finance') >= 0">
+                    <div v-show="userInfo.module.indexOf('finance') >= 0">
                         <div class="title">
                             <p> <router-link to="/finance"> 财务管理 </router-link> </p>
                         </div>
@@ -77,17 +77,18 @@
 export default {
     data : function (){
         return {
-            //modelList : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
-            modelList : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
+            //module : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
+            module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
         }
     },
     computed : {
         userInfo : function(){
-            //console.log('userInfo ', this.$store.getters.getMe)
-            return this.$store.getters.getMe || {modelList:[]}
+            console.log('userInfo ', this.$store.getters.getMe)
+            return this.$store.getters.getMe || {module:[]}
         }
     },
     created (){
+        console.log('userinfo', this.userInfo.module)
         /*
         $('.accordion') .accordion({
                 selector: {

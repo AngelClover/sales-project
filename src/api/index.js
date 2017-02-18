@@ -68,11 +68,16 @@ export default {
     getMe: function(){
         return UserResource.get({id:'me'})
     },
+    /*
     Login: function(payload){
         return AuthResource.save(payload)
     },
+    */
     register: function(payload){
         return UserResource.save(payload)
+    },
+    getToken: function(){
+        return UserResource.get({id:'login_token'})
     }
 
 }

@@ -4,6 +4,7 @@ import {getUserInfo} from './user'
 const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 const LOGIN_FAILURE = "LOGIN_FAILURE"
 const LOGOUT_USER = "LOGOUT_USER"
+const USERINFO_SUCCESS = "USERINFO_SUCCESS"
 
 import {getCookie, saveCookie} from '../../utils/authService'
 import {showMsg, hideMsg} from './toast'
@@ -17,6 +18,7 @@ const state = {
 
 const mutations = {
     [LOGIN_SUCCESS](state, response_data){
+        saveCookie('token', response_data.token)
         state.token = response_data.token
     },
     [LOGIN_FAILURE](state, response_data){
@@ -39,7 +41,9 @@ const getters = {
 //import router from '../../router'
 //import Vue from 'vue'
 export const getLogin = (store, body) => {
-    api.Login(body).then(response => {
+    //api.Login(body).then(response => {
+    //TODO: where is headers
+    api.getToken(body).then(response => {
         console.log('login succ', response)
         if (response.data.error != 0){
             //commit(LOGIN_FAILURE, response.data.msg)
@@ -47,8 +51,8 @@ export const getLogin = (store, body) => {
             return
         }
         const token = response.data.data.token || ""
-        saveCookie('token', token)
-        getUserInfo(store)
+        //getUserInfo(store)
+        store.commit(USERINFO_SUCCESS, response.data.data)
         store.commit(LOGIN_SUCCESS, {token: response.data.data.token})
         showMsg(store, '登录成功,欢迎光临', 'success')
         console.log('store router', store.rootState)

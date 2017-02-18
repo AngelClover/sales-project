@@ -23,12 +23,14 @@
         <div class="ui fluid large teal submit button" @click="login">登录</div>
       </div>
 
-      <div class="ui error message" v-show=error>
+      <div class="ui error message" v-show="error == true && msg != ''">
           {{msg}}
       </div>
+      <!--
       <div >
           {{$store.getters.getToken}}
       </div>
+      -->
 
     </form>
 
@@ -56,6 +58,7 @@ export default {
     },
     methods : {
         login : function(){
+            /*
             if (this.username.length < 3){
                 this.error = true
                 this.msg = "用户名不能小于三位"
@@ -65,6 +68,12 @@ export default {
                 this.error = true
                 this.msg = "密码不得小于六位"
                 return 
+            }
+            */
+            if (this.username.length < 1 && this.password.length < 1){
+                this.error = true
+                this.msg = "用户名或密码不能为空"
+                return
             }
             this.error = false
             this.msg = ""

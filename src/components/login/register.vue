@@ -16,6 +16,12 @@
         </div>
         <div class="field">
           <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" placeholder="email" v-model="email" @input="check">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
             <i class="lock icon"></i>
             <input type="password" placeholder="密码" v-model="password" @input="check">
           </div>
@@ -53,6 +59,7 @@ export default {
             password : "",
             password2 : "",
             nickname : "",
+            email : "",
             error : false,
             msg : ""
         }
@@ -82,14 +89,19 @@ export default {
                 this.msg = "密码与确认密码不一致，请重新输入"
                 return 
             }
+            var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+            if (req.test(this.email) != true){
+                this.error = true
+                this.msg = "电子邮箱格式有误, 例如:aaa@bbb.com"
+                return
+            }
             this.error = false
             this.msg = ""
         },
         register : function(){
-            console.log("register")
-            console.log(this.username, this.password, this.password2)
             this.$store.dispatch('register', {
                 username: this.username,
+                email: this.email,
                 nickname: this.nickname,
                 password: this.password,
                 password2: this.password2

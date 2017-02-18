@@ -20,7 +20,7 @@ const mutations = {
         saveCookie('user', action.user)
     },
     [USERINFO_FAILURE](state, action){
-        console.log('userinfo_failure')
+         console.log('userinfo_failure')
         state.user = null
     },
     [LOGOUT_USER](state, action){
@@ -36,8 +36,8 @@ const mutations = {
 
 const getters = {
     getMe : (state) => {
-        console.log('user getters', state.user)
-        console.log('user getters', getCookie('user'))
+        //console.log('user getters', state.user)
+        //console.log('user getters', getCookie('user'))
         return state.user || getCookie('user') }
 }
 
