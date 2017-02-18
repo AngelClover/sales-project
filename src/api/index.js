@@ -1,10 +1,13 @@
 import {EquipmentResource, SourceCompanyResource, SourceCustomerResource, SaleOrderResource, BuyOrderResource, StoreHouseResource, RepairResource, LogisticResource} from './resources'
 import {LogEquipmentResource, LogSourceCompanyResource, LogSourceCustomerResource, LogSaleOrderResource, LogBuyOrderResource, LogStoreHouseResource, LogRepairResource, LogLogisticResource} from './resources'
-import {UserMeResource, UserResource, AuthResource} from './resources'
+import {UserResource, AuthResource} from './resources'
 
 export default {
     getEquipmentList: function() {
         return EquipmentResource.get()
+    },
+    updateEquipment: function(payload) {
+        return EquipmentResource.update({id:payload})
     },
     getSourceCompanyList: function() {
         return SourceCompanyResource.get()
@@ -54,7 +57,7 @@ export default {
     },
     //auth
     getMe: function(){
-        return UserMeResource.get()
+        return UserResource.get({id:'me'})
     },
     Login: function(payload){
         return AuthResource.save(payload)

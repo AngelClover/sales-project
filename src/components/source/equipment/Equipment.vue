@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference>
+        <ListView msg="asd" :title=title :content=content :pref=preference :savecb=saveEquipment>
             <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>
@@ -35,7 +35,7 @@ export default {
         }
     },
     methods : {
-        createContent : (title, suffix)=>{
+            createContent : (title, suffix)=>{
             var ret = {}
             for (var item in title){
                 ret[item] = title[item] + suffix
@@ -44,6 +44,11 @@ export default {
         },
         getEquipmentList (){
             this.$store.dispatch('getEquipmentList')
+        },
+        saveEquipment(content){
+            console.log('save equipment', content)
+            this.$store.dispatch('updateEquipment')
+            this.getEquipmentList()
         }
     },
 

@@ -41,7 +41,7 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType="'show'" @close="showDetails = false">
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType="'show'" @close="showDetails = false" :savecb=savecb>
         </detail>
 
         <div v-show=debug>
@@ -70,7 +70,7 @@ export default {
     components : {
         Detail
     },
-    props: ['msg', 'title', 'content', 'initdata', 'pref'],
+    props: ['msg', 'title', 'content', 'initdata', 'pref', 'savecb'],
     /*
     data : function() {
         var preference = []
@@ -207,8 +207,25 @@ th {
   user-select: none;
 }
 
+tr {
+    cursor: pointer;
+}
+tr:hover{
+    background-color: #42b983;
+}
+
+/*
+tr:hover td{
+    background: none;
+}
+
 td {
   background-color: #f9f9f9;
+}
+*/
+
+td:hover{
+    background-color: #32a963
 }
 
 th, td {

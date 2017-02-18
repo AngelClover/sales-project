@@ -24,7 +24,7 @@ Vue.http.interceptors.push((request, next)=>{
   })
 })
 
-export const EquipmentResource = Vue.resource(API_ROOT + 'api/equipment')
+export const EquipmentResource = Vue.resource(API_ROOT + 'api/equipment{/id}')
 export const LogEquipmentResource = Vue.resource(API_ROOT + 'api/log/equipment')
 
 export const SourceCompanyResource = Vue.resource(API_ROOT + 'api/sourcecompany')
@@ -50,8 +50,8 @@ export const LogRepairResource = Vue.resource(API_ROOT + 'api/log/repair')
 export const LogisticResource = Vue.resource(API_ROOT + 'api/logistic')
 export const LogLogisticResource = Vue.resource(API_ROOT + 'api/log/logistic')
 
-export const UserMeResource = Vue.resource(API_ROOT + 'api/user/getme')
+//export const UserMeResource = Vue.resource(API_ROOT + 'api/user/getme')
 export const AuthResource = Vue.resource(API_ROOT + 'api/auth')
-export const UserResource = Vue.resource(API_ROOT + 'api/user')
+export const UserResource = Vue.resource(API_ROOT + 'api/user{/id}')
 
 
