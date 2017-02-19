@@ -35,14 +35,18 @@
 
         <br/>
         <div class="ui buttom" align=center>
-            <button @click=createAction> + </button>
-            <button @click=showLogTips> log </button>
+            <button @click=createAction> 新建 </button>
+            <button @click=showLogTips> 变更记录 </button>
+            <button @click=showPrefs> 偏好设置 </button>
         </div>
 
         <br/>
 
         <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :updatecb=updatecb :savecb=savecb :removecb=removecb>
         </detail>
+
+        <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
+        </Preference>
 
         <div v-show=debug>
         <p> -----------for debug below-------------- </p>
@@ -65,12 +69,14 @@
 
 <script>
 import Detail from './Detail.vue'
+import Preference from './Preference.vue'
 
 export default {
     components : {
-        Detail
+        Detail,
+        Preference
     },
-    props: ['msg', 'title', 'content', 'initdata', 'pref', 'savecb', 'updatecb', 'removecb'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'savecb', 'updatecb', 'removecb'],
     data : function(){
         return {
             sortKey : '',
@@ -79,14 +85,21 @@ export default {
             showDetails : false,
             detailContent : {},
             debug : false,
-            actionType : 'show'
+            actionType : 'show',
+            showPref : false,
         }
     },
     computed : {
         preference : function(){
+            //localStorage.removeItem(this.location)
+            var shw = this.showPref
+                shw = !shw
             console.log('preference in listview refresh', this)
+            var readStr = localStorage.getItem(this.location)
+            var prefobj = JSON.parse(readStr || "{}") 
+            var prefarray = prefobj["pref"] || []
             var ret = []
-            if (this.pref == undefined || this.pref.length == 0){
+            if (prefarray == undefined || prefarray.length == 0){
                 console.log('preference in listview branch 1', this.title)
                 if (this.title && Object.values(this.title).length >= 1){ //To be better
                     for (var item in this.title){
@@ -95,8 +108,12 @@ export default {
                     console.log('preference in listview branch 2')
                 }
             }else{
-                console.log('preference in listview branch 3')
-                ret = this.pref
+                console.log('preference in listview branch 3', prefarray)
+                for (var item in prefarray){
+                    if (prefarray[item].value == true){
+                        ret.push(prefarray[item].name)
+                    }
+                }
             }
             console.log('preference in listview branch ret:', ret)
             return {
@@ -133,8 +150,10 @@ export default {
         },
     },
    filters: {
-       capitalize: function (str) {
-           return str.charAt(0).toUpperCase() + str.slice(1)
+       capitalize: function (str) { //TODO: why sometimes str is null
+           if (str)
+               return str.charAt(0).toUpperCase() + str.slice(1)
+            else return str
        }
    },
    methods: {
@@ -164,6 +183,11 @@ export default {
        },
        showLogTips(){
            this.$store.dispatch('showMsg', '此功能暂不开放', 'info')
+       },
+       showPrefs(){
+           console.log('showPrefs', this.showPref)
+           this.showPref = !this.showPref
+           console.log('showPrefs', this.showPref)
        }
 
    }

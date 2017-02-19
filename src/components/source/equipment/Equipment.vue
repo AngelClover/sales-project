@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :updatecb=updateEquipment :savecb=saveEquipment :removecb=removeEquipment>
+        <ListView msg="asd" :title=title :content=content :pref=preference :updatecb=updateEquipment :savecb=saveEquipment :removecb=removeEquipment location="equipment">
             <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>

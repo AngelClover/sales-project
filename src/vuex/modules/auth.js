@@ -87,6 +87,7 @@ export const register = (store, payload) => {
 
 export const logOut = ({commit}) => {
     commit(LOGOUT_USER)
+    localStorage.clear()
 }
 
 const actions = {
