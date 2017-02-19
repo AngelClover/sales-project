@@ -9,7 +9,7 @@
                     </div>
                     <div class="pref-body">
                         <div>
-                            <div v-for="(item, index) in newPreference">
+                            <div v-for="(item, index) in newPreference" class="ui toggle checkbox">
                                 <input type="checkbox" v-model="item['value']" >
                                 <label> {{item['displayName']}}</label>
                             </div>
@@ -27,10 +27,10 @@
                     </div>
                     <div class="pref-footer">
                         <center>
-                            <button @click="selectAll">
+                            <button @click="selectAll" class="ui green  button">
                                 全选 
                             </button>
-                            <button @click="close">
+                            <button @click="close" class="ui primary button">
                                 OK
                             </button>
                         </center>
@@ -79,6 +79,9 @@ export default {
         }
     },
     methods : {
+        mounted() {
+            $('.ui .checkbox').checkbox()
+        },
         close(){
             var writeStr = JSON.stringify({"pref":this.newPreference})
             localStorage.setItem(this.location, writeStr)

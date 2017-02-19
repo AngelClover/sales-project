@@ -27,11 +27,13 @@ import SourceCustomer from './components/source/customer/Customer.vue'
 import SourceEquipment from './components/source/equipment/Equipment.vue'
 import StoreHouse from './components/storehouse/storeHouse.vue'
 import App from './components/App.vue'
+import CacheClear from './components/CacheClear.vue'
 
 var routes = [
     //{path: '/', component: App},
     {path: '/login', component: Login},
     {path: '/register', component: Register}, 
+    {path: '/cacheclear', component: CacheClear},
     {path: '/', component: App,
         children: [
     //{path: '/home', component:  require('./components/Home.vue')},

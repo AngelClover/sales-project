@@ -19,10 +19,10 @@
                         </div>
                         <div class="detail-footer">
                             <center>
-                            <button class="modal-default-button" @click="$emit('close')">
+                            <button class="ui primary button" @click="$emit('close')">
                                 OK
                             </button>
-                            <button class="modal-default-button" @click="modifier">
+                            <button class="ui button" @click="modifier">
                                 修改
                             </button>
                             </center>
@@ -50,13 +50,13 @@
                         </div>
                         <div class="detail-footer">
                             <center>
-                            <button class="modal-default-button" @click="closeModifier">
+                            <button class="ui red button" @click="closeModifier">
                                 放弃
                             </button>
-                            <button class="modal-default-button" @click="realModify" v-show="actionType == 'show'">
+                            <button class="ui primary button" @click="realModify" v-show="actionType == 'show'">
                                 修改
                             </button>
-                            <button class="modal-default-button" @click="realModify" v-show="actionType == 'create'">
+                            <button class="ui primary button" @click="realModify" v-show="actionType == 'create'">
                                 新建
                             </button>
                             </center>

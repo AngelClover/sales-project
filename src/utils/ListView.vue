@@ -35,9 +35,9 @@
 
         <br/>
         <div class="ui buttom" align=center>
-            <button @click=createAction> 新建 </button>
-            <button @click=showLogTips> 变更记录 </button>
-            <button @click=showPrefs> 偏好设置 </button>
+            <button @click=createAction class="ui green button"> 新建 </button>
+            <button @click=showPrefs class="ui violet button"> 偏好设置 </button>
+            <button @click=showLogTips class="ui red button"> 变更记录 </button>
         </div>
 
         <br/>
@@ -94,8 +94,8 @@ export default {
             //localStorage.removeItem(this.location)
             var shw = this.showPref
                 shw = !shw
-            console.log('preference in listview refresh', this)
             var readStr = localStorage.getItem(this.location)
+            console.log('preference in listview refresh', readStr)
             var prefobj = JSON.parse(readStr || "{}") 
             var prefarray = prefobj["pref"] || []
             var ret = []
