@@ -42,6 +42,9 @@
           </div>
         </div>
         <div class="ui fluid large teal submit button" @click="update">修改 </div>
+        <div class="ui button"><p>
+            <router-link to='/'> 返回 </router-link>
+            </p></div>
       </div>
 
     </form>
