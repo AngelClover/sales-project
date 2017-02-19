@@ -54,9 +54,24 @@ export const getUserInfo = ({commit}) => {
         commit(USERINFO_FAILURE)
     })
 }
+export const updateUserInfo = ({dispatch, commit}, payload) => {
+    api.updateUserInfo(payload).then(response => {
+        console.log('updateUserInfo succ', response.data.data)
+        var err = response.data.error || 0
+        if (err == 0){
+            dispatch('showMsg', '修改成功', 'success')
+            dispatch('getUserInfo')
+        }else{
+            dispatch('showMsg', '修改失败')
+        }
+    }, response => {
+        dispatch('showMsg', '修改失败')
+    })
+}
 
 const actions = {
     getUserInfo,
+    updateUserInfo,
 }
 
 export default{

@@ -1,19 +1,21 @@
 <template>
     <div class="ui container">
         <div class="ui menu inverted" id="headermenu">
-            <div class="header item">Angela</div>
+            <div class="header item">国泰安华</div>
+            <!--
             <div class="right item" @click=logout>logout </div>
+            -->
             <div class="right menu">
                 <div class="ui dropdown item">
-                    用户username
+                    {{displayName}}
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item">签到</div>
                         <div class="divider"></div>
-                        <div class="item">erp信息</div>
-                        <div class="item">工作日记</div>
+                        <div class="item"><p>
+                            <router-link to='/userinfomodify'>资料修改</router-link>
+                            </p></div>
                         <div class="divider"></div>
-                        <div class="item">注销</div>
+                        <div class="item" @click=logout>注销</div>
                     </div>
                 </div>
             </div>
@@ -29,7 +31,23 @@ export default {
             name : 'app-nav'
         }
     },
+    computed : {
+        displayName(){
+            console.log('display name', this.$store.getters.getMe)
+            return this.$store.getters.getMe.username
+        }
+    },
     methods :{
+        created(){
+            //TODO ; no called
+            console.log('i created dropdown')
+            $('.ui .dropdown').dropdown()
+        },
+        mounted(){
+            //TODO ; no called
+            console.log('i mounted dropdown')
+            $('.ui .dropdown').dropdown()
+        },
         logout(){
             signOut()
             this.$store.dispatch('showMsg', '登出成功', 'success')

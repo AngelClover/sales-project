@@ -78,6 +78,10 @@ export default {
     },
     getToken: function(){
         return UserResource.get({id:'login_token'})
+    },
+    updateUserInfo: function(payload){
+        console.log('api payload', payload)
+        return UserResource.update({id:payload.username}, payload)
     }
 
 }

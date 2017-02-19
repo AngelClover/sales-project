@@ -43,6 +43,8 @@ export default {
             this.$router.push('/login')
         }
         */
+            console.log('i mounted dropdown in app.vue')
+            $('.ui .dropdown').dropdown()
     }
 
 }

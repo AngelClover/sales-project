@@ -1,8 +1,8 @@
 <template>
     <div>
-        <p>
-        Welcome Home
-        </p>
+        <h1>
+            欢迎
+        </h1>
     </div>
 </template>
 
