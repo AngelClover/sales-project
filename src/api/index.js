@@ -76,7 +76,7 @@ export default {
     register: function(payload){
         return UserResource.save(payload)
     },
-    getToken: function(){
+    getToken: function(body){
         return UserResource.get({id:'login_token'})
     },
     updateUserInfo: function(payload){

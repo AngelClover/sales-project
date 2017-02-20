@@ -43,6 +43,12 @@ const getters = {
 export const getLogin = (store, body) => {
     //api.Login(body).then(response => {
     //TODO: where is headers
+     var trans = body.username + ":" + body.password;            
+     var target = window.btoa(trans);
+     console.log('login trans ', trans + '->' + target);
+     //var target_auth_string = "Basic " + target;
+    localStorage.setItem('AuthString', target)
+
     api.getToken(body).then(response => {
         console.log('login succ', response)
         if (response.data.error != 0){

@@ -11,7 +11,11 @@ Vue.http.options.credentials = true
 Vue.http.interceptors.push((request, next)=>{
   // 这里对请求体进行处理
   request.headers = request.headers || {}
-  if (getCookie('token')) {
+  var authString = localStorage.getItem('AuthString')
+  if (authString){
+      request.headers.set('Authorization', 'Basic ' + authString)
+      localStorage.removeItem('AuthString')
+  }else if (getCookie('token')) {
     request.headers.set('Authorization', 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, ''))
   }
   console.log('request headers', request.headers)
