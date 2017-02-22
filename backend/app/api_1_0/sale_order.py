@@ -20,7 +20,13 @@ def get_sale_headers():
 @api.route('/sale', methods=['GET'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['sale']['read'])
 def get_sale_orders():
-    orders = SaleOrder.query.all()
+    state = int(request.args.get('state')) if request.args.get('state') is not None else None
+    orders = []
+    if state is None:
+        orders = SaleOrder.query.all()
+    else:
+        orders = SaleOrder.query.filter_by(state=state).all()
+
     return jsonify({
             'error' : 0,
             'msg' : '',

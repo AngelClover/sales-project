@@ -20,7 +20,12 @@ def get_purchase_headers():
 @api.route('/purchase', methods=['GET'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['read'])
 def get_purchase_orders():
-    orders = PurchaseOrder.query.all()
+    state = int(request.args.get('state')) if request.args.get('state') is not None else None
+    orders = []
+    if state is None:
+        orders = PurchaseOrder.query.all()
+    else:
+        orders = PurchaseOrder.query.filter_by(state=state).all()
     return jsonify({
             'error' : 0,
             'msg' : '',

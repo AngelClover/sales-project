@@ -54,7 +54,7 @@ class Equipment(db.Model):
         return [('id', u'产品编号'),
             ('info', u'产品信息'),
             ('abbr' , u'产品简称'),
-            ('type', u'产品分类'),
+            ('type', u'产品分类', 'option', [u'设备', u'试剂', u'耗材']),
             ('spec' , u'产品规格'),
             ('model', u'产品型号'),
             ('producer', u'厂家'),
@@ -117,7 +117,7 @@ class Enterprise(db.Model):
         ('name', u'供应商名称'),
         ('register_capital', u'注册资金'),
         ('abbr', u'简称'),
-        ('type', u'供应商类型(设备/试剂/耗材等)'),
+        ('type', u'供应商类型(设备/试剂/耗材等)', 'option', [u'设备', u'试剂', u'耗材']),
         ('ever_name', u'曾用名'),
         ('legal_representor', u'法人代表'),
         ('location', u'住所'),
@@ -303,7 +303,96 @@ class SaleEquipment(db.Model):
     sale_order = db.relationship(SaleOrder, uselist=False, backref='sale_equipments')
     equipment = db.relationship(Equipment, uselist=False, backref='sale_order')
 
+class Logistic(db.Model):
+    __tablename__ = 'logistic'
+    id = db.Column(db.Integer, primary_key=True)#物流单号(系统自分配)
+    equipment_name = db.Column(db.String(256))#待送设备名称
+    delivery_address = db.Column(db.String(1024))#送货地址
+    equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
+    delivery_status = db.Column(db.String(64))#完成状态
+    state = db.Column(db.Integer, default=1) #当前状态 0:审批通过，1:待审批
+
+    def __init__(self):
+        self.state = 1
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'物流单号(系统自分配)'),
+        ('equipment_name', u'待送设备名称'),
+        ('delivery_address', u'送货地址'),
+        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('delivery_status', u'完成状态')
+        ]
+
+    def to_json(self):
+        return {
+            'id' : self.id,
+            'equipment_name' : self.equipment_name,
+            'delivery_address' : self.delivery_address,
+            'equipment_type' : self.equipment_type,
+            'delivery_status' : self.delivery_status
+        }
+
+class Repair(db.Model):
+    __tablename__ = 'repair'
     
+    id = db.Column(db.Integer, primary_key=True)#维修单号(系统自分配)
+    equipment_name = db.Column(db.String(256))#待维修设备名称
+    repair_address = db.Column(db.String(1024))#维修地址
+    equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
+    repair_status = db.Column(db.String(64))#完成状态
+    state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+
+    def __init__(self):
+        self.state = 1
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'维修单号(系统自分配)'),
+        ('equipment_name', u'待维修设备名称'),
+        ('repair_address', u'维修地址'),
+        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('repair_status', u'完成状态')
+        ]
+
+    def to_json(self):
+        return {
+            'id' : self.id,
+            'equipment_name' : self.equipment_name,
+            'repair_address' : self.repair_address,
+            'equipment_type' : self.equipment_type,
+            'repair_status' : self.repair_status
+        }
+
+class Store(db.Model):
+    __tablename__ = 'store'
+    id = db.Column(db.Integer, primary_key=True)#仓库信息编号(系统自分配)
+    equipment_name = db.Column(db.String(256))#设备名称
+    store_number = db.Column(db.Integer)#在库数字
+    abbr = db.Column(db.String(256))#简称
+    equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
+    state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+
+    def __init(self):
+        self.state = 1
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'仓库信息编号(系统自分配)'),
+        ('equipment_name', u'设备名称'),
+        ('abbr', u'简称'),
+        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('store_number', u'在库数字')
+        ]
+
+    def to_json(self):
+        return {
+            'id' : self.id,
+            'equipment_name' : self.equipment_name,
+            'abbr' : self.abbr,
+            'equipment_type' : self.equipment_type,
+            'store_number' : self.store_number
+        }
 
 class Permission:
     MODULE_PERMISSION_LIST = [

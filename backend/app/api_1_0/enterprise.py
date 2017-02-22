@@ -19,7 +19,12 @@ def get_enterprise_headers():
 @api.route('/enterprise/', methods=['GET'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['enterprise']['read'])
 def get_enterprises():
-    enterprises = Enterprise.query.all()
+    state = int(request.args.get('state')) if request.args.get('state') is not None else None
+    enterprises = []
+    if state is None:
+        enterprises = Enterprise.query.all()
+    else:
+        enterprises = Enterprise.query.filter_by(state=state).all()
     return jsonify({
             'error' : 0,
             'msg' : '',
