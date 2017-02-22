@@ -67,6 +67,11 @@
                             <p> <router-link to="/finance"> 财务管理 </router-link> </p>
                         </div>
                     </div>
+                    <div v-show="userInfo.module.indexOf('admin') >= 0">
+                        <div class="title">
+                            <p> <router-link to="/userauth"> 用户权限管理 </router-link> </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 </template>
@@ -78,7 +83,7 @@ export default {
     data : function (){
         return {
             //module : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
-            module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
+            //module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
         }
     },
     computed : {

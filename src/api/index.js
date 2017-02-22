@@ -82,6 +82,9 @@ export default {
     updateUserInfo: function(payload){
         console.log('api payload', payload)
         return UserResource.update({id:payload.username}, payload)
+    },
+    getUserList: function(){
+        return UserResource.query()
     }
 
 }
