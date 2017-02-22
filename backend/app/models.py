@@ -34,7 +34,7 @@ class Equipment(db.Model):
             'spec' : self.spec,
             'model' : self.model,
             'producer' : self.producer,
-            'state' : self.state
+            'state' : (u'审核通过' if self.state == 0 else u'待审核')
         } 
         return equip_json
     
@@ -46,7 +46,8 @@ class Equipment(db.Model):
             'type' : u'产品分类',
             'spec' : u'产品规格',
             'model' : u'产品型号',
-            'producer' : u'厂家'
+            'producer' : u'厂家',
+            'state' : u'当头状态'
         }
     @staticmethod
     def get_ordered_headers():
@@ -56,11 +57,12 @@ class Equipment(db.Model):
             ('type', u'产品分类'),
             ('spec' , u'产品规格'),
             ('model', u'产品型号'),
-            ('producer', u'厂家')
+            ('producer', u'厂家'),
+            ('state', u'当前状态'),
         ]
 
-class Producer(db.Model):
-    __tablename__ = 'producer'
+class Enterprise(db.Model):
+    __tablename__ = 'enterprise'
     id = db.Column(db.Integer, primary_key=True)#首营企业编号
     name = db.Column(db.String(256))#供应商名称
     register_capital = db.Column(db.Integer)#注册资金
@@ -70,9 +72,19 @@ class Producer(db.Model):
     legal_representor = db.Column(db.String(256))#法人代表
     location = db.Column(db.String(1024))#住所
     establish_date = db.Column(db.Date)#成立日期
+
+    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date):
+        self.name = name
+        self.register_capital = register_capital
+        self.abbr = abbr
+        self.type = type
+        self.ever_name = ever_name
+        self.legal_representor = legal_representor
+        self.location = location
+        self.establish_date = establish_date
     
     def to_json(self):
-        producer_json = { 'id' : self.id,
+        enterprise_json = { 'id' : self.id,
             'name' : self.name,
             'register_capital' : self.register_capital,
             'abbr' : self.abbr,
@@ -82,7 +94,7 @@ class Producer(db.Model):
             'location' : self.location,
             'establish_date' : self.establish_date
         }
-        return producer_json
+        return enterprise_json
     
     @staticmethod
     def get_headers():
@@ -98,10 +110,202 @@ class Producer(db.Model):
             'establish_date' : u'成立日期'
         }
         return headers
+    
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'首营企业编号(系统自动分配)'),
+        ('name', u'供应商名称'),
+        ('register_capital', u'注册资金'),
+        ('abbr', u'简称'),
+        ('type', u'供应商类型(设备/试剂/耗材等)'),
+        ('ever_name', u'曾用名'),
+        ('legal_representor', u'法人代表'),
+        ('location', u'住所'),
+        ('establish_date', u'成立日期')
+        ]
 
+class PurchaseOrder(db.Model):
+    __tablename__ = 'purchase_order'
+    id = db.Column(db.Integer, primary_key=True)#合同编号
+    sign_date = db.Column(db.Date)#签订日期
+    provider_info = db.Column(db.String(256))#供应商名称、地址、电话
+    billing_company = db.Column(db.String(256))#结算公司
+    arrive_date = db.Column(db.DateTime)#到货日期
+    get_location = db.Column(db.String(1024))#收货地点
+    pay_mode = db.Column(db.String(256))#付款方式
+    invoice_type = db.Column(db.String(256))#发票类型
+    postage_account = db.Column(db.String(256))#运费承担方
+    state = db.Column(db.Integer, default=1)#状态，0:正常, 1:创建，待审核
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'合同编号（系统自动分配）'),
+        ('sign_date', u'签订日期'),
+        ('provider_info', u'供应商名称、地址、电话'),
+        ('billing_company', u'结算公司'),
+        ('arrive_date', u'到货时间'),
+        ('get_location', u'收货地点'),
+        ('pay_mode', u'付款方式'),
+        ('invoice_type', u'发票类型'),
+        ('postage_account', u'运费承担方'),
+        ('state', u'当前状态'),
+        (),
+        ('warranty_period', u'保修期限'),
+        ('install_require', u'安装调试要求'),
+        ('product_name', u'产品名称'),
+        ('spec', u'规格'),
+        ('model', u'型号'),
+        ('measurement_unit', u'单位'),
+        ('unit_price', u'单价'),
+        ('quantity', u'数量'),
+        ('total_price', u'总价'),
+        ('producer', u'生产厂商'),
+        ('product_configure', u'产品配置单')
+        ]
+
+    def to_json(self):
+        total_price = 0
+        equipments = []
+        for e in self.purchase_equipments:
+            total_price += e.total_price
+            equipments.append({
+                    'warranty_period' : e.warranty_period,
+                    'install_require' : e.install_require,
+                    'measurement_unit' : e.measurement_unit,
+                    'unit_price' : e.unit_price,
+                    'quantity' : e.quantity,
+                    'total_price' : e.total_price,
+                    'producer' : e.equipment.producer,
+                    'product_configure' : e.product_configure,
+                    'product_name' : e.equipment.info,
+                    'spec' : e.equipment.spec,
+                    'model' : e.equipment.model,
+                    })
+
+        equip_json = {'id' : self.id,
+            'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
+            'provider_info' : self.provider_info,
+            'billing_company' : self.billing_company,
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'get_location' : self.get_location,
+            'pay_mode' : self.pay_mode,
+            'invoice_type' : self.invoice_type,
+            'postage_account' : self.postage_account,
+            'total_price' : total_price,
+            'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'equipments' : equipments
+        }
+        return equip_json
+
+#associate PurchaseOrder and Equipment
+class PurchaseEquipment(db.Model):
+    __tablename__ = 'purchase_equipment'
+    id = db.Column(db.Integer, primary_key=True)
+    purchase_id = db.Column(db.Integer, db.ForeignKey('purchase_order.id'))
+    equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'))
+    #extra info
+    warranty_period = db.Column(db.String(256))#保修期限
+    install_require = db.Column(db.String(256))#安装调试要求
+    measurement_unit = db.Column(db.String(256))#单位
+    unit_price = db.Column(db.Float)#单价
+    quantity = db.Column(db.Integer)#数量
+    total_price = db.Column(db.Float)#总价
+    product_configure = db.Column(db.Text)#产品配置单
+    
+    purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="purchase_equipments")
+    equipment = db.relationship(Equipment, uselist=False, backref="purchase_order")
+
+
+class SaleOrder(db.Model):
+    __tablename__ = 'sale_order'
+    id = db.Column(db.Integer, primary_key=True)#合同编号
+    sign_date = db.Column(db.Date)#签证日期
+    provider_info = db.Column(db.String(256))#供应商名称、地址、电话
+    billing_company = db.Column(db.String(256))#结算公司
+    arrive_date = db.Column(db.DateTime)#到货日期
+    get_location = db.Column(db.String(1024))#收货地点
+    pay_mode = db.Column(db.String(256))#付款方式
+    invoice_type = db.Column(db.String(256))#发票类型
+    state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'合同编号（系统自动分配）'),
+        ('sign_date', u'签订日期'),
+        ('provider_info', u'供应商名称、地址、电话'),
+        ('billing_company', u'结算公司'),
+        ('arrive_date', u'到货时间'),
+        ('get_location', u'收货地点'),
+        ('pay_mode', u'付款方式'),
+        ('invoice_type', u'发票类型'),
+        (),
+        ('service_commitment', u'售后服务承诺'),
+        ('warranty_period', u'保修期限'),
+        ('product_name', u'产品名称'),
+        ('spec', u'规格'),
+        ('model', u'型号'),
+        ('measurement_unit', u'单位'),
+        ('unit_price', u'单价'),
+        ('quantity', u'数量'),
+        ('total_price', u'总价'),
+        ('producer', u'生产厂商'),
+        ('product_configure', u'产品配置单')
+        ]
+
+    def to_json(self):
+        total_price = 0
+        equipments = []
+        for e in self.sale_equipments:
+            total_price += e.total_price
+            equipments.append({
+                    'service_commitment' : e.service_commitment,
+                    'warranty_period' : e.warranty_period,
+                    'measurement_unit' : e.measurement_unit,
+                    'unit_price' : e.unit_price,
+                    'quantity' : e.quantity,
+                    'total_price' : e.total_price,
+                    'producer' : e.equipment.producer,
+                    'product_configure' : e.product_configure,
+                    'product_name' : e.equipment.info,
+                    'spec' : e.equipment.spec,
+                    'model' : e.equipment.model
+                    })
+
+        equip_json = {'id' : self.id,
+            'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
+            'provider_info' : self.provider_info,
+            'billing_company' : self.billing_company,
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'get_location' : self.get_location,
+            'pay_mode' : self.pay_mode,
+            'invoice_type' : self.invoice_type,
+            'total_price' : total_price,
+            'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'equipments' : equipments
+        }
+        return equip_json
+
+#associate sale_order and equipment
+class SaleEquipment(db.Model):
+    __tablename__ = 'sale_equipment'
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.Integer, db.ForeignKey('sale_order.id'))
+    equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'))
+    #extra info
+    service_commitment = db.Column(db.String(1024))
+    warranty_period = db.Column(db.String(256))#保修期限
+    measurement_unit = db.Column(db.String(256))#单位
+    unit_price = db.Column(db.Float)#单价
+    quantity = db.Column(db.Integer)#数量
+    total_price = db.Column(db.Float)#总价
+    product_configure = db.Column(db.Text)#产品配置单
+
+    sale_order = db.relationship(SaleOrder, uselist=False, backref='sale_equipments')
+    equipment = db.relationship(Equipment, uselist=False, backref='sale_order')
+
+    
 
 class Permission:
-
     MODULE_PERMISSION_LIST = [
         ('equipment', {
          'read' : 0x01,
@@ -307,5 +511,9 @@ def init_db():
     print table_names
 
     admin = User(current_app.config['FLASKY_ADMIN'], current_app.config['FLASKY_ADMIN'], current_app.config['FLASKY_ADMIN_PASSWORD'])
+    test_equipment_x = Equipment(u'xx试剂', u'xx', u'试剂', u'100ml', u'轻量', u'北京污业公司')
+    test_equipment_y = Equipment(u'yy试剂', u'yy', u'试剂', u'100ml', u'轻量', u'北京伟业公司')
+    db.session.add(test_equipment_x)
+    db.session.add(test_equipment_y)
     db.session.add(admin)
     db.session.commit()

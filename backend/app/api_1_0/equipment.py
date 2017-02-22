@@ -10,6 +10,7 @@ from errors import bad_request
 
 
 @api.route('/equipment/headers', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipment_headers():
     return jsonify({
             'error' : 0,
@@ -18,6 +19,7 @@ def get_equipment_headers():
             })
 
 @api.route('/equipment/', methods=['GET'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipments():
     equips = Equipment.query.all()
     return jsonify({
@@ -31,14 +33,13 @@ def get_equipments():
         
 
 @api.route('/equipment/<int:id>', methods=['GET'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipment(id):
     equip = Equipment.query.get_or_404(id)
     return jsonify({
             'error' : 0,
             'msg' : '',
-            'data' : {
-            'equipment' : equip.to_json()
-            }
+            'data' : equip.to_json()
             })
 
 
@@ -68,7 +69,7 @@ def new_equipment():
                 'error' : 2,
                 'msg' : 'fields not complete or error:info|abbr|spec|model|producer',
                 'data' : {}
-                }), 404
+                }), 403
     
     return jsonify({
             'error' : 0,
