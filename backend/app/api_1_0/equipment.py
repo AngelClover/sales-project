@@ -10,6 +10,7 @@ from errors import bad_request
 
 
 @api.route('/equipment/headers', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipment_headers():
     return jsonify({
             'error' : 0,
@@ -17,9 +18,15 @@ def get_equipment_headers():
             'data' : Equipment.get_ordered_headers()
             })
 
-@api.route('/equipment/', methods=['GET'])
+@api.route('/equipment', methods=['GET'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipments():
-    equips = Equipment.query.all()
+    state = int(request.args.get('state')) if request.args.get('state') is not None else None
+    equips = []
+    if state is None:
+        equips = Equipment.query.all()
+    else:
+        equips = Equipment.query.filter_by(state=state).all()
     return jsonify({
             'error' : 0,
             'msg' : '',
@@ -31,14 +38,13 @@ def get_equipments():
         
 
 @api.route('/equipment/<int:id>', methods=['GET'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['read'])
 def get_equipment(id):
     equip = Equipment.query.get_or_404(id)
     return jsonify({
             'error' : 0,
             'msg' : '',
-            'data' : {
-            'equipment' : equip.to_json()
-            }
+            'data' : equip.to_json()
             })
 
 
@@ -68,7 +74,7 @@ def new_equipment():
                 'error' : 2,
                 'msg' : 'fields not complete or error:info|abbr|spec|model|producer',
                 'data' : {}
-                }), 404
+                }), 403
     
     return jsonify({
             'error' : 0,

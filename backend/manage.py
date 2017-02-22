@@ -2,7 +2,7 @@ import os
 
 
 from app import create_app, db
-from app.models import Equipment, init_db
+from app.models import Equipment, PurchaseOrder, PurchaseEquipment, Enterprise, init_db
 
 from flask_script import Manager, Shell, prompt_bool, Server
 
@@ -28,6 +28,10 @@ def dropdb():
 @manager.command
 def initdb():
     init_db() 
+
+@manager.command
+def dropdb():
+    db.drop_all()
 
 
 if __name__ == '__main__':
