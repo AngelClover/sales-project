@@ -27,9 +27,20 @@ const mutations = {
     },
     [GET_EQUIPMENT_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.title = response_data.headers
         state.content = response_data.equipments
         //state.preference = response_data.preference
+        //state.title = response_data.headers
+        state.title = []//response_data.headers
+        for (var item in response_data.headers){
+            var d = {}
+            d['item'] = response_data.headers[item][0]
+            d['displayName'] = response_data.headers[item][1]
+            if (response_data.headers.length >= 3){
+                //TODO: specify
+            }
+            state.title.push(d)
+        }
+        console.log(state.title)
     },
 }
 
@@ -46,20 +57,29 @@ const getters = {
     equipmentPreference : (state) => state.preference,
 }
 
-export const getEquipmentList = ({commit}) => {
+const failBack = ({commit, dispatch}, content) => {
+    console.log('response fail', content)
+    commit(GET_EQUIPMENT_LIST_FAILURE, content)
+    dispatch('showMsg', '请求失败', 'error')
+}
+
+export const getEquipmentList = (store) => {
     api.getEquipmentList().then(response => {
         console.log('response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                return commit(GET_EQUIPMENT_LIST_FAILURE, response.data.msg)
+                failBack(store, '请求失败 ' + response.data.msg)
+            }else{
+                store.commit(GET_EQUIPMENT_LIST_SUCCESS, response.data.data)
             }
-            commit(GET_EQUIPMENT_LIST_SUCCESS, response.data.data)
         }else{
-            commit(GET_EQUIPMENT_LIST_FAILURE, response.status + response.statusText)
+            //commit(GET_EQUIPMENT_LIST_FAILURE, response.status + response.statusText)
+            failBack(store, '请求失败 ' + response.status + response.statusText)
         }
     }, response => {
         console.log('response fail', response)
-        commit(GET_EQUIPMENT_LIST_FAILURE)
+        //commit(GET_EQUIPMENT_LIST_FAILURE)
+        failBack(store, '请求失败 ' + response.status + response.statusText)
     })
 }
 

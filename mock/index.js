@@ -93,13 +93,13 @@ function mockConfig(app){
     addPath(app, 'log/repair', require('./resource/log/logRepair'))
     addPath(app, 'log/logistic', require('./resource/log/logLogistic'))
     */
-    app.get('/api/v1.0/user/me', (req, res) => {
+    app.get('/api/v1.0/users/me', (req, res) => {
        res.send(addContext(require('./resource/user').get()))
     })
-    app.get('/api/v1.0/user/login_token', (req, res) => {
+    app.get('/api/v1.0/users/login_token', (req, res) => {
        res.send(addContext(require('./resource/user').get_token()))
     })
-    app.post('/api/user', (req, res) => {
+    app.post('/api/users', (req, res) => {
         res.send(addContext({msg: 'success'}))
     })
 

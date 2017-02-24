@@ -16,7 +16,8 @@
             <th v-for="(item, index) in preference"
                 @click="sortBy(item)"
                 :class="{ active : sortKey == item}" >
-                {{title[item] | capitalize}}
+                {{titleMap[item] | capitalize}}
+                <!--{{title[item.item] | capitalize}}-->
                 <span class="arrow" :class="sortOrders[item] > 0 ? 'asc' : 'dsc'">
                 </span>
             </th>
@@ -87,11 +88,12 @@ export default {
             debug : false,
             actionType : 'show',
             showPref : false,
+            clearCache : false,
         }
     },
     computed : {
         preference : function(){
-            //localStorage.removeItem(this.location)
+            if (this.clearCache)localStorage.removeItem(this.location)
             var shw = this.showPref
                 shw = !shw
             var readStr = localStorage.getItem(this.location)
@@ -99,11 +101,12 @@ export default {
             var prefobj = JSON.parse(readStr || "{}") 
             var prefarray = prefobj["pref"] || []
             var ret = []
+            console.log("preference list prefarray", prefarray)
             if (prefarray == undefined || prefarray.length == 0){
                 console.log('preference in listview branch 1', this.title)
                 if (this.title && Object.values(this.title).length >= 1){ //To be better
                     for (var item in this.title){
-                        ret.push(item)
+                        ret.push(this.title[item].item)
                     }
                     console.log('preference in listview branch 2')
                 }
@@ -111,7 +114,7 @@ export default {
                 console.log('preference in listview branch 3', prefarray)
                 for (var item in prefarray){
                     if (prefarray[item].value == true){
-                        ret.push(prefarray[item].name)
+                        ret.push(prefarray[item].item)
                     }
                 }
             }
@@ -119,6 +122,14 @@ export default {
             return {
                 ...ret
             }
+        },
+        titleMap : function(){
+            var ret = {}
+            for (var index in this.title){
+                ret[this.title[index].item] = this.title[index].displayName
+            }
+            console.log('computed titleMap', ret)
+            return ret
         },
         filteredContent : function() {
             //console.log('filteredContent computed')
@@ -165,8 +176,11 @@ export default {
        initSortOrders : function(){
             var sortOrders = {}
             //console.log('listview method initSortOrders', Object.keys(this.title))
+            var _this = this
             Object.keys(this.title).forEach(function (key) {
-                sortOrders[key] = 1
+                console.log('sort key', key)
+
+                sortOrders[_this.title[key].item] = 1
             })
             //console.log('listview method initSortOrders :', sortOrders, Object.keys(sortOrders))
             //this.$set('sortOrders', sortOrders)

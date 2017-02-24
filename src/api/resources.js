@@ -6,20 +6,31 @@ import { getCookie,signOut } from '../utils/authService'
 Vue.use(VueResource)
 
 Vue.http.options.crossOrigin = true
-Vue.http.options.credentials = true
+//Vue.http.options.credentials = true
 
 Vue.http.interceptors.push((request, next)=>{
   // 这里对请求体进行处理
   request.headers = request.headers || {}
   var authString = localStorage.getItem('AuthString')
-  if (authString){
+  if (getCookie('token')) {
+      //var str = localStorage.getItem('TestAuth', str)
+    var str = 'Basic ' + window.btoa(getCookie('token') + ":")
+    //request.headers.set('Authorization', 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, ''))
+    //request.headers.set('Authorization', 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, ''))
+    request.headers.set('Authorization', str)
+      console.log('use token', str)
+  }else if (authString){
+      var str = 'Basic ' + authString
+      localStorage.setItem('TestAuth', str)
       request.headers.set('Authorization', 'Basic ' + authString)
-      localStorage.removeItem('AuthString')
-  }else if (getCookie('token')) {
-    request.headers.set('Authorization', 'Basic ' + getCookie('token').replace(/(^\")|(\"$)/g, ''))
+      //localStorage.removeItem('AuthString')
+      console.log('remove auth string')
+  }else {
+      console.log('p isn\'t there')
   }
   console.log('request headers', request.headers)
   next((response) => {
+    console.log('login status', response.status)
     // 这里可以对响应的结果进行处理
     if (response.status === 401) {
       signOut()
@@ -56,6 +67,6 @@ export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic')
 export const LogLogisticResource = Vue.resource(API_ROOT + apiBase + 'log/logistic')
 
 export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')
-export const UserResource = Vue.resource(API_ROOT + apiBase + 'user{/id}')
+export const UserResource = Vue.resource(API_ROOT + apiBase + 'users{/id}')
 
 

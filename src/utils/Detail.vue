@@ -11,8 +11,8 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value}}</td>
-                                        <td>{{detailContent[key]}}</td>
+                                        <td>{{value.displayName}}</td>
+                                        <td>{{detailContent[value.item]}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -39,9 +39,9 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value}}</td>
+                                        <td>{{value.displayName}}</td>
                                         <td>
-                                            <input v-model=newContent[key]>
+                                            <input v-model=newContent[value.item]>
                                             </input>
                                         </td>
                                     </tr>
@@ -88,6 +88,7 @@ export default {
     methods : {
         modifier: function(){
             this.newContent = this.deepCopy(this.detailContent)
+            console.log('deep copy', this.newContent, this.detailContent)
             this.showContent = false
         },
         closeModifier(){
@@ -99,16 +100,21 @@ export default {
             
         },
         realModify(){
+            console.log("!!!!", this.newContent, this.detailContent)
             console.log("!!!!", this.cmp(this.newContent, this.detailContent))
+            console.log('real modify', this.newContent)
             if (this.cmp(this.newContent, this.detailContent)){
                 this.$store.dispatch('showMsg', '无修改', 'info')
                 this.closeModifier()
             }else{
+                console.log("!!!!", this.newContent, this.detailContent)
                 this.showContent = true
                 if (this.actionType == 'create'){
                     this.savecb(this.newContent)
                     this.closeModifier()
                 }else if(this.actionType == 'show'){
+                    console.log('modify', this.newContent)
+                    //this.newContent.id = this.showContent.id
                     this.updatecb(this.newContent)
                 }else{
                     console.log('error actionType', this.actionType)
@@ -118,7 +124,8 @@ export default {
         deepCopy : function(source) { 
             var result={};
             for (var key in source) {
-                result[key] = typeof source[key] === 'object' ? deepCoyp(source[key]): source[key];
+                result[key] = typeof source[key] === 'object' ? deepCopy(source[key]): source[key];
+                console.log('deepcopy', key, result)
             } 
             return result; 
         },
