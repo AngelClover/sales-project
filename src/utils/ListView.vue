@@ -43,7 +43,7 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :updatecb=updatecb :savecb=savecb :removecb=removecb>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset>
         </detail>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
@@ -77,7 +77,7 @@ export default {
         Detail,
         Preference
     },
-    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'savecb', 'updatecb', 'removecb'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset'],
     data : function(){
         return {
             sortKey : '',

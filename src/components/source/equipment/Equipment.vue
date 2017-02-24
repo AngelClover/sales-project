@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :updatecb=updateEquipment :savecb=saveEquipment :removecb=removeEquipment location="equipment">
+        <ListView msg="asd" :title=title :content=content :pref=preference  :cbset=cbSet location="equipment">
             <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>
@@ -12,6 +12,17 @@ import ListView from '../../../utils/ListView.vue'
 //import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+    data (){
+        return {
+            cbSet : {
+            get: this.getEquipmentList,
+            update: this.updateEquipment,
+            save: this.saveEquipment,
+            remove: this.removeEquipment,
+            approve: this.approveEquipment
+        }
+        }
+    },
     components : {
         ListView
     },
@@ -25,8 +36,6 @@ export default {
         preference() {
             return this.$store.getters.equipmentPreference
         }
-
-
     },
     created : function(){
         console.log('created this', this)
@@ -51,6 +60,10 @@ export default {
             this.$store.dispatch('removeEquipment', {id:content.id})
             this.getEquipmentList()
         },
+        approveEquipment(content){
+            this.$store.dispatch('approveEquipment', {id:content.id})
+            this.getEquipmentList()
+        }
     },
 
 }

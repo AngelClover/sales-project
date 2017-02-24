@@ -15,6 +15,9 @@ export default {
         //this will be right?
         return EquipmentResource.save(payload)
     },
+    approveEquipment: function(payload) {
+        return EquipmentResource.get({id:payload.id, action:"approve"}, payload)
+    },
     removeEquipment: function(payload) {
         return EquipmentResource.remove({id:payload})
     },

@@ -25,6 +25,9 @@
                             <button class="ui button" @click="modifier">
                                 修改
                             </button>
+                            <button class="ui red button" @click="approve" >
+                                审批
+                            </button>
                             </center>
                         </div>
                     </div>
@@ -76,8 +79,9 @@
 </template>
 
 <script>
+import api from '../api'
 export default {
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'savecb', 'updatecb', 'removecb'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset'],
     data: function() {
         return {
             debug : true,
@@ -110,12 +114,12 @@ export default {
                 console.log("!!!!", this.newContent, this.detailContent)
                 this.showContent = true
                 if (this.actionType == 'create'){
-                    this.savecb(this.newContent)
+                    this.cbset.save(this.newContent)
                     this.closeModifier()
                 }else if(this.actionType == 'show'){
                     console.log('modify', this.newContent)
                     //this.newContent.id = this.showContent.id
-                    this.updatecb(this.newContent)
+                    this.cbset.update(this.newContent)
                 }else{
                     console.log('error actionType', this.actionType)
                 }
@@ -178,7 +182,10 @@ export default {
                 }  
             }  
             return true;  
-        }  
+        },
+        approve : function(){
+            this.cbset.approve(this.detailContent)
+        }
     }
 
 }

@@ -130,12 +130,29 @@ const removeEquipment = ({dispatch}, payload) => {
         dispatch('showMsg', response.status + response.statusText)
     })
 }
+const approveEquipment = ({dispatch}, payload) => {
+    api.approveEquipment(payload).then(response => {
+        console.log('save response succ', response)
+        if (response.status == 200){
+            if (response.data.error != 0){
+                dispatch('showMsg', response.data.error + response.data.msg)
+            }else{
+                dispatch('showMsg', '审批成功', 'success')
+            }
+        }else{
+            dispatch('showMsg', response.status + response.statusText)
+        }
+    }, response => {
+        dispatch('showMsg', response.status + response.statusText)
+    })
+}
 
 const actions = {
     getEquipmentList,
     updateEquipment,
     saveEquipment,
-    removeEquipment
+    removeEquipment,
+    approveEquipment
     /*
     getEquipmentList : async ({commit}) => {
         console.log('angel commit in module dispatch')

@@ -40,7 +40,7 @@ Vue.http.interceptors.push((request, next)=>{
 })
 const apiBase = 'api/v1.0/'
 
-export const EquipmentResource = Vue.resource(API_ROOT + apiBase + 'equipment{/id}')
+export const EquipmentResource = Vue.resource(API_ROOT + apiBase + 'equipment{/action}{/id}')
 export const LogEquipmentResource = Vue.resource(API_ROOT + apiBase + 'log/equipment')
 
 export const SourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'sourcecompany')
