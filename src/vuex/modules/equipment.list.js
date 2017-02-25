@@ -40,7 +40,7 @@ const mutations = {
             }
             state.title.push(d)
         }
-        console.log(state.title)
+        //console.log(state.title)
     },
 }
 
@@ -57,93 +57,96 @@ const getters = {
     equipmentPreference : (state) => state.preference,
 }
 
-const failBack = ({commit, dispatch}, content) => {
+const failBack = ({commit, dispatch}, content, mutation=GET_EQUIPMENT_LIST_FAILURE) => {
     console.log('response fail', content)
-    commit(GET_EQUIPMENT_LIST_FAILURE, content)
+    commit(mutation, content)
     dispatch('showMsg', '请求失败', 'error')
 }
 
 export const getEquipmentList = (store) => {
+    var failMessage = "请求失败"
     api.getEquipmentList().then(response => {
         console.log('response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                failBack(store, '请求失败 ' + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
                 store.commit(GET_EQUIPMENT_LIST_SUCCESS, response.data.data)
             }
         }else{
-            //commit(GET_EQUIPMENT_LIST_FAILURE, response.status + response.statusText)
-            failBack(store, '请求失败 ' + response.status + response.statusText)
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        console.log('response fail', response)
-        //commit(GET_EQUIPMENT_LIST_FAILURE)
-        failBack(store, '请求失败 ' + response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
 
-const updateEquipment = ({dispatch}, payload) => {
+const updateEquipment = (store, payload) => {
+    var failMessage = "更新失败"
     api.updateEquipment(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                dispatch('showMsg', response.data.error + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
+            } else{
+                store.dispatch('showMsg', '修改成功', 'success')
             }
-            dispatch('showMsg', '修改成功', 'success')
-        }else{
-            dispatch('showMsg', response.status + response.statusText)
+        } else{
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        dispatch('showMsg', response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const saveEquipment = ({dispatch}, payload) => {
+const saveEquipment = (store, payload) => {
+    var failMessage = "添加失败"
     api.saveEquipment(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                dispatch('showMsg', response.data.error + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
-                dispatch('showMsg', '添加成功', 'success')
+                store.dispatch('showMsg', '添加成功', 'success')
             }
         }else{
-            dispatch('showMsg', response.status + response.statusText)
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        dispatch('showMsg', response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const removeEquipment = ({dispatch}, payload) => {
+const removeEquipment = (store, payload) => {
+    var failMessage = "删除失败"
     api.removeEquipment(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                dispatch('showMsg', response.data.error + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
-                dispatch('showMsg', '删除成功', 'success')
+                store.dispatch('showMsg', '删除成功', 'success')
             }
         }else{
-            dispatch('showMsg', response.status + response.statusText)
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        dispatch('showMsg', response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const approveEquipment = ({dispatch}, payload) => {
+const approveEquipment = (store, payload) => {
+    var failMessage = "审批失败"
     api.approveEquipment(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                dispatch('showMsg', response.data.error + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
-                dispatch('showMsg', '审批成功', 'success')
+                store.dispatch('showMsg', '审批成功', 'success')
             }
         }else{
-            dispatch('showMsg', response.status + response.statusText)
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        dispatch('showMsg', response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
 

@@ -43,27 +43,27 @@ const apiBase = 'api/v1.0/'
 export const EquipmentResource = Vue.resource(API_ROOT + apiBase + 'equipment{/action}{/id}')
 export const LogEquipmentResource = Vue.resource(API_ROOT + apiBase + 'log/equipment')
 
-export const SourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'sourcecompany')
+export const SourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'enterprise{/action}{/id}')
 export const LogSourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecompany')
 
 export const SourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'sourcecustomer')
 export const LogSourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecustomer')
 
 
-export const SaleOrderResource = Vue.resource(API_ROOT + apiBase + 'saleorder')
+export const SaleOrderResource = Vue.resource(API_ROOT + apiBase + 'sale{/action}{/id}')
 export const LogSaleOrderResource = Vue.resource(API_ROOT + apiBase + 'log/saleorder')
 
-export const BuyOrderResource = Vue.resource(API_ROOT + apiBase + 'buyorder')
+export const BuyOrderResource = Vue.resource(API_ROOT + apiBase + 'purchase{/action}{/id}')
 export const LogBuyOrderResource = Vue.resource(API_ROOT + apiBase + 'log/buyorder')
 
 
-export const StoreHouseResource = Vue.resource(API_ROOT + apiBase + 'storehouse')
+export const StoreHouseResource = Vue.resource(API_ROOT + apiBase + 'store{/action}{/id}')
 export const LogStoreHouseResource = Vue.resource(API_ROOT + apiBase + 'log/storehouse')
 
-export const RepairResource = Vue.resource(API_ROOT + apiBase + 'repair')
+export const RepairResource = Vue.resource(API_ROOT + apiBase + 'repair{/action}{/id}')
 export const LogRepairResource = Vue.resource(API_ROOT + apiBase + 'log/repair')
 
-export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic')
+export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic{/action]{/id}')
 export const LogLogisticResource = Vue.resource(API_ROOT + apiBase + 'log/logistic')
 
 export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')
