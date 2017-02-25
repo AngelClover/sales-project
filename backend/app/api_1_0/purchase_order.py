@@ -3,7 +3,7 @@
 
 from flask import jsonify, request, g, url_for, current_app
 from .. import db
-from ..models import Equipment, Permission, PurchaseOrder, PurchaseEquipment
+from ..models import Equipment, Permission, PurchaseOrder, PurchaseEquipment, Store
 from . import api
 from decorators import permission_required
 from errors import bad_request
@@ -131,6 +131,77 @@ def approve_purchase_order(id):
     return jsonify({
             'error' : 0,
             'msg' : 'approve purchase order successful',
+            'data' : {}
+            })
+
+@api.route('/purchase/can_store/<int:id>', methods=['GET', 'POSt'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['write'])
+def purchase_can_store(id):
+    p_order = PurchaseOrder.query.get_or_404(id)
+    if p_order.state != 0:
+        return bad_request('cannot store a purchase order, that\'s state is not approved')
+    p_order.state = 2
+    db.session.commit()
+    return jsonify({'error' : 0, 'msg' : ''})
+
+@api.route('/purchase/store_one/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def store_one_equipment(id):
+    p_equipment = PurchaseEquipment.query.get_or_404(id)
+    if p_equipment.purchase_order.state != 2:
+        return bad_request('purchase order not at ready to store state') 
+    if p_equipment.stored == 1:
+        return bac_request('already stored in houseware')
+    p_equipment.stored = 1
+    equipments = p_equipment.purchase_order.purchase_equipments
+    part_stored = False;
+    for e in equipments:
+        if e.stored != 1:
+            part_stored = True
+            break
+    #部分入库
+    p_equipment.purchase_order.total_stored = 1
+    if not part_stored:
+        #完全入库
+        p_equipment.purchase_order.total_stored = 2 
+    db.session.commit()
+    #add store element
+    new_store = Store()
+    new_store.equipment_id = p_equipment.equipment_id
+    new_store.purchase_id = p_equipment.purchase_order.id
+    new_store.store_number = p_equipment.quantity
+    new_store.state = 1
+    db.session.add(new_store)
+    db.session.commit()
+    return jsonify({
+            'error' : 0,
+            'msg' : 'store one equipment successful',
+            'data' : {}
+            })
+
+@api.route('/purchase/store_all/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def store_all_equipments(id):
+    p_order = PurchaseOrder.query.get_or_404(id)
+    if p_order.state != 2:
+        return bad_request('purchase order not at ready to store state') 
+
+    for p_equipment in p_order.purchase_equipments:
+        if p_equipment.stored == 1:
+            continue
+        new_store = Store()
+        new_store.equipment_id = p_equipment.equipment_id
+        new_store.purchase_id = p_equipment.purchase_order.id
+        new_store.store_number = p_equipment.quantity
+        new_store.state = 1
+        db.session.add(new_store)
+        p_equipment.stored = 1
+    p_order.total_stored = 2
+    db.session.commit()
+
+    return jsonify({
+            'error' : 0,
+            'msg' : 'store one equipment successful',
             'data' : {}
             })
 

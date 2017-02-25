@@ -48,7 +48,7 @@ def get_equipment(id):
             })
 
 
-@api.route('/equipment/', methods=['POST'])
+@api.route('/equipment', methods=['POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['write'])
 def new_equipment():
     equip_json = request.get_json()
@@ -59,6 +59,7 @@ def new_equipment():
                 'data' : {}
                 }), 403
     print equip_json
+    equip = None
     try:
         info = equip_json['info']
         abbr = equip_json['abbr'] 
