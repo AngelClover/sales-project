@@ -11,13 +11,14 @@ from .decorators import permission_required, admin_required
 
 
 @api.route('/users/<int:id>')
-@admin_required()
+@auth.login_required
 def get_user(id):
+    if isinstance(g.current_user, AnonymousUser) or g.current_user.id != id:
+            return forbidden('not allowed')
     user = User.query.get_or_404(id)
     return jsonify(user.to_json())
 
 @api.route('/users', methods=['POST'])
-@admin_required()
 def new_user():
     user_json = request.get_json()
     if user_json is None:
@@ -25,7 +26,7 @@ def new_user():
     new_user = None
     try:
         email = user_json['email']
-        name = user_json['name']
+        name = user_json['username']
         password = user_json['password']
         new_user = User(email, name, password)
         print "%s,%s,%s" % (email, name, password)

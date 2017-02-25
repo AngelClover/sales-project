@@ -9,8 +9,8 @@ from . import db
 class Equipment(db.Model):
     __tablename__ = 'equipment'
     id = db.Column(db.Integer, primary_key=True)#产品ID
-    info = db.Column(db.String(256), unique=True)#产品信息
-    abbr = db.Column(db.String(256), unique=True)#产品简称
+    info = db.Column(db.String(256))#产品信息
+    abbr = db.Column(db.String(256))#产品简称
     type = db.Column(db.String(256))#产品类型，可选的类型
     spec = db.Column(db.String(256))#产品规格
     model = db.Column(db.String(256))#产品型号
@@ -135,7 +135,8 @@ class PurchaseOrder(db.Model):
     pay_mode = db.Column(db.String(256))#付款方式
     invoice_type = db.Column(db.String(256))#发票类型
     postage_account = db.Column(db.String(256))#运费承担方
-    state = db.Column(db.Integer, default=1)#状态，0:正常, 1:创建，待审核
+    state = db.Column(db.Integer, default=1)#状态，0:已审批, 1:创建，待审核, 2:待入库
+    total_stored = db.Column(db.Integer, default=0)#是否完全入库, 0:未入库；1：部分入库；2:完全入库
 
     @staticmethod
     def get_ordered_headers():
@@ -149,6 +150,7 @@ class PurchaseOrder(db.Model):
         ('invoice_type', u'发票类型'),
         ('postage_account', u'运费承担方'),
         ('state', u'当前状态'),
+        ('total_stored', u'入库情况（未/部分/完全)'),
         (),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
@@ -160,7 +162,8 @@ class PurchaseOrder(db.Model):
         ('quantity', u'数量'),
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
-        ('product_configure', u'产品配置单')
+        ('product_configure', u'产品配置单'),
+        ('stored', u'是否入库(0/1)')
         ]
 
     def to_json(self):
@@ -169,6 +172,7 @@ class PurchaseOrder(db.Model):
         for e in self.purchase_equipments:
             total_price += e.total_price
             equipments.append({
+                    'id' : e.equipment.id,
                     'warranty_period' : e.warranty_period,
                     'install_require' : e.install_require,
                     'measurement_unit' : e.measurement_unit,
@@ -180,6 +184,7 @@ class PurchaseOrder(db.Model):
                     'product_name' : e.equipment.info,
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
+                    'stored' : e.stored
                     })
 
         equip_json = {'id' : self.id,
@@ -193,7 +198,8 @@ class PurchaseOrder(db.Model):
             'postage_account' : self.postage_account,
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else u'待审核'),
-            'equipments' : equipments
+            'equipments' : equipments,
+            'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
         }
         return equip_json
 
@@ -211,6 +217,7 @@ class PurchaseEquipment(db.Model):
     quantity = db.Column(db.Integer)#数量
     total_price = db.Column(db.Float)#总价
     product_configure = db.Column(db.Text)#产品配置单
+    stored = db.Column(db.Integer, default=0)#0:未入库，1:已入库
     
     purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="purchase_equipments")
     equipment = db.relationship(Equipment, uselist=False, backref="purchase_order")
@@ -227,6 +234,7 @@ class SaleOrder(db.Model):
     pay_mode = db.Column(db.String(256))#付款方式
     invoice_type = db.Column(db.String(256))#发票类型
     state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
+    total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
 
     @staticmethod
     def get_ordered_headers():
@@ -238,6 +246,7 @@ class SaleOrder(db.Model):
         ('get_location', u'收货地点'),
         ('pay_mode', u'付款方式'),
         ('invoice_type', u'发票类型'),
+        ('total_outstore', u'出库情况(未/部分/完全'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
@@ -258,6 +267,7 @@ class SaleOrder(db.Model):
         for e in self.sale_equipments:
             total_price += e.total_price
             equipments.append({
+                    'id' : e.id,
                     'service_commitment' : e.service_commitment,
                     'warranty_period' : e.warranty_period,
                     'measurement_unit' : e.measurement_unit,
@@ -281,6 +291,7 @@ class SaleOrder(db.Model):
             'invoice_type' : self.invoice_type,
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
             'equipments' : equipments
         }
         return equip_json
@@ -299,6 +310,8 @@ class SaleEquipment(db.Model):
     quantity = db.Column(db.Integer)#数量
     total_price = db.Column(db.Float)#总价
     product_configure = db.Column(db.Text)#产品配置单
+    outstore_quantity = db.Column(db.Integer, default=0)
+    outstore_state = db.Column(db.Integer, default=0)#出库状态：0:完全未出库，1:部分出库；2：完全出库
 
     sale_order = db.relationship(SaleOrder, uselist=False, backref='sale_equipments')
     equipment = db.relationship(Equipment, uselist=False, backref='sale_order')
@@ -367,14 +380,17 @@ class Repair(db.Model):
 class Store(db.Model):
     __tablename__ = 'store'
     id = db.Column(db.Integer, primary_key=True)#仓库信息编号(系统自分配)
-    equipment_name = db.Column(db.String(256))#设备名称
+    equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'))
+    purchase_id = db.Column(db.Integer, db.ForeignKey('purchase_order.id'))
     store_number = db.Column(db.Integer)#在库数字
-    abbr = db.Column(db.String(256))#简称
-    equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
-    state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+    #state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+
+    purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="stores")
+    equipment = db.relationship(Equipment, uselist=False, backref="stores")
 
     def __init(self):
-        self.state = 1
+        #self.state = 1
+        pass
 
     @staticmethod
     def get_ordered_headers():
@@ -388,11 +404,12 @@ class Store(db.Model):
     def to_json(self):
         return {
             'id' : self.id,
-            'equipment_name' : self.equipment_name,
-            'abbr' : self.abbr,
-            'equipment_type' : self.equipment_type,
+            'equipment_name' : self.equipment.info,
+            'abbr' : self.equipment.abbr,
+            'equipment_type' : self.equipment.type,
             'store_number' : self.store_number
         }
+
 
 class Permission:
     MODULE_PERMISSION_LIST = [
@@ -451,21 +468,26 @@ class Permission:
             elif ((module_perm[1]['read'] & permissions) == module_perm[1]['read']):
                 modules.append(module_perm[0])
         return modules
-    
+
+    @staticmethod
+    def get_permission(permissions):
+        permission_json = {}
+        for module_perm in Permission.MODULE_PERMISSION_LIST:
+            if module_perm[0] == 'administer':
+                continue
+            permission_json[module_perm[0]] = {}
+            for name, value in module_perm[1].iteritems():
+                if (value & permissions) == value:
+                    permission_json[module_perm[0]][name] = True
+                else:
+                    permission_json[module_perm[0]][name] = False
+        return permission_json
+
     @staticmethod
     def to_json():
         return Permission.MODULE_PERMISSION_LIST
-        return {
-            u'首营设备':  {u'创建申请' : 0x01, u'审批&删除' : 0x03},
-            u'首营企业': {u'创建申请': 0x04, u'审批&删除': 0x0c},
-            u'采购订单': {u'创建申请': 0x10, u'审批&删除': 0x30},
-            u'销售订单': {u'创建申请': 0x40, u'审批&删除': 0xc0},
-            u'仓库管理': {u'创建申请': 0x100, u'审批&删除': 0x300},
-            u'维修管理': {u'创建申请': 0x400, u'审批&删除': 0xc00},
-            u'物流管理': {u'创建申请': 0x1000, u'审批&删除': 0x3000},
-            u'财务管理': {u'创建申请': 0x4000, u'审批&删除': 0xc000}
-        }
-
+    
+    
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -495,7 +517,8 @@ class User(db.Model):
         user_json = {'id' : self.id,
             'email' : self.email,
             'username' : self.username,
-            'module' : Permission.get_modules(self.permission)
+            'module' : Permission.get_modules(self.permission),
+            'permission' : Permission.get_permission(self.permission)
         }
         return user_json
 

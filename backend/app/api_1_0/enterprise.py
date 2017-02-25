@@ -42,7 +42,7 @@ def get_enterprise(id):
             'data' : enterprise.to_json()
             })
 
-@api.route('/enterprise/', methods=['POST'])
+@api.route('/enterprise', methods=['POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['enterprise']['write'])
 def new_enterprise():
     enterprise_json = request.get_json()
