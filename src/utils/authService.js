@@ -24,3 +24,19 @@ export function signOut() {
 export function isLogin() {
   return !!cookie.load('token')
 }
+
+export function getStorage(name){
+    return JSON.parse(localStorage.getItem(name) || "{}")
+}
+
+export function saveStorage(name, value){
+    localStorage.setItem(name, JSON.stringify(value))
+}
+
+export function removeStorage(name){
+    localStorage.removeItem(name)
+}
+
+export function clearStorage(){
+    localStorage.clear()
+}

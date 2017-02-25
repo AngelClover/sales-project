@@ -29,6 +29,7 @@ import StoreHouse from './components/storehouse/storeHouse.vue'
 import App from './components/App.vue'
 import CacheClear from './components/CacheClear.vue'
 import UserInfoModify from './components/login/modify.vue'
+import UserAuth from './components/admin/UserAuth.vue'
 
 var routes = [
     //{path: '/', component: App},
@@ -53,6 +54,7 @@ var routes = [
             {path: '/sourcecustomer', name: 'sourcecustomer',  component:  SourceCustomer},
             {path: '/equipment', name: 'equipment',  component:  SourceEquipment},
             {path: '/storehouse', name: 'storehouse', component: StoreHouse},
+            {path: '/userauth', name: 'userauth', component: UserAuth},
             { path: '*', component: NotFound }
         ]
     },

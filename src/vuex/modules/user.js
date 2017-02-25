@@ -5,7 +5,7 @@ const USERINFO_FAILURE = "USERINFO_FAILURE"
 const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS"
 const LOGOUT_USER = "LOGOUT_USER"
 
-import {getCookie, saveCookie} from '../../utils/authService'
+import {getStorage, saveStorage, removeCookie} from '../../utils/authService'
 import {showMsg, hideMsg} from './toast'
 
 const state = {
@@ -17,7 +17,7 @@ const mutations = {
         console.log('userinfo_success', action)
         console.log('userinfo_success', action.user)
         state.user = action.user
-        saveCookie('user', action.user)
+        saveStorage('user', action.user)
     },
     [USERINFO_FAILURE](state, action){
          console.log('userinfo_failure')
@@ -30,15 +30,18 @@ const mutations = {
     [UPDATE_USER_SUCCESS](state, action){
         console.log('update userinfo_success', action)
         state.user = action.user
-        saveCookie('user', action.user)
+        saveStorage('user', action.user)
     }
 }
 
 const getters = {
     getMe : (state) => {
+        if (!getStorage('user') && getCookie('token')){
+            removeCookie('token')
+        }
         //console.log('user getters', state.user)
         //console.log('user getters', getCookie('user'))
-        return state.user || getCookie('user') }
+        return state.user || getStorage('user') }
 }
 
 export const getUserInfo = ({commit}) => {

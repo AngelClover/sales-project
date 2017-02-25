@@ -16,15 +16,16 @@
                             <p> 1.2 </p>
                         </div>
                     </div>
-                    -->
                     <div v-show="userInfo.module.indexOf('home') >= 0" class=title>
+                    -->
+                    <div class=title>
                         <p>
                         <router-link to="/home">
                             Home
                         </router-link>
                         </p>
                     </div>
-                    <div v-show="userInfo.module.indexOf('source') >= 0">
+                    <div v-show="userInfo.module.indexOf('equipment') >= 0">
                         <div id="triggereg" class="accordion">
                             <div class="active title">
                                 <i class="ui dropdown icon"></i> 首营审批
@@ -37,7 +38,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-show="userInfo.module.indexOf('buy') >= 0">
+                    <div v-show="userInfo.module.indexOf('purchase') >= 0">
                         <div class="title">
                             <p> <router-link to="/buy"> 采购订单管理 </router-link> </p>
                         </div>
@@ -47,7 +48,7 @@
                             <p> <router-link to="/sale"> 销售订单管理 </router-link> </p>
                         </div>
                     </div>
-                    <div v-show="userInfo.module.indexOf('storehouse') >= 0">
+                    <div v-show="userInfo.module.indexOf('store') >= 0">
                         <div class="title">
                             <p> <router-link to="/storehouse"> 仓库管理 </router-link> </p>
                         </div>
@@ -67,6 +68,11 @@
                             <p> <router-link to="/finance"> 财务管理 </router-link> </p>
                         </div>
                     </div>
+                    <div v-show="userInfo.module.indexOf('administer') >= 0">
+                        <div class="title">
+                            <p> <router-link to="/userauth"> 用户权限管理 </router-link> </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 </template>
@@ -78,7 +84,7 @@ export default {
     data : function (){
         return {
             //module : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
-            module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
+            //module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
         }
     },
     computed : {

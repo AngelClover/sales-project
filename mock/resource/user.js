@@ -3,7 +3,7 @@ var Mock = require('mockjs')
 Mock.Random.cparagraph(2, 5)
 userAttr = ['id', 'name', 'nickname']
 
-modelList = ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
+modelList = ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse', 'finance', 'admin']
 
 function getOneUser(){
      return {

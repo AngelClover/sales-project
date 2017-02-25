@@ -7,12 +7,16 @@ export default {
         return EquipmentResource.get()
     },
     updateEquipment: function(payload) {
-        return EquipmentResource.update({id:payload.id})
+        console.log('update', payload, payload.id)
+        return EquipmentResource.update({id:payload.id}, payload)
     },
     saveEquipment: function(payload) {
         //TODO: api need uri but how to get uri
         //this will be right?
         return EquipmentResource.save(payload)
+    },
+    approveEquipment: function(payload) {
+        return EquipmentResource.get({id:payload.id, action:"approve"}, payload)
     },
     removeEquipment: function(payload) {
         return EquipmentResource.remove({id:payload})
@@ -82,6 +86,9 @@ export default {
     updateUserInfo: function(payload){
         console.log('api payload', payload)
         return UserResource.update({id:payload.username}, payload)
+    },
+    getUserList: function(){
+        return UserResource.query()
     }
 
 }

@@ -11,8 +11,8 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value}}</td>
-                                        <td>{{detailContent[key]}}</td>
+                                        <td>{{value.displayName}}</td>
+                                        <td>{{detailContent[value.item]}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -24,6 +24,9 @@
                             </button>
                             <button class="ui button" @click="modifier">
                                 修改
+                            </button>
+                            <button class="ui red button" @click="approve" >
+                                审批
                             </button>
                             </center>
                         </div>
@@ -39,9 +42,9 @@
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value}}</td>
+                                        <td>{{value.displayName}}</td>
                                         <td>
-                                            <input v-model=newContent[key]>
+                                            <input v-model=newContent[value.item]>
                                             </input>
                                         </td>
                                     </tr>
@@ -76,8 +79,9 @@
 </template>
 
 <script>
+import api from '../api'
 export default {
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'savecb', 'updatecb', 'removecb'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset'],
     data: function() {
         return {
             debug : true,
@@ -88,6 +92,7 @@ export default {
     methods : {
         modifier: function(){
             this.newContent = this.deepCopy(this.detailContent)
+            console.log('deep copy', this.newContent, this.detailContent)
             this.showContent = false
         },
         closeModifier(){
@@ -99,17 +104,22 @@ export default {
             
         },
         realModify(){
+            console.log("!!!!", this.newContent, this.detailContent)
             console.log("!!!!", this.cmp(this.newContent, this.detailContent))
+            console.log('real modify', this.newContent)
             if (this.cmp(this.newContent, this.detailContent)){
                 this.$store.dispatch('showMsg', '无修改', 'info')
                 this.closeModifier()
             }else{
+                console.log("!!!!", this.newContent, this.detailContent)
                 this.showContent = true
                 if (this.actionType == 'create'){
-                    this.savecb(this.newContent)
+                    this.cbset.save(this.newContent)
                     this.closeModifier()
                 }else if(this.actionType == 'show'){
-                    this.updatecb(this.newContent)
+                    console.log('modify', this.newContent)
+                    //this.newContent.id = this.showContent.id
+                    this.cbset.update(this.newContent)
                 }else{
                     console.log('error actionType', this.actionType)
                 }
@@ -118,7 +128,8 @@ export default {
         deepCopy : function(source) { 
             var result={};
             for (var key in source) {
-                result[key] = typeof source[key] === 'object' ? deepCoyp(source[key]): source[key];
+                result[key] = typeof source[key] === 'object' ? deepCopy(source[key]): source[key];
+                console.log('deepcopy', key, result)
             } 
             return result; 
         },
@@ -171,7 +182,10 @@ export default {
                 }  
             }  
             return true;  
-        }  
+        },
+        approve : function(){
+            this.cbset.approve(this.detailContent)
+        }
     }
 
 }

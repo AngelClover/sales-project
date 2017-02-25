@@ -66,8 +66,8 @@ export default {
                 preference = []
                 for (var item in this.oriTitle){
                     var d = {}
-                    d['name'] = item
-                    d['displayName'] = this.oriTitle[item]
+                    d['item'] = this.oriTitle[item].item
+                    d['displayName'] = this.oriTitle[item].displayName
                     d['value'] = true
                     preference.push(d)
                 }
