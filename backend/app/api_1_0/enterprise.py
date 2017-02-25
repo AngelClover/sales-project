@@ -16,7 +16,7 @@ def get_enterprise_headers():
             'data' : Enterprise.get_ordered_headers()
             })
 
-@api.route('/enterprise/', methods=['GET'])
+@api.route('/enterprise', methods=['GET'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['enterprise']['read'])
 def get_enterprises():
     state = int(request.args.get('state')) if request.args.get('state') is not None else None
