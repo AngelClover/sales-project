@@ -18,7 +18,7 @@ const mutations = {
     },
     [GET_REPAIR_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.content = response_data.repair
+        state.content = response_data.repairs
         state.title = []//response_data.headers
         for (var item in response_data.headers){
             var d = {}

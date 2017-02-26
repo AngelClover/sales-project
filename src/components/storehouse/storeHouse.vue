@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference>
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="storehouse">
             <h3 slot="titlename" align=center> 仓库管理 </h3>
         </ListView>
     </div>
@@ -10,6 +10,17 @@
 import ListView from '../../utils/ListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+    data (){
+        return {
+            cbSet : {
+            get: this.getStoreHouseList,
+            update: this.updateStoreHouse,
+            save: this.saveStoreHouse,
+            remove: this.removeStoreHouse,
+            approve: this.approveStoreHouse
+        }
+        }
+    },
     components : {
         ListView
     },
@@ -33,15 +44,25 @@ export default {
         }
     },
     methods : {
-        createContent : (title, suffix)=>{
-            var ret = {}
-            for (var item in title){
-                ret[item] = title[item] + suffix
-            }
-            return ret
-        },
         getStoreHouseList (){
             this.$store.dispatch('getStoreHouseList')
+        },
+        updateStoreHouse(content){
+            //console.log('save equipment', content)
+            this.$store.dispatch('updateStoreHouse', content)
+            this.getStoreHouseList()
+        },
+        saveStoreHouse(content){
+            this.$store.dispatch('saveStoreHouse', content)
+            this.getStoreHouseList()
+        },
+        removeStoreHouse(content){
+            this.$store.dispatch('removeStoreHouse', {id:content.id})
+            this.getStoreHouseList()
+        },
+        approveStoreHouse(content){
+            this.$store.dispatch('approveStoreHouse', {id:content.id})
+            this.getStoreHouseList()
         }
     },
 

@@ -63,7 +63,7 @@ export const LogStoreHouseResource = Vue.resource(API_ROOT + apiBase + 'log/stor
 export const RepairResource = Vue.resource(API_ROOT + apiBase + 'repair{/action}{/id}')
 export const LogRepairResource = Vue.resource(API_ROOT + apiBase + 'log/repair')
 
-export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic{/action]{/id}')
+export const LogisticResource = Vue.resource(API_ROOT + apiBase + 'logistic{/action}{/id}')
 export const LogLogisticResource = Vue.resource(API_ROOT + apiBase + 'log/logistic')
 
 export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference>
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="saleorder">
             <h3 slot="titlename" align=center> 销售订单管理 </h3>
         </ListView>
     </div>
@@ -10,6 +10,17 @@
 import ListView from '../../../utils/ListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+    data (){
+        return {
+            cbSet : {
+            get: this.getSaleOrderList,
+            update: this.updateSaleOrder,
+            save: this.saveSaleOrder,
+            remove: this.removeSaleOrder,
+            approve: this.approveSaleOrder
+        }
+        }
+    },
     components : {
         ListView
     },
@@ -33,15 +44,25 @@ export default {
         }
     },
     methods : {
-        createContent : (title, suffix)=>{
-            var ret = {}
-            for (var item in title){
-                ret[item] = title[item] + suffix
-            }
-            return ret
-        },
         getSaleOrderList (){
             this.$store.dispatch('getSaleOrderList')
+        },
+        updateSaleOrder(content){
+            //console.log('save equipment', content)
+            this.$store.dispatch('updateSaleOrder', content)
+            this.getSaleOrderList()
+        },
+        saveSaleOrder(content){
+            this.$store.dispatch('saveSaleOrder', content)
+            this.getSaleOrderList()
+        },
+        removeSaleOrder(content){
+            this.$store.dispatch('removeSaleOrder', {id:content.id})
+            this.getSaleOrderList()
+        },
+        approveSaleOrder(content){
+            this.$store.dispatch('approveSaleOrder', {id:content.id})
+            this.getSaleOrderList()
         }
     },
 

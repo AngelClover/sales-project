@@ -26,17 +26,17 @@ export default {
     getSourceCompanyList: function() {
         return SourceCompanyResource.get()
     },
-    updateSourceCompanyList: function(payload){
-        return SourceCompany.update({id:payload.id}, payload)
+    updateSourceCompany: function(payload){
+        return SourceCompanyResource.update({id:payload.id}, payload)
     },
-    saveSourceCompanyList: function(payload){
-        return SourceCompany.save(payload)
+    saveSourceCompany: function(payload){
+        return SourceCompanyResource.save(payload)
     },
-    approveSourceCompanyList: function(payload){
-        return SourceCompany.get({id:payload.id, action:"approve"},payload)
+    approveSourceCompany: function(payload){
+        return SourceCompanyResource.get({id:payload.id, action:"approve"},payload)
     },
     removeSourceCompany: function(){
-        return SourceCompany.remove({id:payload.id})
+        return SourceCompanyResource.remove({id:payload.id})
     },
 
 
@@ -49,13 +49,13 @@ export default {
     getSaleOrderList: function() {
         return SaleOrderResource.get()
     },
-    updateSaleOrderList: function(payload){
+    updateSaleOrder: function(payload){
         return SaleOrderResource.update({id:payload.id}, payload)
     },
-    saveSaleOrderList: function(payload){
+    saveSaleOrder: function(payload){
         return SaleOrderResource.save(payload)
     },
-    approveSaleOrderList: function(payload){
+    approveSaleOrder: function(payload){
         return SaleOrderResource.get({id:payload.id, action:"approve"},payload)
     },
     removeSaleOrder: function(){
@@ -66,13 +66,13 @@ export default {
     getBuyOrderList: function() {
         return BuyOrderResource.get()
     },
-    updateBuyOrderList: function(payload){
+    updateBuyOrder: function(payload){
         return BuyOrderResource.update({id:payload.id}, payload)
     },
-    saveBuyOrderList: function(payload){
+    saveBuyOrder: function(payload){
         return BuyOrderResource.save(payload)
     },
-    approveBuyOrderList: function(payload){
+    approveBuyOrder: function(payload){
         return BuyOrderResource.get({id:payload.id, action:"approve"},payload)
     },
     removeBuyOrder: function(){
@@ -82,58 +82,58 @@ export default {
     getStoreHouseList: function() {
         return StoreHouseResource.get()
     },
-    updateStoreHouseList: function(payload){
-        return StoreHouse.update({id:payload.id}, payload)
+    updateStoreHouse: function(payload){
+        return StoreHouseResource.update({id:payload.id}, payload)
     },
-    saveStoreHouseList: function(payload){
-        return StoreHouse.save(payload)
+    saveStoreHouse: function(payload){
+        return StoreHouseResource.save(payload)
     },
-    approveStoreHouseList: function(payload){
-        return StoreHouse.get({id:payload.id, action:"approve"},payload)
+    approveStoreHouse: function(payload){
+        return StoreHouseResource.get({id:payload.id, action:"approve"},payload)
     },
     removeStoreHouse: function(){
-        return StoreHouse.remove({id:payload.id})
+        return StoreHouseResource.remove({id:payload.id})
     },
     //Repair
     getRepairList: function() {
         return RepairResource.get()
     },
-    updateRepairList: function(payload){
-        return Repair.update({id:payload.id}, payload)
+    updateRepair: function(payload){
+        return RepairResource.update({id:payload.id}, payload)
     },
-    saveRepairList: function(payload){
-        return Repair.save(payload)
+    saveRepair: function(payload){
+        return RepairResource.save(payload)
     },
-    approveRepairList: function(payload){
-        return Repair.get({id:payload.id, action:"approve"},payload)
+    approveRepair: function(payload){
+        return RepairResource.get({id:payload.id, action:"approve"},payload)
     },
     removeRepair: function(){
-        return Repair.remove({id:payload.id})
+        return RepairResource.remove({id:payload.id})
     },
     //Logistic
     getLogisticList: function() {
         return LogisticResource.get()
     },
-    updateLogisticList: function(payload){
-        return Logistic.update({id:payload.id}, payload)
+    updateLogistic: function(payload){
+        return LogisticResource.update({id:payload.id}, payload)
     },
-    saveLogisticList: function(payload){
-        return Logistic.save(payload)
+    saveLogistic: function(payload){
+        return LogisticResource.save(payload)
     },
-    approveLogisticList: function(payload){
-        return Logistic.get({id:payload.id, action:"approve"},payload)
+    approveLogistic: function(payload){
+        return LogisticResource.get({id:payload.id, action:"approve"},payload)
     },
     removeLogistic: function(){
-        return Logistic.remove({id:payload.id})
+        return LogisticResource.remove({id:payload.id})
     },
     //log
     getLogEquipmentList: function() {
         return LogEquipmentResource.get()
     },
-    getLogSourceCompanyList: function() {
+    getLogSourceCompany: function() {
         return LogSourceCompanyResource.get()
     },
-    getLogSourceCustomerList: function(){
+    getLogSourceCustomer: function(){
         return LogSourceCustomerResource.get()
     },
     getLogSaleOrderList: function(){

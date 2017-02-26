@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference>
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSt location="repair">
             <h3 slot="titlename" align=center> 维修管理 </h3>
         </ListView>
     </div>
@@ -10,6 +10,17 @@
 import ListView from '../../utils/ListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+    data (){
+        return {
+            cbSet : {
+            get: this.getRepairList,
+            update: this.updateRepair,
+            save: this.saveRepair,
+            remove: this.removeRepair,
+            approve: this.approveRepair
+        }
+        }
+    },
     components : {
         ListView
     },
@@ -33,15 +44,25 @@ export default {
         }
     },
     methods : {
-        createContent : (title, suffix)=>{
-            var ret = {}
-            for (var item in title){
-                ret[item] = title[item] + suffix
-            }
-            return ret
-        },
         getRepairList (){
             this.$store.dispatch('getRepairList')
+        },
+        updateRepair(content){
+            //console.log('save equipment', content)
+            this.$store.dispatch('updateRepair', content)
+            this.getRepairList()
+        },
+        saveRepair(content){
+            this.$store.dispatch('saveRepair', content)
+            this.getRepairList()
+        },
+        removeRepair(content){
+            this.$store.dispatch('removeRepair', {id:content.id})
+            this.getRepairList()
+        },
+        approveRepair(content){
+            this.$store.dispatch('approveRepair', {id:content.id})
+            this.getRepairList()
         }
     },
 

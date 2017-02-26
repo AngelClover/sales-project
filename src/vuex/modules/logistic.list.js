@@ -18,7 +18,7 @@ const mutations = {
     },
     [GET_LOGISTIC_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.content = response_data.logistic
+        state.content = response_data.logistics
         state.title = []//response_data.headers
         for (var item in response_data.headers){
             var d = {}
@@ -58,7 +58,7 @@ export const getLogisticList = (store) => {
             if (response.data.error != 0){
                 failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
-                store.commit(GET_EQUIPMENT_LIST_SUCCESS, response.data.data)
+                store.commit(GET_LOGISTIC_LIST_SUCCESS, response.data.data)
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)

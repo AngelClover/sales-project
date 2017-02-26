@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference >
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="sourcecompany">
         <h3 slot="titlename" align=center> 首营公司管理 </h3>
         </ListView>
     </div>
@@ -12,6 +12,17 @@ import ListView from '../../../utils/ListView.vue'
 //import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+    data (){
+        return {
+            cbSet : {
+            get: this.getSourceCompanyList,
+            update: this.updateSourceCompany,
+            save: this.saveSourceCompany,
+            remove: this.removeSourceCompany,
+            approve: this.approveSourceCompany
+        }
+        }
+    },
     components : {
         ListView
     },
@@ -35,15 +46,25 @@ export default {
         }
     },
     methods : {
-        createContent : (title, suffix)=>{
-            var ret = {}
-            for (var item in title){
-                ret[item] = title[item] + suffix
-            }
-            return ret
-        },
         getSourceCompanyList (){
             this.$store.dispatch('getSourceCompanyList')
+        },
+        updateSourceCompany(content){
+            //console.log('save equipment', content)
+            this.$store.dispatch('updateSourceCompany', content)
+            this.getSourceCompanyList()
+        },
+        saveSourceCompany(content){
+            this.$store.dispatch('saveSourceCompany', content)
+            this.getSourceCompanyList()
+        },
+        removeSourceCompany(content){
+            this.$store.dispatch('removeSourceCompany', {id:content.id})
+            this.getSourceCompanyList()
+        },
+        approveSourceCompany(content){
+            this.$store.dispatch('approveSourceCompany', {id:content.id})
+            this.getSourceCompanyList()
         }
     },
 

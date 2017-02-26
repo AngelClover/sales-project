@@ -18,7 +18,7 @@ const mutations = {
     },
     [GET_SOURCE_COMPANY_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.content = response_data.enterprise
+        state.content = response_data.enterprises
         //state.preference = response_data.preference
         //state.title = response_data.title
         state.title = []
