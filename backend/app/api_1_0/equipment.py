@@ -3,7 +3,7 @@
 
 from flask import jsonify, request, g, url_for, current_app
 from .. import db
-from ..models import Equipment, Permission
+from ..models import Equipment, Permission, Store
 from . import api
 from decorators import permission_required
 from errors import bad_request
@@ -142,4 +142,16 @@ def delete_equipment(id):
             'error' : 0,
             'msg' : 'delete equipment successful',
             'data' : {}
+            })
+
+@api.route('/equipment/get_store/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def get_store_equipoment(id):
+    equip = Equipment.query.get(id)
+    if equip is None:
+        return bad_request('no such a equipment')
+    return jsonify({
+            'error' : 0,
+            'msg' : '',
+            'data' : [store.to_json() for store in equip.stores]
             })

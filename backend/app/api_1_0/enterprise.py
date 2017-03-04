@@ -28,8 +28,10 @@ def get_enterprises():
     return jsonify({
             'error' : 0,
             'msg' : '',
-            'data' : [enterprise.to_json() for enterprise in enterprises]
-            })
+            'data' : {
+            'headers' : Enterprise.get_ordered_headers(),
+            'enterprises' : [enterprise.to_json() for enterprise in enterprises]
+            }})
 
 
 @api.route('/enterprise/<int:id>', methods=['GET'])
