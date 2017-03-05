@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSt location="repair">
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="repair">
             <h3 slot="titlename" align=center> 维修管理 </h3>
         </ListView>
     </div>

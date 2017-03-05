@@ -170,8 +170,14 @@ export default {
         console.log('api payload', payload)
         return UserResource.update({id:payload.username}, payload)
     },
-    getUserList: function(){
+    getUserInfoList: function(){
         return UserResource.query()
+    },
+    saveUserInfo: function(payload){
+        return UserResource.save(payload)
+    },
+    removeUserInfo: function(payload){
+        return UserResource.remove({id:payload.id})
     }
 
 }

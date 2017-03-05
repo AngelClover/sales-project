@@ -63,7 +63,6 @@
                             <p> <router-link to="/logistic"> 物流管理 </router-link> </p>
                         </div>
                     </div>
-                    <!--
                     <div v-show="userInfo.module.indexOf('finance') >= 0">
                         <div class="title">
                             <p> <router-link to="/finance"> 财务管理 </router-link> </p>
@@ -74,7 +73,6 @@
                             <p> <router-link to="/userauth"> 用户权限管理 </router-link> </p>
                         </div>
                     </div>
-                    -->
                 </div>
             </div>
 </template>
