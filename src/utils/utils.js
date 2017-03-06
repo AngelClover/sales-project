@@ -58,7 +58,20 @@ export function cmp(x, y){
     return true;  
 
 }
+
+var _ = require("underscore")
+export function deepClone(obj){
+    var clone = _.clone(obj)
+    _.each(clone, function(value, key){
+        if (_.isObject(value)){
+            clone[key] = deepClone(value)
+        }
+    })
+    return clone
+}
+
 export default {
     deepCopy,
     cmp,
+    deepClone,
 }

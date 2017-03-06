@@ -103,15 +103,18 @@ export default {
         },
         clickRow(item){
             this.detailContent = item
-            this.tmpDetailContent = utils.deepCopy(this.detailContent)
+            //this.tmpDetailContent = utils.deepCopy(this.detailContent)
+            //this.tmpDetailContent = us.pick(this.detailContent, "permission")
+            this.tmpDetailContent = utils.deepClone(this.detailContent)
             this.showAuthDetail = true
-            console.log("underscore equal when create fake", us.isEqual(this.DetailContent, this.detailContent))
-            console.log("underscore equal when create", us.isEqual(this.tmpDetailContent, this.detailContent))
         },
         closeDetail(){
             console.log("underscore equal", us.isEqual(this.tmpDetailContent, this.detailContent))
             if (us.isEqual(this.tmpDetailContent, this.detailContent)){
+                console.log("closedetail for equal, no need to send request")
             }else{
+                var payload = this.tmpDetailContent
+                console.log("underscore info detail payload", JSON.stringify(payload))
                 this.$store.dispatch('updateUserInfo', this.detailContent)
                 this.getUserInfoList()
             }
