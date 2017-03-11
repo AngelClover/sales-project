@@ -18,6 +18,21 @@ def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify(user.to_json())
 
+#TODO admin required added
+@api.route('/users', methods=['GET'])
+def get_user_list():
+    user_list = User.query.all()
+    print 'user_list:', user_list
+    ret = []
+    for user in user_list:
+        ret.append(user.to_json())
+
+    return jsonify({
+            'error' : 0,
+            'msg' : 'get user list successful',
+            'data' : { 'userList' : ret },
+            })
+
 @api.route('/users', methods=['POST'])
 def new_user():
     user_json = request.get_json()
