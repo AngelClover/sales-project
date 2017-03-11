@@ -12,6 +12,7 @@ import auth from './modules/auth'
 import msg from './modules/toast'
 import user from './modules/user'
 import admin from './modules/admin'
+import permission from './modules/permission'
 //import {getEquipmentList} from './actions'
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -34,7 +35,8 @@ export default new Vuex.Store({
         auth,
         msg,
         user,
-        admin
+        admin,
+        permission,
     },
     //middlewares,
     strict : debug,

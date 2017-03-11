@@ -1,6 +1,6 @@
 import {EquipmentResource, SourceCompanyResource, SourceCustomerResource, SaleOrderResource, BuyOrderResource, StoreHouseResource, RepairResource, LogisticResource} from './resources'
 import {LogEquipmentResource, LogSourceCompanyResource, LogSourceCustomerResource, LogSaleOrderResource, LogBuyOrderResource, LogStoreHouseResource, LogRepairResource, LogLogisticResource} from './resources'
-import {UserResource, AuthResource} from './resources'
+import {UserResource, AuthResource, PermissionResource} from './resources'
 
 export default {
     //Equipment
@@ -168,7 +168,7 @@ export default {
     },
     updateUserInfo: function(payload){
         console.log('api payload', payload)
-        return UserResource.update({id:payload.username}, payload)
+        return UserResource.update({id:payload.id}, payload)
     },
     getUserInfoList: function(){
         return UserResource.query()
@@ -178,6 +178,16 @@ export default {
     },
     removeUserInfo: function(payload){
         return UserResource.remove({id:payload.id})
-    }
+    },
+    getPermissionList: function(){
+        return PermissionResource.get()
+    },
+    addPermission: function(payload){
+        return PermissionResource.save({id:payload.id, action:"authorize"}, payload)
+    },
+    removePermission: function(payload){
+        return PermissionResource.save({id:payload.id, action:"unauthorize"}, payload)
+    },
+    
 
 }

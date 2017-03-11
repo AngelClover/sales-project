@@ -69,4 +69,6 @@ export const LogLogisticResource = Vue.resource(API_ROOT + apiBase + 'log/logist
 export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')
 export const UserResource = Vue.resource(API_ROOT + apiBase + 'users{/id}')
 
+export const PermissionResource = Vue.resource(API_ROOT + apiBase + 'permission{/action}{/id}')
+
 

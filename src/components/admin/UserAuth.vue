@@ -58,6 +58,7 @@ export default {
             showAuthDetail : false,
             detailContent : {},
             tmpDetailContent: {},
+            //attr: ["read", "write", "approve"],
         }
     },
     computed : {
@@ -67,12 +68,18 @@ export default {
         loading(){
             if (this.userList.length > 0 && this.userList[0] && this.userList[0].permission) return false;
             else return true;
+        },
+        permissionList(){
+            return this.$store.getters.getPermissionList
         }
     },
     created(){
         if (this.userList.length < 1){
             this.getUserInfoList()
         }
+        //if (this.$store.getPermissionList < 1){
+            this.$store.dispatch('getPermissionList')
+        //}
     },
     methods : {
         getUserInfoList(){
@@ -80,15 +87,15 @@ export default {
         },
         updateUserInfo(content){
             this.$store.dispatch('updateUserInfo', content)
-            this.getuserinfolist()
+            this.getUserInfoList()
         },
         saveUserInfo(content){
             this.$store.dispatch('saveUserInfo', content)
-            this.getuserinfolist()
+            this.getUserInfoList()
         },
         removeUserInfo(content){
             this.$store.dispatch('removeUserinfo', {id:content.id})
-            this.getuserinfolist()
+            this.getUserInfoList()
         },
         getPerList(){
             var dat = {"equipment":"设备", "enterprise":"企业", "purchase":"采购", "sale":"销售", "store":"库管", "logistic":"物流", "repair":"维修", "finance":"财务" }
@@ -115,10 +122,50 @@ export default {
             }else{
                 var payload = this.tmpDetailContent
                 console.log("underscore info detail payload", JSON.stringify(payload))
-                this.$store.dispatch('updateUserInfo', this.detailContent)
-                this.getUserInfoList()
+                this.addAuth(this.tmpDetailContent, this.detailContent)
+                this.removeAuth(this.tmpDetailContent, this.detailContent)
+                //this.$store.dispatch('updateUserInfo', payload)
             }
+            //setTimeout(this.getUserInfoList(), 5000) //But no use....
             this.showAuthDetail = false
+        },
+        addAuth(target, source){
+            var payload = {
+                "permissions" : []
+            }
+            //console.log("permissionList in getters", this.permissionList)
+            for (var index in this.permissionList){
+                var key = this.permissionList[index][0]
+                for(var at in this.permissionList[index][1]){
+                    if (target.permission[key][at] && !source.permission[key][at]){
+                        payload.permissions.push(this.permissionList[index][1][at])
+                    }
+                }
+            }
+            if (payload.permissions.length > 0){
+                payload.id = target.id //userid
+                console.log('add Auth', payload)
+                this.$store.dispatch('addPermissions', payload)
+            }
+        },
+        removeAuth(target, source){
+            var payload = {
+                "permissions" : []
+            }
+            //console.log("permissionList in getters", this.permissionList)
+            for (var index in this.permissionList){
+                var key = this.permissionList[index][0]
+                for(var at in this.permissionList[index][1]){
+                    if (!target.permission[key][at] && source.permission[key][at]){
+                        payload.permissions.push(this.permissionList[index][1][at])
+                    }
+                }
+            }
+            if (payload.permissions.length > 0){
+                payload.id = target.id //userid
+                console.log('remove Auth', payload)
+                this.$store.dispatch('removePermissions', payload)
+            }
         }
     }
 }

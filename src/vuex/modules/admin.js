@@ -57,7 +57,7 @@ const getUserInfoList = (store) =>{
 const updateUserInfo = (store, payload) => {
     var failMessage = "更新失败"
     api.updateUserInfo(payload).then(response => {
-        console.log('save response succ', response)
+        console.log('update response succ', payload, response)
         if (response.status == 200){
             if (response.data.error != 0){
                 failBack(store, failMessage + response.data.error + response.data.msg)
