@@ -35,7 +35,7 @@ export default {
     approveSourceCompany: function(payload){
         return SourceCompanyResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeSourceCompany: function(){
+    removeSourceCompany: function(payload){
         return SourceCompanyResource.remove({id:payload.id})
     },
 
@@ -58,8 +58,11 @@ export default {
     approveSaleOrder: function(payload){
         return SaleOrderResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeSaleOrder: function(){
+    removeSaleOrder: function(payload){
         return SaleOrderResource.remove({id:payload.id})
+    },
+    transferSaleOrder: function(payload){
+        //TODO
     },
 
     //BuyOrder
@@ -75,8 +78,11 @@ export default {
     approveBuyOrder: function(payload){
         return BuyOrderResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeBuyOrder: function(){
+    removeBuyOrder: function(payload){
         return BuyOrderResource.remove({id:payload.id})
+    },
+    transferBuyOrder: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"can_store"})
     },
     //Store
     getStoreHouseList: function() {
@@ -91,8 +97,20 @@ export default {
     approveStoreHouse: function(payload){
         return StoreHouseResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeStoreHouse: function(){
+    removeStoreHouse: function(payload){
         return StoreHouseResource.remove({id:payload.id})
+    },
+    storeInOne: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"store_one"})
+    },
+    storeInAll: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"store_all"})
+    },
+    storeOut: function(payload){
+        return StoreHouseResource.save({action:"out_store"}, payload)
+    },
+    storedEquipmentList: function(payload){
+        return EquipmentResource.save({action:"get_store", id:payload.id})
     },
     //Repair
     getRepairList: function() {
@@ -107,7 +125,7 @@ export default {
     approveRepair: function(payload){
         return RepairResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeRepair: function(){
+    removeRepair: function(payload){
         return RepairResource.remove({id:payload.id})
     },
     //Logistic
@@ -123,7 +141,7 @@ export default {
     approveLogistic: function(payload){
         return LogisticResource.get({id:payload.id, action:"approve"},payload)
     },
-    removeLogistic: function(){
+    removeLogistic: function(payload){
         return LogisticResource.remove({id:payload.id})
     },
     //log

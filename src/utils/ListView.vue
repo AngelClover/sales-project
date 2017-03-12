@@ -6,6 +6,12 @@
                 <i class="search icon"></i>
         </div>
             <br/>
+            <div class="filter label" v-show="this.filteredList.length > 0">
+                <button v-for="item in this.filteredList" @click=filterByLabel(item)>
+                    {{item.displayName}}
+                </button>
+            </div>
+            <br/>
             <div class='table-container'>
         <table>
             <thead>
@@ -77,7 +83,7 @@ export default {
         Detail,
         Preference
     },
-    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList'],
     data : function(){
         return {
             sortKey : '',
@@ -89,6 +95,11 @@ export default {
             actionType : 'show',
             showPref : false,
             clearCache : false,
+            allListObj : {
+                displayName : "全部",
+                filtercb : obj => {return true},
+            },
+            labelFiltercb : obj => {return true},
         }
     },
     computed : {
@@ -132,7 +143,7 @@ export default {
             return ret
         },
         filteredContent : function() {
-            //console.log('filteredContent computed')
+            console.log('filteredContent computed')
             var sortKey = this.sortKey
             //var filterkey = this.filterkey && this.filterkey.tolowercase()
             var filterKey = this.searchQuery && this.searchQuery.toLowerCase()
@@ -141,6 +152,17 @@ export default {
             }
             var order = this.sortOrders[sortKey] || 1
             var data = this.content
+            var _this = this
+            var tmp = this.labelFiltercb
+            console.log('filteredList size: ', this.filteredList)
+            if (this.filteredList.length > 0){
+                console.log('label filter change the data from', data.length, '=>')
+                data = data.filter(function (row){
+                    console.log('consider row', row)
+                    return _this.labelFiltercb(row)
+                })
+                console.log('label filter change the data to => ', data.length)
+            }
             if (filterKey) {
                 data = data.filter(function (row) {
                     return Object.keys(row).some(function (key) {
@@ -158,6 +180,16 @@ export default {
             }
             //console.log('filteredContent computed end')
             return data
+        },
+        filteredList : function(){
+            var ret = []
+            if (this.filterList && this.filterList.length > 0){
+                ret.push(this.allListObj)
+            }
+            for (var key in this.filterList){
+                ret.push(this.filterList[key])
+            }
+            return ret
         },
     },
    filters: {
@@ -178,7 +210,7 @@ export default {
             //console.log('listview method initSortOrders', Object.keys(this.title))
             var _this = this
             Object.keys(this.title).forEach(function (key) {
-                console.log('sort key', key)
+                //console.log('sort key', key)
 
                 sortOrders[_this.title[key].item] = 1
             })
@@ -202,7 +234,11 @@ export default {
            console.log('showPrefs', this.showPref)
            this.showPref = !this.showPref
            console.log('showPrefs', this.showPref)
-       }
+       },
+       filterByLabel(obj){
+           console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
+           this.labelFiltercb = obj.filtercb
+       },
 
    }
 }

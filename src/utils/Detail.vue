@@ -28,6 +28,9 @@
                             <button class="ui red button" @click="approve" >
                                 审批
                             </button>
+                            <button class="ui green button" @click="transfer" >
+                                转化
+                            </button>
                             </center>
                         </div>
                     </div>
@@ -135,7 +138,10 @@ export default {
         },
         approve : function(){
             this.cbset.approve(this.detailContent)
-        }
+        },
+        transfer : function(){
+            this.cbset.transfer(this.detailContent)
+        },
     }
 
 }

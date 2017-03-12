@@ -78,6 +78,7 @@ const updateBuyOrder = (store, payload) => {
                 failBack(store, failMessage + response.data.error + response.data.msg)
             } else{
                 store.dispatch('showMsg', '修改成功', 'success')
+                store.dispatch('getBuyOrderList')
             }
         } else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -95,6 +96,7 @@ const saveBuyOrder = (store, payload) => {
                 failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
                 store.dispatch('showMsg', '添加成功', 'success')
+                store.dispatch('getBuyOrderList')
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -112,6 +114,7 @@ const removeBuyOrder = (store, payload) => {
                 failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
                 store.dispatch('showMsg', '删除成功', 'success')
+                store.dispatch('getBuyOrderList')
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -129,6 +132,7 @@ const approveBuyOrder = (store, payload) => {
                 failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
                 store.dispatch('showMsg', '审批成功', 'success')
+                store.dispatch('getBuyOrderList')
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -138,12 +142,28 @@ const approveBuyOrder = (store, payload) => {
     })
 }
 
+const transferBuyOrder = (store, payload) => {
+    var failMessage = "采购订单转化入库申请失败"
+    api.transferBuyOrder(payload).then(response => {
+        console.log('transfer response succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            store.dispatch('showMsg', '采购订单转化入库申请成功', 'successs')
+            store.dispatch('getBuyOrderList')
+        }else{
+            failBack(store, failMessage + response.data.error + response.data.msg)
+        }
+    }, response => {
+        failBack(store, failMessage + response.data.error + response.data.msg)
+    })
+}
+
 const actions = {
     getBuyOrderList,
     updateBuyOrder,
     saveBuyOrder,
     removeBuyOrder,
-    approveBuyOrder
+    approveBuyOrder,
+    transferBuyOrder,
 }
 
 export default{

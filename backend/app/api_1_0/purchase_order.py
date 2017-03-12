@@ -134,7 +134,7 @@ def approve_purchase_order(id):
             'data' : {}
             })
 
-@api.route('/purchase/can_store/<int:id>', methods=['GET', 'POSt'])
+@api.route('/purchase/can_store/<int:id>', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['write'])
 def purchase_can_store(id):
     p_order = PurchaseOrder.query.get_or_404(id)
