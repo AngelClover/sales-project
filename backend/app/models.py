@@ -135,7 +135,7 @@ class PurchaseOrder(db.Model):
     pay_mode = db.Column(db.String(256))#付款方式
     invoice_type = db.Column(db.String(256))#发票类型
     postage_account = db.Column(db.String(256))#运费承担方
-    state = db.Column(db.Integer, default=1)#状态，0:已审批, 1:创建，待审核, 2:待入库
+    state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:买货中(占位) -2:待入库 -3:入库中(partial) -4：已入库
     total_stored = db.Column(db.Integer, default=0)#是否完全入库, 0:未入库；1：部分入库；2:完全入库
 
     @staticmethod
@@ -197,7 +197,7 @@ class PurchaseOrder(db.Model):
             'invoice_type' : self.invoice_type,
             'postage_account' : self.postage_account,
             'total_price' : total_price,
-            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else u'待入库')),
+            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待入库' if self.state == -2 else (u'入库中' if self.state == -3 else (u'已入库' if self.state == -4 else u'状态异常'))))),
             'equipments' : equipments,
             'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
         }
