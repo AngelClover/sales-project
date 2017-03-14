@@ -257,8 +257,8 @@ table {
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
-  width: 80%;
-  height:70%;
+  width: 100%;
+  height:90%;
   overflow: scroll;
 }
 

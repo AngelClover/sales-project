@@ -2,7 +2,7 @@
     <div>
         <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet">
             <h3 slot="titlename" align=center> 采购订单管理 </h3>
-        </ListView
+        </ListView>
     </div>
 </template>
 
@@ -19,18 +19,26 @@ export default {
                 remove: this.removeBuyOrder,
                 approve: this.approveBuyOrder,
                 transfer: this.transferBuyOrder,
+                storeInAll: this.storeInAllBuyOrder,
+                storeInOne: this.storeInOneBuyOrder,
             },
             labelFilterSet : [
             {
+                displayName : "待审批",
+                filtercb : function(obj) {
+                    return obj && obj.state && obj.state == "待审核" 
+                },
+            },
+            {
                 displayName : "待入库",
                 filtercb : function(obj) {
-                    return obj && obj.state && obj.state == "审核通过" && obj.total_stored && obj.total_stored != "完全入库"
+                    return obj && obj.state && obj.state == "审核通过" || obj.state == "入库中"
                 },
             },
             {
                 displayName : "已入库",
                 filtercb : function(obj) {
-                    return obj && obj.state && obj.state == "审核通过" && obj.total_stored && obj.total_stored == "完全入库"
+                    return obj && obj.state && obj.state == "已入库" 
                 },
             }
             ],
@@ -81,6 +89,12 @@ export default {
         },
         transferBuyOrder(content){
             this.$store.dispatch('transferBuyOrder', {id:content.id})
+        },
+        storeInAllBuyOrder(content){
+            this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
+        },
+        storeInOneBuyOrder(content){
+            this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
         },
     },
 

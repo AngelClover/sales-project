@@ -101,16 +101,16 @@ export default {
         return StoreHouseResource.remove({id:payload.id})
     },
     storeInOne: function(payload){
-        return BuyOrderResource.save({id:payload.id, action:"store_one"})
+        return BuyOrderResource.save({id:payload.id, action:"store_one"}, payload)
     },
     storeInAll: function(payload){
-        return BuyOrderResource.save({id:payload.id, action:"store_all"})
+        return BuyOrderResource.save({id:payload.id, action:"store_all"}, payload)
     },
     storeOut: function(payload){
         return StoreHouseResource.save({action:"out_store"}, payload)
     },
     storedEquipmentList: function(payload){
-        return EquipmentResource.save({action:"get_store", id:payload.id})
+        return EquipmentResource.save({action:"get_store", id:payload.id}, payload)
     },
     //Repair
     getRepairList: function() {

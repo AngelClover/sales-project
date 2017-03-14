@@ -29,8 +29,16 @@
                                 审批
                             </button>
                             <button class="ui green button" @click="transfer" >
-                                转化
+                                采购
                             </button>
+                            <button class="ui green button" @click="storeInAll" >
+                                入库
+                            </button>
+                                <!--
+                            <button class="ui green button" @click="storeInOne" >
+                                单个入库
+                            </button>
+                                -->
                             </center>
                         </div>
                     </div>
@@ -141,6 +149,9 @@ export default {
         },
         transfer : function(){
             this.cbset.transfer(this.detailContent)
+        },
+        storeInAll : function(){
+            this.cbset.storeInAll(this.detailContent)
         },
     }
 
