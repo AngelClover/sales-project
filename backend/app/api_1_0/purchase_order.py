@@ -141,7 +141,7 @@ def purchase_can_store(id):
     p_order = PurchaseOrder.query.get_or_404(id)
     if p_order.state != 0:
         return bad_request('cannot store a purchase order, that\'s state is not approved')
-    p_order.state = 2
+    p_order.state = -2
     db.session.commit()
     return jsonify({'error' : 0, 'msg' : ''})
 
@@ -149,7 +149,7 @@ def purchase_can_store(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_one_equipment(id):
     p_equipment = PurchaseEquipment.query.get_or_404(id)
-    if p_equipment.purchase_order.state != 2:
+    if p_equipment.purchase_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
     if p_equipment.stored == 1:
         return bac_request('already stored in houseware')
@@ -162,9 +162,11 @@ def store_one_equipment(id):
             break
     #部分入库
     p_equipment.purchase_order.total_stored = 1
+    p_equipment.purchase_order.state = -3
     if not part_stored:
         #完全入库
         p_equipment.purchase_order.total_stored = 2 
+        p_equipment.purchase_order.state = -4 
     db.session.commit()
     #add store element
     new_store = Store()
@@ -184,7 +186,7 @@ def store_one_equipment(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_all_equipments(id):
     p_order = PurchaseOrder.query.get_or_404(id)
-    if p_order.state != 2:
+    if p_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
 
     for p_equipment in p_order.purchase_equipments:
@@ -198,6 +200,7 @@ def store_all_equipments(id):
         db.session.add(new_store)
         p_equipment.stored = 1
     p_order.total_stored = 2
+    p_order.state = -4
     db.session.commit()
 
     return jsonify({
