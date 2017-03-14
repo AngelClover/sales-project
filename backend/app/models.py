@@ -197,7 +197,7 @@ class PurchaseOrder(db.Model):
             'invoice_type' : self.invoice_type,
             'postage_account' : self.postage_account,
             'total_price' : total_price,
-            'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else u'待入库'),
             'equipments' : equipments,
             'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
         }

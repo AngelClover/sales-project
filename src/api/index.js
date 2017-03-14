@@ -79,10 +79,10 @@ export default {
         return BuyOrderResource.get({id:payload.id, action:"approve"},payload)
     },
     removeBuyOrder: function(payload){
-        return BuyOrderResource.remove({id:payload.id})
+        return BuyOrderResource.remove({id:payload.id}, payload)
     },
     transferBuyOrder: function(payload){
-        return BuyOrderResource.save({id:payload.id, action:"can_store"})
+        return BuyOrderResource.save({id:payload.id, action:"can_store"}, payload)
     },
     //Store
     getStoreHouseList: function() {

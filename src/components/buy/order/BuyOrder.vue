@@ -20,13 +20,20 @@ export default {
                 approve: this.approveBuyOrder,
                 transfer: this.transferBuyOrder,
             },
-            labelFilterSet : [{
+            labelFilterSet : [
+            {
                 displayName : "待入库",
                 filtercb : function(obj) {
-                    console.log("obj in buyorder labelFilter cb", obj)
                     return obj && obj.state && obj.state == "审核通过" && obj.total_stored && obj.total_stored != "完全入库"
                 },
-            }],
+            },
+            {
+                displayName : "已入库",
+                filtercb : function(obj) {
+                    return obj && obj.state && obj.state == "审核通过" && obj.total_stored && obj.total_stored == "完全入库"
+                },
+            }
+            ],
         }
     },
     components : {

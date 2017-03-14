@@ -7,7 +7,7 @@
         </div>
             <br/>
             <div class="filter label" v-show="this.filteredList.length > 0">
-                <button v-for="item in this.filteredList" @click=filterByLabel(item)>
+                <button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
                 </button>
             </div>
@@ -113,7 +113,7 @@ export default {
             var prefarray = prefobj["pref"] || []
             var ret = []
             console.log("preference list prefarray", prefarray)
-            if (prefarray == undefined || prefarray.length == 0){
+            if (typeof(prefarray) == undefined || prefarray.length == 0){
                 console.log('preference in listview branch 1', this.title)
                 if (this.title && Object.values(this.title).length >= 1){ //To be better
                     for (var item in this.title){
@@ -147,7 +147,7 @@ export default {
             var sortKey = this.sortKey
             //var filterkey = this.filterkey && this.filterkey.tolowercase()
             var filterKey = this.searchQuery && this.searchQuery.toLowerCase()
-            if (this.sortOrders[sortKey] == undefined){
+            if (typeof(this.sortOrders[sortKey]) == undefined){
                 this.initSortOrders()
             }
             var order = this.sortOrders[sortKey] || 1
