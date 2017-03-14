@@ -21,6 +21,8 @@ def authorize(id):
     user = User.query.get(id)
     if user is None:
         return bad_request('no such a user')
+    if user.id == 1 or user.username == admin:
+        return bad_request('admin has no need to be authorize')
     if 'permissions' not in request.get_json() or \
             not isinstance(request.get_json()['permissions'], list):
         return bad_request('authorize need json permissions field or not a list')
@@ -40,6 +42,8 @@ def unauthorize(id):
     user = User.query.get(id)
     if user is None:
         return bad_request('no such a user')
+    if user.id == 1 or user.username == admin:
+        return bad_request('admin has no need to be unauthorize')
     if 'permissions' not in request.get_json() or \
             not isinstance(request.get_json()['permissions'], list):
         return bad_request('authorize need json permissions field or not a list')

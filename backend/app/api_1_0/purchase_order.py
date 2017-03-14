@@ -78,6 +78,7 @@ def new_purchase_order():
                         })
             Equipment.query.get_or_404(e['equipment_id'])
 
+        x = order.to_json()
         #add order for get purchase order id
         db.session.add(order)
         db.session.commit()
@@ -94,7 +95,6 @@ def new_purchase_order():
             pe.total_price = float(pe.unit_price) * float(pe.quantity)
             pe.product_configure = e.get('product_configure') or None
             db.session.add(pe)
-        order.to_json()
         db.session.commit()
     except Exception, e:
         return jsonify({
