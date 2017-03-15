@@ -126,6 +126,8 @@ def delete_sale_order(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['sale']['approve'])
 def approve_sale_order(id):
     sale_order = SaleOrder.query.get_or_404(id)
+    if store.state != 1:
+        return bad_request('wrong order number, cannot approve')
     sale_order.state = 0
     db.session.commit()
     return jsonify({

@@ -127,6 +127,8 @@ def delete_purchase_order(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['approve'])
 def approve_purchase_order(id):
     purchase_order = PurchaseOrder.query.get_or_404(id)
+    if purchase_order.state != 1:
+        return bad_request('wrong order number, cannot approve')
     purchase_order.state = 0
     db.session.commit()
     return jsonify({

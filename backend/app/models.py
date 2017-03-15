@@ -233,7 +233,8 @@ class SaleOrder(db.Model):
     get_location = db.Column(db.String(1024))#收货地点
     pay_mode = db.Column(db.String(256))#付款方式
     invoice_type = db.Column(db.String(256))#发票类型
-    state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
+    #state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
+    state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(占位) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
     total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
 
     @staticmethod
@@ -246,6 +247,7 @@ class SaleOrder(db.Model):
         ('get_location', u'收货地点'),
         ('pay_mode', u'付款方式'),
         ('invoice_type', u'发票类型'),
+        ('state', u'订单状态'),
         ('total_outstore', u'出库情况(未/部分/完全'),
         (),
         ('service_commitment', u'售后服务承诺'),
@@ -290,7 +292,7 @@ class SaleOrder(db.Model):
             'pay_mode' : self.pay_mode,
             'invoice_type' : self.invoice_type,
             'total_price' : total_price,
-            'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常'))))),
             'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
             'equipments' : equipments
         }

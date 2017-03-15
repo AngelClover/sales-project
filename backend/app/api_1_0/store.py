@@ -152,8 +152,10 @@ def out_store_equipments():
                 break
         if part_outstored:
             sale_equipment.sale_order.total_outstore = 1
+            sale_equipment.sale_order.state = -3
         else:
             sale_equipment.sale_order.total_outstore = 2
+            sale_equipment.sale_order.state = -4
     except Exception, e:
         return jsonify({
                 'error' : 2,
