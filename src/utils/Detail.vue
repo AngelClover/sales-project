@@ -34,6 +34,9 @@
                             <button class="ui green button" @click="storeInAll" >
                                 入库
                             </button>
+                            <button class="ui green button" @click="storeOut" >
+                                出库
+                            </button>
                                 <!--
                             <button class="ui green button" @click="storeInOne" >
                                 单个入库
@@ -76,6 +79,8 @@
                             </center>
                         </div>
                     </div>
+                    <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
+                    </OutSelector>
                 </div>
             </div>
         </transition>
@@ -92,13 +97,18 @@
 <script>
 import api from '../api'
 import utils from './utils'
+import OutSelector from './outSelector.vue'
 export default {
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset'],
+    components : {
+        OutSelector
+    },
+    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores'],
     data: function() {
         return {
             debug : true,
             newContent : {},
             showContent : true,
+            showOutStore : false,
         }
     },
     methods : {
@@ -152,6 +162,10 @@ export default {
         },
         storeInAll : function(){
             this.cbset.storeInAll(this.detailContent)
+        },
+        storeOut : function(){
+            this.showOutStore = true;
+            //this.cbset.storeOut(this.detailContent)
         },
     }
 

@@ -110,7 +110,7 @@ export default {
         return StoreHouseResource.save({action:"out_store"}, payload)
     },
     storedEquipmentList: function(payload){
-        return EquipmentResource.save({action:"get_store", id:payload.id}, payload)
+        return EquipmentResource.query({action:"get_store", id:payload.id}, payload)
     },
     //Repair
     getRepairList: function() {

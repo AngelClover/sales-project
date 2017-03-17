@@ -155,7 +155,7 @@ const actions = {
     updateEquipment,
     saveEquipment,
     removeEquipment,
-    approveEquipment
+    approveEquipment,
     /*
     getEquipmentList : async ({commit}) => {
         console.log('angel commit in module dispatch')
