@@ -87,6 +87,8 @@ export default {
             x = x
             x = this.stores
             x = x
+            x = this.$store.getters.inStore
+            x = x
             if (this.stores && this.targetEquipment.equipment_id){
                 ret = this.stores[this.targetEquipment.equipment_id]
             }
