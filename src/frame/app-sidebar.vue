@@ -4,7 +4,7 @@
             sidebar
             </p>
         -->
-            <div class="three wide column overlay">
+            <div class="three wide column overlay sidebar left">
                 <div class="ui styled accordion">
                     <!--
                     <div class="title">
@@ -109,4 +109,18 @@ export default {
 </script>
 
 <style>
+.sidebar.left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+.sidebars > .sidebar {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.64);
+    position: fixed;
+    color: white;
+    padding: 30px;
+    font-size: 2em;
+    text-align: center;
+}
 </style>

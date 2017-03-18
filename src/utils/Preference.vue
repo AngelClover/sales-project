@@ -27,10 +27,10 @@
                     </div>
                     <div class="pref-footer">
                         <center>
-                            <button @click="selectAll" class="ui green  button">
+                            <button @click="selectAll" class="ui primary  button">
                                 全选 
                             </button>
-                            <button @click="close" class="ui primary button">
+                            <button @click="close" class="ui secondary button">
                                 OK
                             </button>
                         </center>

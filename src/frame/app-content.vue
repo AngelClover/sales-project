@@ -1,5 +1,5 @@
 <template>
-    <div class="ten wide column">
+    <div class="thirteen wide column">
         <div class="ui text container">
             <!--
                 <div class="header">

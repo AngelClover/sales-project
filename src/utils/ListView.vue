@@ -13,7 +13,7 @@
             </div>
             <br/>
             <div class='table-container'>
-        <table>
+        <table class="ui selected striped padded very basic compact table">
             <thead>
                 <tr>
                     <!--
@@ -42,9 +42,9 @@
 
         <br/>
         <div class="ui buttom" align=center>
-            <button @click=createAction class="ui green button"> 新建 </button>
-            <button @click=showPrefs class="ui violet button"> 偏好设置 </button>
-            <button @click=showLogTips class="ui red button"> 变更记录 </button>
+            <button @click=createAction class="ui primary button"> 新建 </button>
+            <button @click=showPrefs class="ui primary button"> 偏好设置 </button>
+            <button @click=showLogTips class="ui primary button"> 变更记录 </button>
         </div>
 
         <br/>
@@ -239,12 +239,15 @@ export default {
            console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
            this.labelFiltercb = obj.filtercb
        },
-
+       mounted(){
+           $('table').tablesort()
+       },
    }
 }
 </script>
 
 <style>
+/*
 table {
   border: 2px solid #42b983;
   border-radius: 3px;
@@ -285,6 +288,7 @@ table tr:nth-child(odd){
 table tr:hover tr:nth-child(odd){
     background: none;
 }
+*/
 
 tr:hover td{
     background: none;

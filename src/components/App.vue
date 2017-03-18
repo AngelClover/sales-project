@@ -23,6 +23,7 @@ import AppView from '../frame/app-view.vue'
 import Home from './Home.vue'
 import Toaster from './toaster/index.vue'
 import {isLogin} from '../utils/authService'
+import 'sidebarjs'
 
 export default {
     data: () => {

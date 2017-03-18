@@ -19,22 +19,22 @@
                         </div>
                         <div class="detail-footer">
                             <center>
-                            <button class="ui primary button" @click="$emit('close')">
+                            <button class="ui secondary button" @click="$emit('close')">
                                 OK
                             </button>
-                            <button class="ui button" @click="modifier">
+                            <button class="ui primary button" @click="modifier">
                                 修改
                             </button>
-                            <button class="ui red button" @click="approve" >
+                            <button class="ui primary  button" @click="approve" >
                                 审批
                             </button>
-                            <button class="ui green button" @click="transfer" >
+                            <button class="ui primary button" @click="transfer" >
                                 采购
                             </button>
-                            <button class="ui green button" @click="storeInAll" >
+                            <button class="ui primary button" @click="storeInAll" >
                                 入库
                             </button>
-                            <button class="ui green button" @click="storeOut" >
+                            <button class="ui primary button" @click="storeOut" >
                                 出库
                             </button>
                                 <!--
@@ -67,7 +67,7 @@
                         </div>
                         <div class="detail-footer">
                             <center>
-                            <button class="ui red button" @click="closeModifier">
+                            <button class="ui secondary button" @click="closeModifier">
                                 放弃
                             </button>
                             <button class="ui primary button" @click="realModify" v-show="actionType == 'show'">
