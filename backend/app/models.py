@@ -280,7 +280,8 @@ class SaleOrder(db.Model):
                     'product_configure' : e.product_configure,
                     'product_name' : e.equipment.info,
                     'spec' : e.equipment.spec,
-                    'model' : e.equipment.model
+                    'model' : e.equipment.model,
+                    'equipment_id' : e.equipment_id
                     })
 
         equip_json = {'id' : self.id,
