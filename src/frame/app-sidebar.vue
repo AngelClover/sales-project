@@ -4,7 +4,10 @@
             sidebar
             </p>
         -->
-            <div class="three wide column overlay sidebar left">
+        <!--
+            <div class="ui vertical sidebar three wide column overlay left">
+        -->
+            <div class="ui vertical inverted sidebar menu left">
                 <div class="ui styled accordion">
                     <!--
                     <div class="title">

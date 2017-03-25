@@ -58,7 +58,8 @@ export default {
             setTimeout(this.$router.go('/'), 5000)
         },
         sidebarToogle(){
-            $(".sidebar.left").sidebar().trigger("sidebar:toggle");
+            //$(".sidebar.left").sidebar().trigger("sidebar:toggle");
+            $(".sidebar.left").sidebar('toggle');
         }
     }
 }
