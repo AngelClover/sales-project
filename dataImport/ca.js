@@ -5,6 +5,15 @@ var pbName = "product1.xls"
 var caName = "com.xls"
 var cbName = "com1.xls"
 var _ = require("underscore")
+var mysql = require('mysql');
+
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database:'dev_sales'
+});
+
 
 var blackList = ["流程状态", "审批结果", "编号"]
 xl.open(caName,function(err, bk){
@@ -48,4 +57,20 @@ xl.open(caName,function(err, bk){
         filteredData.push(obj)
     }
     console.log(filteredData)
+    
+    connection.connect();
+    for (var i in filteredData){
+        var post  = {
+            accessory : JSON.stringify(filteredData[i])
+        }
+        var sql = connection.query('INSERT INTO enterprise SET ?', post,  function(err, result, fields){
+
+            if (err) {
+                console.log(err)
+            }
+            
+        });
+        //console.log(sql.sql)
+    }
+    connection.end();
 })
