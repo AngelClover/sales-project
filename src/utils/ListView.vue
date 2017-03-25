@@ -49,7 +49,7 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset :storeForEquipment=stores>
         </detail>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
@@ -83,7 +83,7 @@ export default {
         Detail,
         Preference
     },
-    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores'],
     data : function(){
         return {
             sortKey : '',

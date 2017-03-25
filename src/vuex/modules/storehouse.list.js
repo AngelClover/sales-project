@@ -2,12 +2,13 @@ import api from '../../api'
 
 const GET_STORE_HOUSE_LIST_SUCCESS = "GET_STORE_HOUSE_LIST_SUCCESS"
 const GET_STORE_HOUSE_LIST_FAILURE = "GET_STORE_HOUSE_LIST_FAILURE"
+const UPDATE_STORES_FOR_EQUIPMENT = "UPDATE_STORES_FOR_EQUIPMENT"
 
 const state = {
     title : [],
     content : [],
-    preference : []
-
+    preference : [],
+    storeForEquipment : {},
 }
 
 const mutations = {
@@ -15,6 +16,7 @@ const mutations = {
         state.title = []
         state.content = []
         state.preference = []
+        state.storeForEquipment = {}
     },
     [GET_STORE_HOUSE_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
@@ -29,6 +31,9 @@ const mutations = {
             }
             state.title.push(d)
         }
+    },
+    [UPDATE_STORES_FOR_EQUIPMENT](state, data){
+        state.storeForEquipment[data.id] = data.list
     }
 }
 
@@ -43,9 +48,10 @@ const getters = {
     storeHouseTitle : (state) => state.title,
     storeHouseContent :  (state) => state.content, 
     storeHousePreference : (state) => state.preference,
+    inStore : (state) => state.storeForEquipment,
 }
 
-const failBack = ({commit, dispatch}, content, mutation=GET_EQUIPMENT_LIST_FAILURE) => {
+const failBack = ({commit, dispatch}, content, mutation=GET_STORE_HOUSE_LIST_FAILURE) => {
     console.log('response fail', content)
     commit(mutation, content)
     dispatch('showMsg', '请求失败', 'error')
@@ -138,12 +144,48 @@ const approveStoreHouse = (store, payload) => {
     })
 }
 
+const getStoredEquipmentList = (store, payload) => {
+    var failMessage = "获取在库设备失败"
+    api.storedEquipmentList(payload).then(response => {
+        console.log('get stored equipment list succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            console.log('got data', response.data.data)
+            store.dispatch('showMsg', '获取在库设备成功', 'success')
+            store.commit(UPDATE_STORES_FOR_EQUIPMENT, {id: payload.id, list:response.data.data})
+        } else{
+            failBack(store, failMessage + response.status + response.statusText)
+        }
+    }, response => {
+        failBack(store, failMessage + response.status + response.statusText)
+    })
+}
+
+//one equipment type , multi store id
+const outStoreEquipmentList = (store, payload) => {
+    var failMessage = "出库失败"
+    api.storeOut(payload).then(response => {
+        console.log("outstore request succ", response)
+        if (response.status == 200 && reponse.data.error == 0){
+            console.log("outstore succ", response)
+            store.dispatch('showMsg', '出库成功', 'success')
+            store.dispatch('getStoreHouseList')
+        } else{
+            failBack(store, failMessage + response.status + response.statusText)
+        }
+    }, response => {
+        console.log("outstore request fail", response)
+        failBack(store, failMessage + response.status + response.statusText)
+    })
+}
+
 const actions = {
     getStoreHouseList,
     updateStoreHouse,
     saveStoreHouse,
     removeStoreHouse,
-    approveStoreHouse
+    approveStoreHouse,
+    getStoredEquipmentList,
+    outStoreEquipmentList,
 }
 
 export default{

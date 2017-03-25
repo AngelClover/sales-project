@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="storehouse">
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="storehouse" stores="storeForEquipment">
             <h3 slot="titlename" align=center> 仓库管理 </h3>
         </ListView>
     </div>
@@ -33,8 +33,11 @@ export default {
         },
         preference() {
             return this.$store.getters.storeHousePreference
-        }
-
+        },
+        storeForEquipment(){
+            console.log("store for equipment in storehouse", this.$store.getters.inStore);
+            return this.$store.getters.inStore
+        },
 
     },
     created : function(){
