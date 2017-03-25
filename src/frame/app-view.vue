@@ -1,6 +1,5 @@
 <template>
     <div class="ui grid">
-        <app-sidebar> </app-sidebar>
         <app-content> </app-content>
         <!--
         <div class="three wide column overlay">

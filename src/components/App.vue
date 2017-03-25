@@ -7,6 +7,7 @@
           </p>
       </div>
       -->
+    <app-sidebar> </app-sidebar>
       <AppNav></AppNav>
       <!--
       <router-view></router-view>
@@ -20,9 +21,11 @@
 //import Hello from './components/Hello'
 import AppNav from '../frame/app-nav.vue'
 import AppView from '../frame/app-view.vue'
+import AppSidebar from '../frame/app-sidebar.vue'
 import Home from './Home.vue'
 import Toaster from './toaster/index.vue'
 import {isLogin} from '../utils/authService'
+//import 'sidebarjs'
 
 export default {
     data: () => {
@@ -34,7 +37,8 @@ export default {
         AppNav,
         AppView,
         Home,
-        Toaster
+        Toaster,
+        AppSidebar,
     },
     mounted(){
         /*

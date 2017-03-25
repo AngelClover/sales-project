@@ -1,7 +1,8 @@
 <template>
+    <div class="header-wrapper" id="header-wrapper" >
     <div class="ui container">
         <div class="ui menu inverted" id="headermenu">
-            <div class="header item">国泰安华</div>
+            <div class="header item" @click="sidebarToogle">国泰安华</div>
             <!--
             <div class="right item" @click=logout>logout </div>
             -->
@@ -20,6 +21,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -54,10 +56,20 @@ export default {
             this.$store.dispatch('logOut')
             console.log('wait =============>')
             setTimeout(this.$router.go('/'), 5000)
+        },
+        sidebarToogle(){
+            //$(".sidebar.left").sidebar().trigger("sidebar:toggle");
+            $(".sidebar.left").sidebar('toggle');
         }
     }
 }
 </script>
 
 <style>
+.header-wrapper{
+    background: black
+}
+#header-wrapper{
+    background: black
+}
 </style>
