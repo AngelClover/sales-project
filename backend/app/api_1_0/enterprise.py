@@ -7,6 +7,7 @@ from ..models import Equipment, Enterprise, Permission
 from . import api
 from decorators import permission_required
 from errors import bad_request
+import json
 
 @api.route('/enterprise/headers', methods=['GET', 'POST'])
 def get_enterprise_headers():
@@ -64,7 +65,12 @@ def new_enterprise():
         legal_representor = enterprise_json.get('legal_representor') or None
         location = enterprise_json.get('location') or None
         establish_date = enterprise_json.get('establish_date') or None
-        accessory = enterprise_json.get('accesssory') or None
+        a = {}
+        for item in enterprise_json:
+            print item
+            if item != 'id':
+                a[item] = enterprise_json[item]
+        accessory = json.dumps(a)
         enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory)
         db.session.add(enterprise)
         db.session.commit()
@@ -109,8 +115,11 @@ def edit_enterprise(id):
 #        enterprise.location = enterprise_json['location']
 #    if enterprise_json.get('establish_date'):
 #        enterprise.establish_date = enterprise_json['establish_date']
-    if enterprise_json.get('accessory'):
-        enterprise.accessory = enterprise_json['accessory']
+    a = {}
+    for item in enterprise_json:
+        if item != 'id':
+            a[item] = enterprise_json[item]
+    enterprise.accessory = json.dumps(a)
     db.session.commit()
     return jsonify({
             'error' : 0,

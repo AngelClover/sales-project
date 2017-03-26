@@ -59,7 +59,7 @@ class Equipment(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [
-        ('id', u'产品编号'),
+        ('id', u'产品编号', 'immutable'),
 ('名称', '名称'),
 ('简称', '简称'),
 ('医疗器械标准码', '医疗器械标准码'),
@@ -73,7 +73,7 @@ class Equipment(db.Model):
 ('产品注册证到期日期', '产品注册证到期日期'),
 ('审核材料附件', '审核材料附件'),
 ('是否冷链', '是否冷链'),
-('流程编号', '流程编号'),
+#('流程编号', '流程编号'),
         ]
 #return [('id', u'产品编号'),
 #            ('info', u'产品信息'),
@@ -144,7 +144,7 @@ class Enterprise(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [
-            ('id', '首营企业编号'),
+            ('id', '首营企业编号', 'immutable'),
             ('简称', '简称'),
             ('名称', '名称'),
             ('归属地', '归属地'),
