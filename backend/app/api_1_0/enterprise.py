@@ -64,13 +64,14 @@ def new_enterprise():
         legal_representor = enterprise_json.get('legal_representor') or None
         location = enterprise_json.get('location') or None
         establish_date = enterprise_json.get('establish_date') or None
-        enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date)
+        accessory = enterprise_json.get('accesssory') or None
+        enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory)
         db.session.add(enterprise)
         db.session.commit()
     except Exception, e:
         return jsonify({
                 'error' : 2,
-                'msg' : 'fields not complete or error:name|register_capital|abbr|type|ever_name|legal_representor|location|estabilish_date',
+                'msg' : 'fields not complete or error:name|register_capital|abbr|type|ever_name|legal_representor|location|estabilish_date|accessory',
                 'data' : {}
                 }), 404
     
@@ -92,22 +93,24 @@ def edit_enterprise(id):
                 'data' : {}
                 }), 403
     print enterprise_json
-    if enterprise_json.get('name'):
-        enterprise.name = enterprise_json['name']
-    if enterprise_json.get('register_capital'):
-        enterprise.register_capital = enterprise_json['register_capital']
-    if enterprise_json.get('abbr'):
-        enterprise.abbr = enterprise_json['abbr']
-    if enterprise_json.get('type'):
-        enterprise.type = enterprise_json['type']
-    if enterprise_json.get('ever_name'):
-        enterprise.ever_name = enterprise_json['ever_name']
-    if enterprise_json.get('legal_representor'):
-        enterprise.legal_representor = enterprise_json['legal_representor']
-    if enterprise_json.get('location'):
-        enterprise.location = enterprise_json['location']
-    if enterprise_json.get('establish_date'):
-        enterprise.establish_date = enterprise_json['establish_date']
+#if enterprise_json.get('name'):
+#        enterprise.name = enterprise_json['name']
+#    if enterprise_json.get('register_capital'):
+#        enterprise.register_capital = enterprise_json['register_capital']
+#    if enterprise_json.get('abbr'):
+#        enterprise.abbr = enterprise_json['abbr']
+#    if enterprise_json.get('type'):
+#        enterprise.type = enterprise_json['type']
+#    if enterprise_json.get('ever_name'):
+#        enterprise.ever_name = enterprise_json['ever_name']
+#    if enterprise_json.get('legal_representor'):
+#        enterprise.legal_representor = enterprise_json['legal_representor']
+#    if enterprise_json.get('location'):
+#        enterprise.location = enterprise_json['location']
+#    if enterprise_json.get('establish_date'):
+#        enterprise.establish_date = enterprise_json['establish_date']
+    if enterprise_json.get('accessory'):
+        enterprise.accessory = enterprise_json['accessory']
     db.session.commit()
     return jsonify({
             'error' : 0,

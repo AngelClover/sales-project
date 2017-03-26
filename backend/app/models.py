@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from . import db
+import json
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -16,8 +17,9 @@ class Equipment(db.Model):
     model = db.Column(db.String(256))#产品型号
     producer = db.Column(db.String(256))#产品厂家
     state = db.Column(db.Integer) #当前的状态 0:正常状态， 1:需要审批状态
+    accessory = db.Column(db.String(1024))#json
 
-    def __init__(self, info, abbr, type, spec, model, producer):
+    def __init__(self, info, abbr, type, spec, model, producer, accessory):
         self.info = info
         self.abbr = abbr
         self.type = type
@@ -25,17 +27,22 @@ class Equipment(db.Model):
         self.model = model
         self.producer = producer
         self.state = 1
+        self.accessory = accessory
     
     def to_json(self):
         equip_json = { 'id' : self.id,
-            'info' : self.info,
-            'abbr' : self.abbr,
-            'type' : self.type,
-            'spec' : self.spec,
-            'model' : self.model,
-            'producer' : self.producer,
-            'state' : (u'审核通过' if self.state == 0 else u'待审核')
+#'info' : self.info,
+#            'abbr' : self.abbr,
+#            'type' : self.type,
+#            'spec' : self.spec,
+#            'model' : self.model,
+#            'producer' : self.producer,
+            'state' : (u'审核通过' if self.state == 0 else u'待审核'),
         } 
+        if self.accessory:
+            obj = json.loads(self.accessory)
+            for item in obj:
+                equip_json[item] = obj[item]
         return equip_json
     
     @staticmethod
@@ -51,15 +58,32 @@ class Equipment(db.Model):
         }
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'产品编号'),
-            ('info', u'产品信息'),
-            ('abbr' , u'产品简称'),
-            ('type', u'产品分类', 'option', [u'设备', u'试剂', u'耗材']),
-            ('spec' , u'产品规格'),
-            ('model', u'产品型号'),
-            ('producer', u'厂家'),
-            ('state', u'当前状态'),
+        return [
+        ('id', u'产品编号'),
+('名称', '名称'),
+('简称', '简称'),
+('医疗器械标准码', '医疗器械标准码'),
+('医疗器械分类', '医疗器械分类'),
+('英文名称', '英文名称'),
+('规格', '规格'),
+('型号', '型号'),
+('单位', '单位'),
+('产品类别', '产品类别', 'option', ['设备', '试剂', '耗材']),
+('厂商', '厂商'),
+('产品注册证到期日期', '产品注册证到期日期'),
+('审核材料附件', '审核材料附件'),
+('是否冷链', '是否冷链'),
+('流程编号', '流程编号'),
         ]
+#return [('id', u'产品编号'),
+#            ('info', u'产品信息'),
+#            ('abbr' , u'产品简称'),
+#            ('type', u'产品分类', 'option', [u'设备', u'试剂', u'耗材']),
+#            ('spec' , u'产品规格'),
+#            ('model', u'产品型号'),
+#            ('producer', u'厂家'),
+#            ('state', u'当前状态'),
+#        ]
 
 class Enterprise(db.Model):
     __tablename__ = 'enterprise'
@@ -72,8 +96,9 @@ class Enterprise(db.Model):
     legal_representor = db.Column(db.String(256))#法人代表
     location = db.Column(db.String(1024))#住所
     establish_date = db.Column(db.Date)#成立日期
+    accessory = db.Column(db.String(1024)) #json
 
-    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date):
+    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory):
         self.name = name
         self.register_capital = register_capital
         self.abbr = abbr
@@ -82,18 +107,23 @@ class Enterprise(db.Model):
         self.legal_representor = legal_representor
         self.location = location
         self.establish_date = establish_date
+        self.accessory = accessory
     
     def to_json(self):
         enterprise_json = { 'id' : self.id,
-            'name' : self.name,
-            'register_capital' : self.register_capital,
-            'abbr' : self.abbr,
-            'type' : self.type,
-            'ever_name' : self.ever_name,
-            'legal_representor' : self.legal_representor,
-            'location' : self.location,
-            'establish_date' : self.establish_date
+#'name' : self.name,
+#'register_capital' : self.register_capital,
+#'abbr' : self.abbr,
+#'type' : self.type,
+#'ever_name' : self.ever_name,
+#'legal_representor' : self.legal_representor,
+#'location' : self.location,
+#'establish_date' : self.establish_date,
         }
+        if self.accessory:
+            obj = json.loads(self.accessory)
+            for item in obj:
+                enterprise_json[item] = obj[item]
         return enterprise_json
     
     @staticmethod
@@ -113,16 +143,39 @@ class Enterprise(db.Model):
     
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'首营企业编号(系统自动分配)'),
-        ('name', u'供应商名称'),
-        ('register_capital', u'注册资金'),
-        ('abbr', u'简称'),
-        ('type', u'供应商类型(设备/试剂/耗材等)', 'option', [u'设备', u'试剂', u'耗材']),
-        ('ever_name', u'曾用名'),
-        ('legal_representor', u'法人代表'),
-        ('location', u'住所'),
-        ('establish_date', u'成立日期')
+        return [
+            ('id', '首营企业编号'),
+            ('简称', '简称'),
+            ('名称', '名称'),
+            ('归属地', '归属地'),
+            ('状态', '状态'),
+            ('医疗器械经营范围', '医疗器械经营范围'),
+            ('分类', '分类'),
+            ('联系人', '联系人'),
+            ('电话', '电话'),
+            ('地址', '地址'),
+            ('经营范围', '经营范围'),
+            ('手机', '手机'),
+            ('传真', '传真'),
+            ('币种', '币种'),
+            ('承运方式', '承运方式'),
+            ('结算方式', '结算方式'),
+            ('邮箱', '邮箱'),
+            ('网址', '网址'),
+            ('备注', '备注'),
+            ('维护人员', '维护人员'),
+            ('结算单位', '结算单位'),
         ]
+#return [('id', u'首营企业编号(系统自动分配)'),
+#('name', u'供应商名称'),
+#('register_capital', u'注册资金'),
+#('abbr', u'简称'),
+#('type', u'供应商类型(设备/试剂/耗材等)', 'option', [u'设备', u'试剂', u'耗材']),
+#('ever_name', u'曾用名'),
+#('legal_representor', u'法人代表'),
+#('location', u'住所'),
+#('establish_date', u'成立日期')
+#]
 
 class PurchaseOrder(db.Model):
     __tablename__ = 'purchase_order'

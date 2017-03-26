@@ -67,13 +67,14 @@ def new_equipment():
         spec = equip_json['spec']
         model = equip_json['model']
         producer = equip_json['producer']
-        equip = Equipment(info, abbr, type, spec, model, producer)
+        accessory = equip_json['accessory']
+        equip = Equipment(info, abbr, type, spec, model, producer, accessory)
         db.session.add(equip)
         db.session.commit()
     except Exception, e:
         return jsonify({
                 'error' : 2,
-                'msg' : 'fields not complete or error:info|abbr|spec|model|producer',
+                'msg' : 'fields not complete or error:info|abbr|spec|model|producer|accessory',
                 'data' : {}
                 }), 403
     
@@ -108,6 +109,8 @@ def edit_equipment(id):
         equip.model = equip_json['model']
     if equip_json.get('producer') is not None:
         equip.producer = equip_json['producer']
+    if equip_json.get('accessory') is not None:
+        equip.producer = equip_json['accessory']
     db.session.commit()
 
     return jsonify({
