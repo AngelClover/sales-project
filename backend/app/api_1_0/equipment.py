@@ -7,6 +7,7 @@ from ..models import Equipment, Permission, Store
 from . import api
 from decorators import permission_required
 from errors import bad_request
+import json
 
 
 @api.route('/equipment/headers', methods=['GET', 'POST'])
@@ -67,7 +68,13 @@ def new_equipment():
         spec = equip_json['spec']
         model = equip_json['model']
         producer = equip_json['producer']
-        accessory = equip_json['accessory']
+
+        a = {}
+        for item in enterprise_json:
+            if item != 'id' and item != 'state':
+                a[item] = enterprise_json[item]
+        accessory = json.dumps(a)
+
         equip = Equipment(info, abbr, type, spec, model, producer, accessory)
         db.session.add(equip)
         db.session.commit()
@@ -109,8 +116,13 @@ def edit_equipment(id):
         equip.model = equip_json['model']
     if equip_json.get('producer') is not None:
         equip.producer = equip_json['producer']
-    if equip_json.get('accessory') is not None:
-        equip.producer = equip_json['accessory']
+
+    a = {}
+    for item in enterprise_json:
+        if item != 'id' and item != 'state':
+            a[item] = enterprise_json[item]
+    equip_json.accessory = json.dumps(a)
+
     db.session.commit()
 
     return jsonify({
