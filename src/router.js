@@ -22,5 +22,8 @@ router.beforeEach(function (to, from, next){
         next(isLogin() ? '/' : '/login')
     }
 })
+router.afterEach(route => {
+    $(".sidebar.left").sidebar('hide')
+})
 
 export default router

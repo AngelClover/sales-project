@@ -46,20 +46,28 @@
                         </div>
                     </div>
                     <div class="detail-container modifier" @click="" v-show="!showContent || actionType == 'create'">
+                        <h2>
+                        <center>
                         <div class="detail-header" v-show="actionType == 'show'">
                             修改
                         </div>
                         <div class="detail-header" v-show="actionType == 'create'">
                             新建
                         </div>
+                        </center>
+                        </h2>
                         <div class="detail-body">
                             <table>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
                                         <td>{{value.displayName}}</td>
                                         <td>
+                                            <advancedInputer v-model="newContent[value.item]" :header=value>
+                                            </advancedInputer>
+                                        <!--
                                             <input v-model=newContent[value.item]>
                                             </input>
+                                        -->
                                         </td>
                                     </tr>
                                 </tbody>
@@ -98,9 +106,11 @@
 import api from '../api'
 import utils from './utils'
 import OutSelector from './outSelector.vue'
+import advancedInputer from './advancedInputer.vue'
 export default {
     components : {
-        OutSelector
+        OutSelector,
+        advancedInputer
     },
     props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores'],
     data: function() {
@@ -109,6 +119,11 @@ export default {
             newContent : {},
             showContent : true,
             showOutStore : false,
+        }
+    },
+    watch : {
+        detailContent : function(x){
+            this.newContent = this.deepCopy(x)
         }
     },
     methods : {
@@ -217,9 +232,10 @@ td{
     z-index: 6050;
 }
 
-.detail-header h3 {
+.detail-header h2 {
     margin-top: 0;
     color: #42b983;
+    position: center;
 }
 
 .detail-body {

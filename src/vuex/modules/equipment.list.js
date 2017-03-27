@@ -6,6 +6,7 @@ import {
 */
 //import {getEquipmentList} from '../actions'
 import api from '../../api'
+import hp from '../../utils/HeaderParser'
 
 const GET_EQUIPMENT_LIST_SUCCESS = "GET_EQUIPMENT_LIST_SUCCESS"
 const GET_EQUIPMENT_LIST_FAILURE = "GET_EQUIPMENT_LIST_FAILURE"
@@ -32,6 +33,7 @@ const mutations = {
         //state.title = response_data.headers
         state.title = []//response_data.headers
         for (var item in response_data.headers){
+            /*
             var d = {}
             d['item'] = response_data.headers[item][0]
             d['displayName'] = response_data.headers[item][1]
@@ -39,6 +41,8 @@ const mutations = {
                 //TODO: specify
             }
             state.title.push(d)
+            */
+            state.title.push(hp.HeaderParser(response_data.headers[item]))
         }
         //console.log(state.title)
     },
