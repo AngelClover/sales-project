@@ -12,7 +12,10 @@
                 </div>
             </div>
             <div v-else-if="header.type==='date'">
-                <Date-picker type="date" placeholder="选择日期" style="width: 200px"></Date-picker>
+                <Date-picker type="date" placeholder="选择日期" style="width: 200px" v-model=currentDate @on-change="setDate"></Date-picker>
+            </div>
+            <div v-else-if="header.type==='number'">
+                <Input-number :max="10" :min="1" v-model="currentValue"></Input-number>
             </div>
             <div v-else>
                 <input v-model=currentValue class='ui input'>
@@ -29,19 +32,33 @@
 export default {
     data: function() {
         return {
-            currentValue: this.value
+            currentValue: this.value,
+            currentDate: this.header && this.header.type === 'date' && this.value && new Date(Date.parse(this.value.replace(/-/g,  "/"))) || new Date()
         }
     },
     props : ['value', 'header'],
     watch : {
         value : function(x){
-            this.currentValue = x
+            if (x){
+                console.log('watch value various -> ', x)
+                this.currentValue = x
+                if (this.header && this.header.type === 'date'){
+                    this.currentDate = new Date(Date.parse(x.replace(/-/g, "/")));
+                    console.log('x:', x, '-> now:', this.currentDate)
+                }
+            }
         }
     },
     methods : {
         setOption(op){
             this.currentValue = op
             this.$emit('input', this.currentValue)
+        },
+        setDate(){
+            var x = (this.currentDate.getYear() + 1900) + '-' + (this.currentDate.getMonth() + 1) + '-' + this.currentDate.getDate()
+            console.log(this.currentDate)
+            console.log('emit input', x)
+            this.$emit('input', x)
         }
     }
 

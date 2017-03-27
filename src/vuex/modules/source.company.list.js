@@ -13,9 +13,11 @@ const state = {
 
 const mutations = {
     [GET_SOURCE_COMPANY_LIST_FAILURE](state){
+        /*
         state.title = []
         state.content = []
         state.preference = []
+        */
     },
     [GET_SOURCE_COMPANY_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)

@@ -12,9 +12,11 @@ const state = {
 
 const mutations = {
     [GET_BUY_ORDER_LIST_FAILURE](state){
+        /*
         state.title = []
         state.content = []
         state.preference = []
+        */
     },
     [GET_BUY_ORDER_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)

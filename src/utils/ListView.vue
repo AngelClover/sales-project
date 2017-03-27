@@ -100,7 +100,7 @@ export default {
                 filtercb : obj => {return true},
             },
             labelFiltercb : obj => {return true},
-            clickedIndex : 0,
+            clickedIndex : -1,
         }
     },
     computed : {
@@ -202,7 +202,8 @@ export default {
    },
     watch : {
         filteredContent : function(x){
-            this.detailContent = x[this.clickedIndex]
+            if (this.clickedIndex >= 0 && this.clickedIndex < this.detailContent.length)
+                this.detailContent = x[this.clickedIndex]
         }
     },
    methods: {
@@ -231,6 +232,7 @@ export default {
             this.showDetails = true
        },
        createAction(){
+           this.detailContent = {}
            this.actionType='create'
            this.showDetails = true
        },

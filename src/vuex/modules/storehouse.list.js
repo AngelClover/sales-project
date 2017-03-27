@@ -14,10 +14,12 @@ const state = {
 
 const mutations = {
     [GET_STORE_HOUSE_LIST_FAILURE](state){
+        /*
         state.title = []
         state.content = []
         state.preference = []
         state.storeForEquipment = {}
+        */
     },
     [GET_STORE_HOUSE_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
