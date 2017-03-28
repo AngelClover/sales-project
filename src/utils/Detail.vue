@@ -59,10 +59,10 @@
                         <div class="detail-body">
                             <table>
                                 <tbody>
-                                    <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value.displayName}}</td>
+                                    <tr v-for="(v, key) in detailTitle">
+                                        <td>{{v.displayName}}</td>
                                         <td>
-                                            <advancedInputer v-model="newContent[value.item]" :header=value>
+                                            <advancedInputer v-model="newContent[v.item]" :header=v>
                                             </advancedInputer>
                                         <!--
                                             <input v-model=newContent[value.item]>
@@ -123,12 +123,14 @@ export default {
     },
     watch : {
         detailContent : function(x){
-            /*
             if (!this.showContent || this.actionType == "create"){
             }else{
                 this.newContent = this.deepCopy(x)
             }
-            */
+            console.log('detail various -> ', x)
+        },
+        newContent : function(x){
+            console.log('newContent modified -> ', x)
         }
     },
     methods : {
@@ -138,11 +140,11 @@ export default {
             this.showContent = false
         },
         closeModifier(){
-            //this.newContent = {}
             this.showContent = true
             if (this.actionType == 'create'){
                 this.$emit('close')
             }
+            setTimeout(this.newContent = {}, 1000)
             
         },
         realModify(){
@@ -154,10 +156,9 @@ export default {
                 this.closeModifier()
             }else{
                 console.log("!!!!", this.newContent, this.detailContent)
-                this.showContent = true
+                //this.showContent = true
                 if (this.actionType == 'create'){
                     this.cbset.save(this.newContent)
-                    this.closeModifier()
                 }else if(this.actionType == 'show'){
                     console.log('modify', this.newContent)
                     //this.newContent.id = this.showContent.id
@@ -165,6 +166,7 @@ export default {
                 }else{
                     console.log('error actionType', this.actionType)
                 }
+                this.closeModifier()
             }
         },
         deepCopy : function(source) { 

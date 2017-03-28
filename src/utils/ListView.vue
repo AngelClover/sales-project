@@ -202,8 +202,11 @@ export default {
    },
     watch : {
         filteredContent : function(x){
-            if (this.clickedIndex >= 0 && this.clickedIndex < this.detailContent.length)
+            if (this.clickedIndex >= 0 && this.clickedIndex < this.filteredContent.length){
                 this.detailContent = x[this.clickedIndex]
+            }
+        },
+        content : function(x){
         }
     },
    methods: {

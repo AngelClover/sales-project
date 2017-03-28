@@ -21,8 +21,8 @@
                 <Input-number v-model="currentValue"></Input-number>
             </div>
             <div v-else>
-                <input v-model=currentValue class='ui input'>
-                </input>
+                <Input v-model="currentValue" style="width: 300px" @on-change="handleInput">
+                </Input>
             </div>
             {{header}}
             {{currentValue}}
@@ -50,12 +50,17 @@ export default {
                     console.log('x:', x, '-> now:', this.currentDate)
                 }
             }
+        },
+        currentValue: function(x){
+            //console.log('currentValue various =>', x)
         }
+
     },
     methods : {
         setOption(op){
             this.currentValue = op
             this.$emit('input', this.currentValue)
+            console.log('set input option ->', this.currentValue)
         },
         setDate(){
             var x = (this.currentDate.getYear() + 1900) + '-' + (this.currentDate.getMonth() + 1) + '-' + this.currentDate.getDate()
@@ -67,6 +72,10 @@ export default {
             x += " " + this.currentDate.getHours() + ":" + this.currentDate.getMinutes() + ":" + this.currentDate.getSeconds()
             console.log('emit input datetime', this.currentDate, " -> ", x)
             this.$emit('input', x)
+        },
+        handleInput(event){
+            //console.log('set input value ->', this.currentValue)
+            this.$emit('input', this.currentValue)
         }
     }
 
