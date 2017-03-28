@@ -193,7 +193,7 @@ class PurchaseOrder(db.Model):
 
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'合同编号（系统自动分配）'),
+        return [('id', u'合同编号', 'immutable'),
         ('sign_date', u'签订日期'),
         ('provider_info', u'供应商名称、地址、电话'),
         ('billing_company', u'结算公司'),
@@ -202,8 +202,8 @@ class PurchaseOrder(db.Model):
         ('pay_mode', u'付款方式'),
         ('invoice_type', u'发票类型'),
         ('postage_account', u'运费承担方'),
-        ('state', u'当前状态'),
-        ('total_stored', u'入库情况（未/部分/完全)'),
+        ('state', u'当前状态', 'immutable'),
+        ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
         (),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
@@ -292,7 +292,7 @@ class SaleOrder(db.Model):
 
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'合同编号（系统自动分配）'),
+        return [('id', u'销售订单编号', 'immutable'),
         ('sign_date', u'签订日期'),
         ('provider_info', u'供应商名称、地址、电话'),
         ('billing_company', u'结算公司'),
@@ -300,8 +300,8 @@ class SaleOrder(db.Model):
         ('get_location', u'收货地点'),
         ('pay_mode', u'付款方式'),
         ('invoice_type', u'发票类型'),
-        ('state', u'订单状态'),
-        ('total_outstore', u'出库情况(未/部分/完全'),
+        ('state', u'订单状态', 'immutable'),
+        ('total_outstore', u'出库情况(未/部分/完全', 'immutable'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
@@ -386,11 +386,11 @@ class Logistic(db.Model):
 
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'物流单号(系统自分配)'),
+        return [('id', u'物流单号(系统自分配)', 'immutable'),
         ('equipment_name', u'待送设备名称'),
         ('delivery_address', u'送货地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
-        ('delivery_status', u'完成状态')
+        ('delivery_status', u'完成状态', 'immutable')
         ]
 
     def to_json(self):
@@ -417,11 +417,11 @@ class Repair(db.Model):
 
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'维修单号(系统自分配)'),
+        return [('id', u'维修单号(系统自分配)', 'immutable'),
         ('equipment_name', u'待维修设备名称'),
         ('repair_address', u'维修地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
-        ('repair_status', u'完成状态')
+        ('repair_status', u'完成状态', 'immutable')
         ]
 
     def to_json(self):
@@ -450,7 +450,7 @@ class Store(db.Model):
 
     @staticmethod
     def get_ordered_headers():
-        return [('id', u'仓库信息编号(系统自分配)'),
+        return [('id', u'仓库信息编号(系统自分配)', 'immutable'),
         ('equipment_name', u'设备名称'),
         ('abbr', u'简称'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
