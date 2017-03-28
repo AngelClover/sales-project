@@ -1,5 +1,5 @@
 <template>
-    <div v-show="showDetails">
+    <div v-if="showDetails">
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
@@ -46,20 +46,28 @@
                         </div>
                     </div>
                     <div class="detail-container modifier" @click="" v-show="!showContent || actionType == 'create'">
+                        <h2>
+                        <center>
                         <div class="detail-header" v-show="actionType == 'show'">
                             修改
                         </div>
                         <div class="detail-header" v-show="actionType == 'create'">
                             新建
                         </div>
+                        </center>
+                        </h2>
                         <div class="detail-body">
                             <table>
                                 <tbody>
-                                    <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value.displayName}}</td>
+                                    <tr v-for="(v, key) in detailTitle">
+                                        <td>{{v.displayName}}</td>
                                         <td>
+                                            <advancedInputer v-model="newContent[v.item]" :header=v>
+                                            </advancedInputer>
+                                        <!--
                                             <input v-model=newContent[value.item]>
                                             </input>
+                                        -->
                                         </td>
                                     </tr>
                                 </tbody>
@@ -98,9 +106,11 @@
 import api from '../api'
 import utils from './utils'
 import OutSelector from './outSelector.vue'
+import advancedInputer from './advancedInputer.vue'
 export default {
     components : {
-        OutSelector
+        OutSelector,
+        advancedInputer
     },
     props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores'],
     data: function() {
@@ -111,6 +121,18 @@ export default {
             showOutStore : false,
         }
     },
+    watch : {
+        detailContent : function(x){
+            if (!this.showContent || this.actionType == "create"){
+            }else{
+                this.newContent = this.deepCopy(x)
+            }
+            console.log('detail various -> ', x)
+        },
+        newContent : function(x){
+            console.log('newContent modified -> ', x)
+        }
+    },
     methods : {
         modifier: function(){
             this.newContent = this.deepCopy(this.detailContent)
@@ -118,11 +140,11 @@ export default {
             this.showContent = false
         },
         closeModifier(){
-            this.newContent = {}
             this.showContent = true
             if (this.actionType == 'create'){
                 this.$emit('close')
             }
+            setTimeout(this.newContent = {}, 1000)
             
         },
         realModify(){
@@ -134,10 +156,9 @@ export default {
                 this.closeModifier()
             }else{
                 console.log("!!!!", this.newContent, this.detailContent)
-                this.showContent = true
+                //this.showContent = true
                 if (this.actionType == 'create'){
                     this.cbset.save(this.newContent)
-                    this.closeModifier()
                 }else if(this.actionType == 'show'){
                     console.log('modify', this.newContent)
                     //this.newContent.id = this.showContent.id
@@ -145,6 +166,7 @@ export default {
                 }else{
                     console.log('error actionType', this.actionType)
                 }
+                this.closeModifier()
             }
         },
         deepCopy : function(source) { 
@@ -217,9 +239,10 @@ td{
     z-index: 6050;
 }
 
-.detail-header h3 {
+.detail-header h2 {
     margin-top: 0;
     color: #42b983;
+    position: center;
 }
 
 .detail-body {

@@ -19,10 +19,13 @@ import 'jquery'
 import '../node_modules/semantic-ui-css/semantic.min.css'
 import '../node_modules/semantic-ui-css/semantic.min.js'
 import router from './router'
+import iView from 'iview'
+import '../node_modules/iview/dist/styles/iview.css';
 
 //
 
 Vue.use(VueResource)
+Vue.use(iView)
 //Vue.use(VueValidator)
 //Object.keys(filters).forEach(k => Vue.filter(k, filters[k]))
 /*

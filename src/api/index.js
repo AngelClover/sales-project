@@ -13,6 +13,7 @@ export default {
     saveEquipment: function(payload) {
         //TODO: api need uri but how to get uri
         //this will be right?
+        console.log("save equipment", payload)
         return EquipmentResource.save(payload)
     },
     approveEquipment: function(payload) {

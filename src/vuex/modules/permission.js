@@ -26,7 +26,7 @@ const getters = {
     }
 }
 
-const failBack = ({commit, dispatch}, content, mutation=GET_PERMISSION_FAIL) => {
+const failBack = ({commit, dispatch}, content, mutation=UPDATE_PERMISSION_FAIL) => {
     console.log('response fail for permissions', content)
     commit(mutation, content)
     dispatch('showMsg', '权限请求失败', 'error')
@@ -41,13 +41,13 @@ const getPermissionList = (store) => {
                 store.commit(GET_PERMISSION_LIST_SUCC, response.data.data)
                 store.dispatch('showMsg', "获取权限列表成功", 'success')
             }else{
-                failBack('showMsg', failMessage + response.status + response.stratusText)
+                failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
             }
         }else{
-                failBack('showMsg', failMessage + response.status + response.stratusText)
+                failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
         }
     }, response => {
-        failBack('showMsg', failMessage + response.status + response.stratusText)
+        failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
     })
 }
 const addPermissions = (store, payload) => {
@@ -60,10 +60,10 @@ const addPermissions = (store, payload) => {
             console.log('add permssion succ')
             store.dispatch('getUserInfoList')
         } else{
-        failBack('showMsg', failMessage + response.status + response.stratusText)
+        failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
         }
     }, response => {
-        failBack('showMsg', failMessage + response.status + response.stratusText)
+        failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
     })
 
 }
@@ -75,10 +75,10 @@ const removePermissions = (store, payload) => {
             console.log('remove permissions succ')
             store.dispatch('getUserInfoList')
         } else{
-            failBack('showMsg', failMessage + response.status + response.stratusText)
+            failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
         }
     }, response => {
-        failBack('showMsg', failMessage + response.status + response.stratusText)
+        failBack(store, 'showMsg', failMessage + response.status + response.stratusText)
     })
 }
 

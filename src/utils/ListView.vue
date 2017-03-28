@@ -30,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in filteredContent" @click=clickItem(item)> 
+            <tr v-for="(item, index) in filteredContent" @click=clickItem(item,index)> 
                 <!--
                 <td v-for="(val, key, index) in title">{{item[key]}}</td>
                 -->
@@ -100,6 +100,7 @@ export default {
                 filtercb : obj => {return true},
             },
             labelFiltercb : obj => {return true},
+            clickedIndex : -1,
         }
     },
     computed : {
@@ -199,6 +200,15 @@ export default {
             else return str
        }
    },
+    watch : {
+        filteredContent : function(x){
+            if (this.clickedIndex >= 0 && this.clickedIndex < this.filteredContent.length){
+                this.detailContent = x[this.clickedIndex]
+            }
+        },
+        content : function(x){
+        }
+    },
    methods: {
        sortBy: function (key) {
            //console.log('sortBy', key)
@@ -219,11 +229,13 @@ export default {
             this.sortOrders = sortOrders
             return sortOrders
        },
-       clickItem : function(item){
+       clickItem : function(item, index){
             this.detailContent = item
+            this.clickedIndex = index
             this.showDetails = true
        },
        createAction(){
+           this.detailContent = {}
            this.actionType='create'
            this.showDetails = true
        },
