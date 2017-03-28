@@ -2,7 +2,7 @@
     <div>
         <span>
             <div v-if="header.immutable">
-                immutable
+                <label>{{currentValue}}</label>
             </div>
             <div v-else-if="header.type==='option'" class="ui compact menu">
                 <div class="ui simple dropdown item">{{currentValue}}<i class="dropdown icon"></i>
@@ -14,8 +14,11 @@
             <div v-else-if="header.type==='date'">
                 <Date-picker type="date" placeholder="选择日期" style="width: 200px" v-model=currentDate @on-change="setDate"></Date-picker>
             </div>
+            <div v-else-if="header.type==='time'">
+                <Date-picker type="datetime" placeholder="选择日期和时间" style="width: 200px" v-model=currentDate @on-change="setDatetime"></Date-picker>
+            </div>
             <div v-else-if="header.type==='number'">
-                <Input-number :max="10" :min="1" v-model="currentValue"></Input-number>
+                <Input-number v-model="currentValue"></Input-number>
             </div>
             <div v-else>
                 <input v-model=currentValue class='ui input'>
@@ -56,8 +59,13 @@ export default {
         },
         setDate(){
             var x = (this.currentDate.getYear() + 1900) + '-' + (this.currentDate.getMonth() + 1) + '-' + this.currentDate.getDate()
-            console.log(this.currentDate)
-            console.log('emit input', x)
+            console.log('emit input date', this.currentDate, " -> ", x)
+            this.$emit('input', x)
+        },
+        setDatetime(){
+            var x = (this.currentDate.getYear() + 1900) + '-' + (this.currentDate.getMonth() + 1) + '-' + this.currentDate.getDate()
+            x += " " + this.currentDate.getHours() + ":" + this.currentDate.getMinutes() + ":" + this.currentDate.getSeconds()
+            console.log('emit input datetime', this.currentDate, " -> ", x)
             this.$emit('input', x)
         }
     }

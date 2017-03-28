@@ -1,5 +1,5 @@
 <template>
-    <div v-show="showDetails">
+    <div v-if="showDetails">
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
@@ -123,7 +123,12 @@ export default {
     },
     watch : {
         detailContent : function(x){
-            this.newContent = this.deepCopy(x)
+            /*
+            if (!this.showContent || this.actionType == "create"){
+            }else{
+                this.newContent = this.deepCopy(x)
+            }
+            */
         }
     },
     methods : {
@@ -133,7 +138,7 @@ export default {
             this.showContent = false
         },
         closeModifier(){
-            this.newContent = {}
+            //this.newContent = {}
             this.showContent = true
             if (this.actionType == 'create'){
                 this.$emit('close')

@@ -37,6 +37,10 @@ function pipe(obj){
             obj['displayName'] && obj['displayName'].search('日期')  >= 0){
         obj['type'] = 'date'
     }
+    if (obj['item'] && obj['item'].search('时间') >= 0 ||
+            obj['displayName'] && obj['displayName'].search('时间')  >= 0){
+        obj['type'] = 'time'
+    }
 
     return obj
 }
