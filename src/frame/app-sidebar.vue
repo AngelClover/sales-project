@@ -23,52 +23,52 @@
                     </div>
                     <div v-show="userInfo.module.indexOf('home') >= 0" class=title>
                     -->
-                <Menu theme="light" width=auto>
+                <Menu theme="light" width=auto open-names="['source']">
                     <Menu-item class=title name=home>
                         <p> <router-link to="/home"> Home </router-link> </p>
                     </Menu-item>
-                    <Submenu v-show="userInfo.module.indexOf('equipment') >= 0">
-                            <Icon type="IOS paper"></Icon> 首营审批
-                            <Menu-item name=equipment>
-                                <p> <router-link to="/equipment">首营设备</router-link> </p>
-                            </Menu-item>
-                            <Menu-item name=sourcecompany>
-                                <p> <router-link to="/sourcecompany">首营企业</router-link> </p>
-                            </Menu-item>
+                    <Submenu v-show="userInfo.module.indexOf('equipment') >= 0" name="source">
+                        <template slot="title"> <p>首营审批</p> </template>
+                        <Menu-item name=equipment>
+                            <p> <router-link to="/equipment"><Icon type="checkmark-circled"></Icon>首营设备</router-link> </p>
+                        </Menu-item>
+                        <Menu-item name=sourcecompany>
+                            <p> <router-link to="/sourcecompany"> <Icon type="person-stalker"></Icon> 首营企业</router-link> </p>
+                        </Menu-item>
                     </Submenu>
                     <Menu-item v-show="userInfo.module.indexOf('purchase') >= 0" name=buy>
                         <div class="title">
-                            <p> <router-link to="/buy"> 采购订单管理 </router-link> </p>
+                            <p> <router-link to="/buy"><Icon type="archive"></Icon> 采购订单管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('sale') >= 0" name=sale>
                         <div class="title">
-                            <p> <router-link to="/sale"> 销售订单管理 </router-link> </p>
+                            <p> <router-link to="/sale"><Icon type="forward"></Icon> 销售订单管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('store') >= 0" name=store>
                         <div class="title">
-                            <p> <router-link to="/storehouse"> 仓库管理 </router-link> </p>
+                            <p> <router-link to="/storehouse"> <Icon type="cube"></Icon> 仓库管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('repair') >= 0" name=repair>
                         <div class="title">
-                            <p> <router-link to="/repair"> 维修管理 </router-link> </p>
+                            <p> <router-link to="/repair"> <Icon type="wrench"></Icon> 维修管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('logistic') >= 0" name=logistic>
                         <div class="title">
-                            <p> <router-link to="/logistic"> 物流管理 </router-link> </p>
+                            <p> <router-link to="/logistic"><Icon type="model-s"></Icon> 物流管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('finance') >= 0" name=finance>
                         <div class="title">
-                            <p> <router-link to="/finance"> 财务管理 </router-link> </p>
+                            <p> <router-link to="/finance"> <Icon type="social-usd"></Icon>  财务管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('administer') >= 0" name=administer>
                         <div class="title">
-                            <p> <router-link to="/userauth"> 用户权限管理 </router-link> </p>
+                            <p> <router-link to="/userauth"> <Icon type="person"></Icon> 用户权限管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     <!--
@@ -124,7 +124,7 @@ export default {
     font-size: 2em;
     text-align: center;
 }
-.title .p{
+.title .p .a{
     color:#ffffff;
 }
 </style>
