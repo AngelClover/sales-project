@@ -60,25 +60,27 @@ def new_equipment():
                 'data' : {}
                 }), 403
     print equip_json
+    print 'asd'
     equip = None
     try:
-        info = equip_json['info']
-        abbr = equip_json['abbr'] 
-        type = equip_json['type']
-        spec = equip_json['spec']
-        model = equip_json['model']
-        producer = equip_json['producer']
+        info = None #equip_json['info'] or None
+        abbr = None #equip_json['abbr'] or None
+        type = None #equip_json['type'] or None
+        spec = None #equip_json['spec'] or None
+        model = None #equip_json['model'] or None
+        producer = None #equip_json['producer'] or None
 
         a = {}
-        for item in enterprise_json:
+        for item in equip_json:
             if item != 'id' and item != 'state':
-                a[item] = enterprise_json[item]
+                a[item] = equip_json[item]
         accessory = json.dumps(a)
 
         equip = Equipment(info, abbr, type, spec, model, producer, accessory)
         db.session.add(equip)
         db.session.commit()
     except Exception, e:
+        print e
         return jsonify({
                 'error' : 2,
                 'msg' : 'fields not complete or error:info|abbr|spec|model|producer|accessory',
@@ -118,10 +120,10 @@ def edit_equipment(id):
         equip.producer = equip_json['producer']
 
     a = {}
-    for item in enterprise_json:
+    for item in equip_json:
         if item != 'id' and item != 'state':
-            a[item] = enterprise_json[item]
-    equip_json.accessory = json.dumps(a)
+            a[item] = equip_json[item]
+    equip.accessory = json.dumps(a)
 
     db.session.commit()
 
