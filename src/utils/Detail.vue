@@ -8,35 +8,25 @@
                             详细信息
                         </div>
                         <div class="detail-body">
-                            <table>
+                            <table >
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td>{{value.displayName}}</td>
-                                        <td>{{detailContent[value.item]}}</td>
+                                        <td><p align=right margin=10px>{{value.displayName}}</p>
+                                        </td>
+                                        <td><p align=left margin=5px>{{detailContent[value.item]}}</p></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="detail-footer">
                             <center>
-                            <button class="ui secondary button" @click="$emit('close')">
-                                OK
-                            </button>
-                            <button class="ui primary button" @click="modifier">
-                                修改
-                            </button>
-                            <button class="ui primary  button" @click="approve" >
-                                审批
-                            </button>
-                            <button class="ui primary button" @click="transfer" >
-                                采购
-                            </button>
-                            <button class="ui primary button" @click="storeInAll" >
-                                入库
-                            </button>
-                            <button class="ui primary button" @click="storeOut" >
-                                出库
-                            </button>
+                            <button class="ui secondary button" @click="$emit('close')"> OK </button>
+                            <button class="ui primary button" @click="modifier"> 修改 </button>
+                            <button class="ui primary  button" @click="approve" > 审批 </button>
+                            <button class="ui primary button" @click="transfer" > 采购 </button>
+                            <button class="ui primary button" @click="storeInAll" > 入库 </button>
+                            <button class="ui primary button" @click="storeOut" > 出库 </button>
+                            <Button @click="handleDelete"> 删除 </Button>
                                 <!--
                             <button class="ui green button" @click="storeInOne" >
                                 单个入库
@@ -72,6 +62,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-if="location == 'buyorder'">
+                                buyorder
+                            </div>
                         </div>
                         <div class="detail-footer">
                             <center>
@@ -98,6 +91,7 @@
             <p> detailTitle : {{detailTitle}} </p>
             <p> detailContent : {{detailContent}} </p>
             <p> actionType : {{actionType}} </p>
+            <p> location : {{location}} </p>
         </div>
     </div>
 </template>
@@ -112,7 +106,7 @@ export default {
         OutSelector,
         advancedInputer
     },
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores', 'location'],
     data: function() {
         return {
             debug : true,
@@ -189,6 +183,9 @@ export default {
             this.showOutStore = true;
             //this.cbset.storeOut(this.detailContent)
         },
+        handleDelete : function(){
+            this.cbset.remove(this.detailContent)
+        }
     }
 
 }

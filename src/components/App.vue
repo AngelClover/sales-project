@@ -41,14 +41,8 @@ export default {
         AppSidebar,
     },
     mounted(){
-        /*
-        console.log("app mounted")
-        if (isLogin() !== true){
-            this.$router.push('/login')
-        }
-        */
-            console.log('i mounted dropdown in app.vue')
-            $('.ui .dropdown').dropdown()
+        console.log('i mounted dropdown in app.vue')
+        $('.ui .dropdown').dropdown()
     }
 
 }

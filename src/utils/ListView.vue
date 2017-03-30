@@ -35,6 +35,9 @@
                 <td v-for="(val, key, index) in title">{{item[key]}}</td>
                 -->
                 <td v-for="(prefitem, prefindex) in preference"> {{item[prefitem]}} </td>
+                <!--
+                <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
+                -->
             </tr>
             </tbody>
         </table>
@@ -49,7 +52,7 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset :storeForEquipment=stores>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset :storeForEquipment=stores :location=location>
         </detail>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
@@ -69,6 +72,7 @@
         <p> filteredContent : {{filteredContent}} </p>
         <p> showDetails : {{showDetails}} </p>
         <p> detailContent : {{detailContent}} </p>
+        <p> location : {{location}} </p>
         </div>
 
     </div>
@@ -91,7 +95,7 @@ export default {
             searchQuery : '',
             showDetails : false,
             detailContent : {},
-            debug : false,
+            debug : true,
             actionType : 'show',
             showPref : false,
             clearCache : false,
@@ -204,6 +208,8 @@ export default {
         filteredContent : function(x){
             if (this.clickedIndex >= 0 && this.clickedIndex < this.filteredContent.length){
                 this.detailContent = x[this.clickedIndex]
+            }else {
+                this.showDetails = false
             }
         },
         content : function(x){
@@ -246,6 +252,9 @@ export default {
            console.log('showPrefs', this.showPref)
            this.showPref = !this.showPref
            console.log('showPrefs', this.showPref)
+       },
+       handleDelete : function(item, index){
+           this.cbset.delete(item)
        },
        filterByLabel(obj){
            console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
