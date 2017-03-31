@@ -1,24 +1,35 @@
 <template>
     <div v-if="showDetails">
+        <!--
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
-                    <div class="detail-container" @click="" v-show="showContent && actionType == 'show'">
-                        <div class="detail-header">
-                            详细信息
-                        </div>
+        -->
+        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" class-name="vertical-center-modal">
+                    <div slot="header">
+                        详细信息
+                    </div>
+                    <div class="detail-container" >
                         <div class="detail-body">
                             <table >
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
-                                        <td><p align=right margin=10px>{{value.displayName}}</p>
+                                        <td><p>{{value.displayName}}</p>
                                         </td>
-                                        <td><p align=left margin=5px>{{detailContent[value.item]}}</p></td>
+                                        <td><p>{{detailContent[value.item]}}</p></td>
                                     </tr>
                                 </tbody>
                             </table>
+        <div v-show=debug>
+            <p> -----------Detail debug below----------- </p>
+            <p> showDetails : {{showDetails}} </p>
+            <p> location : {{location}} </p>
+            <p> detailTitle : {{detailTitle}} </p>
+            <p> detailContent : {{detailContent}} </p>
+        </div>
                         </div>
-                        <div class="detail-footer">
+                    </div>
+                        <div slot="footer">
                             <center>
                             <button class="ui secondary button" @click="$emit('close')"> OK </button>
                             <button class="ui primary button" @click="modifier"> 修改 </button>
@@ -34,65 +45,14 @@
                                 -->
                             </center>
                         </div>
-                    </div>
-                    <div class="detail-container modifier" @click="" v-show="!showContent || actionType == 'create'">
-                        <h2>
-                        <center>
-                        <div class="detail-header" v-show="actionType == 'show'">
-                            修改
-                        </div>
-                        <div class="detail-header" v-show="actionType == 'create'">
-                            新建
-                        </div>
-                        </center>
-                        </h2>
-                        <div class="detail-body">
-                            <table>
-                                <tbody>
-                                    <tr v-for="(v, key) in detailTitle">
-                                        <td>{{v.displayName}}</td>
-                                        <td>
-                                            <advancedInputer v-model="newContent[v.item]" :header=v>
-                                            </advancedInputer>
-                                        <!--
-                                            <input v-model=newContent[value.item]>
-                                            </input>
-                                        -->
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div v-if="location == 'buyorder'">
-                                buyorder
-                            </div>
-                        </div>
-                        <div class="detail-footer">
-                            <center>
-                            <button class="ui secondary button" @click="closeModifier">
-                                放弃
-                            </button>
-                            <button class="ui primary button" @click="realModify" v-show="actionType == 'show'">
-                                修改
-                            </button>
-                            <button class="ui primary button" @click="realModify" v-show="actionType == 'create'">
-                                新建
-                            </button>
-                            </center>
-                        </div>
-                    </div>
-                    <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
-                    </OutSelector>
+                    <!--
                 </div>
             </div>
         </transition>
-        <div v-show=debug>
-            <p> -----------Detail debug below----------- </p>
-            <p> showDetails : {{showDetails}} </p>
-            <p> detailTitle : {{detailTitle}} </p>
-            <p> detailContent : {{detailContent}} </p>
-            <p> actionType : {{actionType}} </p>
-            <p> location : {{location}} </p>
-        </div>
+                    -->
+        </Modal>
+        <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent>
+        </Modifier>
     </div>
 </template>
 
@@ -101,23 +61,26 @@ import api from '../api'
 import utils from './utils'
 import OutSelector from './outSelector.vue'
 import advancedInputer from './advancedInputer.vue'
+import Modifier from './Modifier.vue'
 export default {
     components : {
         OutSelector,
-        advancedInputer
+        advancedInputer,
+        Modifier,
     },
-    props : ['showDetails', 'detailTitle', 'detailContent', 'actionType', 'cbset', 'stores', 'location'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'cbset', 'stores', 'location'],
     data: function() {
         return {
-            debug : true,
+            debug : false,
             newContent : {},
             showContent : true,
-            showOutStore : false,
+            showModifier : false,
+            contentVisible : true
         }
     },
     watch : {
         detailContent : function(x){
-            if (!this.showContent || this.actionType == "create"){
+            if (this.showModifier){
             }else{
                 this.newContent = this.deepCopy(x)
             }
@@ -125,46 +88,32 @@ export default {
         },
         newContent : function(x){
             console.log('newContent modified -> ', x)
+        },
+        showModifier : function(x){
+            console.log("showModifier", x, " -> showContent", this.showContent)
+            //this.showContent = (x == false)
+        },
+        showDetails : function(x){
+            this.showModifier = false
+            this.showContent = true
         }
     },
     methods : {
         modifier: function(){
             this.newContent = this.deepCopy(this.detailContent)
-            console.log('deep copy', this.newContent, this.detailContent)
+            //console.log('deep copy', this.newContent, this.detailContent)
             this.showContent = false
+            this.showModifier = true
+            console.log("click to modifier ")
         },
+        /*
         closeModifier(){
             this.showContent = true
-            if (this.actionType == 'create'){
-                this.$emit('close')
-            }
             setTimeout(this.newContent = {}, 1000)
-            
         },
-        realModify(){
-            console.log("!!!!", this.newContent, this.detailContent)
-            console.log("!!!!", this.cmp(this.newContent, this.detailContent))
-            console.log('real modify', this.newContent)
-            if (this.cmp(this.newContent, this.detailContent)){
-                this.$store.dispatch('showMsg', '无修改', 'info')
-                this.closeModifier()
-            }else{
-                console.log("!!!!", this.newContent, this.detailContent)
-                //this.showContent = true
-                if (this.actionType == 'create'){
-                    this.cbset.save(this.newContent)
-                }else if(this.actionType == 'show'){
-                    console.log('modify', this.newContent)
-                    //this.newContent.id = this.showContent.id
-                    this.cbset.update(this.newContent)
-                }else{
-                    console.log('error actionType', this.actionType)
-                }
-                this.closeModifier()
-            }
-        },
+        */
         deepCopy : function(source) { 
-            console.log('utils for deepcopy', utils)
+            //console.log('utils for deepcopy', utils)
             return utils.deepCopy(source)
         },
         cmp : function( x, y ) {  
@@ -191,7 +140,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 table {
   width: 90%;
   overflow: scroll;
@@ -263,7 +212,15 @@ td{
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
+.vertical-center-modal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+        .ivu-modal{
+            top: 0;
+        }
+}
 
 </style>
 

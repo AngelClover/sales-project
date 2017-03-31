@@ -52,8 +52,11 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset :storeForEquipment=stores :location=location>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location>
         </detail>
+
+        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false">
+        </Creator>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
         </Preference>
@@ -61,6 +64,7 @@
         <div v-show=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
+        <!--
         <p> msg : {{msg}} </p>
         <p> title : {{title}} </p>
         <p> content : {{content}} </p>
@@ -70,9 +74,11 @@
         <p> sortKey : {{sortKey}} </p>
         <p> searchQuery : {{searchQuery}} </p>
         <p> filteredContent : {{filteredContent}} </p>
-        <p> showDetails : {{showDetails}} </p>
         <p> detailContent : {{detailContent}} </p>
+        -->
+        <p> showDetails : {{showDetails}} </p>
         <p> location : {{location}} </p>
+        <p> showCreator : {{showCreator}} </p>
         </div>
 
     </div>
@@ -81,11 +87,13 @@
 <script>
 import Detail from './Detail.vue'
 import Preference from './Preference.vue'
+import Creator from './Creator.vue'
 
 export default {
     components : {
         Detail,
-        Preference
+        Preference,
+        Creator
     },
     props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores'],
     data : function(){
@@ -96,7 +104,6 @@ export default {
             showDetails : false,
             detailContent : {},
             debug : true,
-            actionType : 'show',
             showPref : false,
             clearCache : false,
             allListObj : {
@@ -105,6 +112,7 @@ export default {
             },
             labelFiltercb : obj => {return true},
             clickedIndex : -1,
+            showCreator : false,
         }
     },
     computed : {
@@ -242,8 +250,7 @@ export default {
        },
        createAction(){
            this.detailContent = {}
-           this.actionType='create'
-           this.showDetails = true
+           this.showCreator = true
        },
        showLogTips(){
            this.$store.dispatch('showMsg', '此功能暂不开放', 'info')
