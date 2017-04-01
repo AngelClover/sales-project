@@ -1,5 +1,5 @@
 <template>
-    <Modal v-model="showModifier">
+    <Modal v-model="showMM" @on-cancel="$emit('close')" @on-ok="$emit('close')">
         <div slot="header">
             <h2>
             <center>
@@ -59,6 +59,11 @@ export default {
         }
     },
     props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'newContent', 'showModifier'],
+    computed : {
+        showMM (){
+            return this.showModifier
+        }
+    },
     methods : {
         realModify(){
             //console.log("!!!!", this.newContent, this.detailContent)

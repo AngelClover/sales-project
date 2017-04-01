@@ -6,6 +6,7 @@ const GET_SALE_ORDER_LIST_FAILURE = "GET_SALE_ORDER_LIST_FAILURE"
 
 const state = {
     title : [],
+    subtitle : [],
     content : [],
     preference : []
 
@@ -23,17 +24,18 @@ const mutations = {
         //console.log('response_data in mutation', response_data)
         state.content = response_data.sale_orders
         state.title = []//response_data.headers
+        state.subtitle = []
+        var findSpace = false
         for (var item in response_data.headers){
-            /*
-            var d = {}
-            d['item'] = response_data.headers[item][0]
-            d['displayName'] = response_data.headers[item][1]
-            if (response_data.headers.length >= 3){
-                //TODO: specify
+            if (response_data.headers[item].length == 0){
+                findSpace = true
+                continue
             }
-            state.title.push(d)
-            */
-            state.title.push(hp.HeaderParser(response_data.headers[item]))
+            if (findSpace == false){
+                state.title.push(hp.HeaderParser(response_data.headers[item]))
+            }else {
+                state.subtitle.push(hp.HeaderParser(response_data.headers[item]))
+            }
         }
     }
 }
@@ -47,6 +49,7 @@ const getters = {
 */
 const getters = {
     saleOrderTitle : (state) => state.title,
+    saleOrderSubtitle : (state) => state.subtitle,
     saleOrderContent :  (state) => state.content, 
     saleOrderPreference : (state) => state.preference,
 }

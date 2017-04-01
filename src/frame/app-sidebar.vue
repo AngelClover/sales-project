@@ -23,7 +23,7 @@
                     </div>
                     <div v-show="userInfo.module.indexOf('home') >= 0" class=title>
                     -->
-                <Menu theme="light" width=auto open-names="['source']">
+                <Menu theme="light" width=auto :open-names="openNames">
                     <Menu-item class=title name=home>
                         <p> <router-link to="/home"> Home </router-link> </p>
                     </Menu-item>
@@ -86,6 +86,7 @@ export default {
         return {
             //module : ['home', 'buy', 'finance', 'sale', 'logistic', 'repair', 'source', 'sink', 'store']
             //module : ['home', 'buy', 'sale', 'logistic', 'repair', 'source', 'sink', 'storehouse']
+            openNames : ['source']
         }
     },
     computed : {

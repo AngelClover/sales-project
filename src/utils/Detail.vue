@@ -5,7 +5,7 @@
             <div class="detail-mask">
                 <div class="detail-wrapper">
         -->
-        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" class-name="vertical-center-modal">
+        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
                     <div slot="header">
                         详细信息
                     </div>
@@ -20,6 +20,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+        <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
+        </EquipDetail>
+
         <div v-show=debug>
             <p> -----------Detail debug below----------- </p>
             <p> showDetails : {{showDetails}} </p>
@@ -62,20 +65,23 @@ import utils from './utils'
 import OutSelector from './outSelector.vue'
 import advancedInputer from './advancedInputer.vue'
 import Modifier from './Modifier.vue'
+import EquipDetail from './EquipDetail.vue'
 export default {
     components : {
         OutSelector,
         advancedInputer,
         Modifier,
+        EquipDetail,
     },
-    props : ['showDetails', 'detailTitle', 'detailContent', 'cbset', 'stores', 'location'],
+    props : ['showDetails', 'detailTitle', 'detailContent', 'cbset', 'stores', 'location', 'detailSubtitle'],
     data: function() {
         return {
             debug : false,
             newContent : {},
             showContent : true,
             showModifier : false,
-            contentVisible : true
+            contentVisible : true,
+            showEquipmentLists : true
         }
     },
     watch : {

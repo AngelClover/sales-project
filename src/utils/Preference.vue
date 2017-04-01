@@ -1,5 +1,5 @@
 <template>
-    <Modal v-model="showPP" @on-close="$emit('close')">
+    <Modal v-model="showPP" @on-close="$emit('close')" @on-cancel="$emit('close')">
                     <div slot="header">
                         偏好设置
                     </div>

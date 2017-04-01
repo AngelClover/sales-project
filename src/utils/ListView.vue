@@ -35,8 +35,10 @@
                 <!--
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
-        <Table width=1100 stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
-        </Table>
+        <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
+            <Table width=auto stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
+            </Table>
+        </div>
 
         <br/>
         <div class="ui buttom" align=center>
@@ -47,7 +49,7 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
         </detail>
 
         <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;">
@@ -98,7 +100,7 @@ export default {
         Preference,
         Creator
     },
-    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores', 'subtitle'],
     data : function(){
         return {
             sortKey : '',
@@ -106,7 +108,7 @@ export default {
             searchQuery : '',
             showDetails : false,
             detailContent : {},
-            debug : true,
+            debug : false,
             showPref : false,
             clearCache : false,
             allListObj : {
