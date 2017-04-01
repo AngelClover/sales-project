@@ -295,10 +295,18 @@ address: '深圳市南山区深南大道'
             this.sortOrders = sortOrders
             return sortOrders
        },
-         clickItem : function(index){ //item, index
-            console.log('on-row-click',  index)
-            this.detailContent = this.filteredContent[index]
-            this.clickedIndex = index
+         clickItem : function(item){ //item, index
+            console.log('on-row-click',  item)
+            this.detailContent = item //this.filteredContent[index]
+            var i = -1;
+             for (var ind in this.filteredContent){
+                if (this.filteredContent[ind].id == item.id){
+                i = ind
+             break
+                 }
+             }
+            this.clickedIndex = i
+            console.log('on-row-click', this.clickedIndex,  item)
             this.showDetails = true
        },
        createAction(){
