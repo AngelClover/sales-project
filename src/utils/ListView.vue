@@ -7,23 +7,19 @@
         </div>
             <br/>
             <div class="filter label" v-show="this.filteredList.length > 0">
-                <button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
+                <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
-                </button>
+                </Button>
             </div>
             <br/>
-            <div class='table-container'>
+                <!--
         <table class="ui selected striped padded very basic compact table">
             <thead>
                 <tr>
-                    <!--
-            <th v-for="(val, key, index) in title"> {{val}} </th>
-                    -->
             <th v-for="(item, index) in preference"
                 @click="sortBy(item)"
                 :class="{ active : sortKey == item}" >
                 {{titleMap[item] | capitalize}}
-                <!--{{title[item.item] | capitalize}}-->
                 <span class="arrow" :class="sortOrders[item] > 0 ? 'asc' : 'dsc'">
                 </span>
             </th>
@@ -31,23 +27,22 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in filteredContent" @click=clickItem(item,index)> 
-                <!--
-                <td v-for="(val, key, index) in title">{{item[key]}}</td>
-                -->
                 <td v-for="(prefitem, prefindex) in preference"> {{item[prefitem]}} </td>
-                <!--
-                <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
-                -->
             </tr>
             </tbody>
         </table>
-            </div>
+        -->
+                <!--
+                <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
+                -->
+        <Table width=1100 stripe :columns="titleKey" :data="filteredContent">
+        </Table>
 
         <br/>
         <div class="ui buttom" align=center>
-            <button @click=createAction class="ui primary button"> 新建 </button>
-            <button @click=showPrefs class="ui primary button"> 偏好设置 </button>
-            <button @click=showLogTips class="ui primary button"> 变更记录 </button>
+            <Button @click=createAction > 新建 </Button>
+            <Button @click=showPrefs > 偏好设置 </Button>
+            <Button @click=showLogTips > 变更记录 </Button>
         </div>
 
         <br/>
@@ -61,6 +56,7 @@
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
         </Preference>
 
+
         <div v-show=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
@@ -73,13 +69,20 @@
         <p> sortOrders : {{sortOrders}} </p>
         <p> sortKey : {{sortKey}} </p>
         <p> searchQuery : {{searchQuery}} </p>
-        <p> filteredContent : {{filteredContent}} </p>
-        <p> detailContent : {{detailContent}} </p>
         -->
+        <p> filteredContent : {{filteredContent.length}} </p>
+        <p> detailContent : {{detailContent.length}} </p>
         <p> showDetails : {{showDetails}} </p>
         <p> location : {{location}} </p>
         <p> showCreator : {{showCreator}} </p>
+        <p> titleKey : {{titleKey}}</p>
         </div>
+        <!--
+        <Table stripe :columns="testTitle" :data="testData">
+        </Table>
+        <Table stripe :columns="titleKey" :data="filteredContent">
+        </Table>
+        -->
 
     </div>
 </template>
@@ -113,9 +116,58 @@ export default {
             labelFiltercb : obj => {return true},
             clickedIndex : -1,
             showCreator : false,
+            testTitle : [
+{
+title: '姓名',
+key: 'name'
+},
+{
+title: '年龄',
+key: 'age'
+},
+{
+title: '地址',
+key: 'address'
+}
+                ],
+                testData : [
+{
+name: '王小明',
+age: 18,
+address: '北京市朝阳区芍药居'
+},
+{
+name: '张小刚',
+age: 25,
+address: '北京市海淀区西二旗'
+},
+{
+name: '李小红',
+age: 30,
+address: '上海市浦东新区世纪大道'
+},
+{
+name: '周小伟',
+age: 26,
+address: '深圳市南山区深南大道'
+}
+                    ]
         }
     },
     computed : {
+        titleKey : function(){
+            var ret = []
+            for (var i in this.preference){
+                var t = {}
+                t.key = this.preference[i]
+                t.title = this.titleMap[t.key]
+                t.width = 100
+                t.sortable = true
+                ret.push(t)
+            }
+            console.log('titleKey', ret)
+            return ret
+        },
         preference : function(){
             if (this.clearCache)localStorage.removeItem(this.location)
             var shw = this.showPref
@@ -318,9 +370,11 @@ table tr:hover tr:nth-child(odd){
 }
 */
 
+/*
 tr:hover td{
     background: none;
 }
+*/
 
 /*
 td {
@@ -328,6 +382,7 @@ td {
 }
 */
 
+/*
 td:hover{
     background-color: #32a963!important;
 }
@@ -344,7 +399,9 @@ th.active {
 th.active .arrow {
   opacity: 1;
 }
+*/
 
+/*
 .arrow {
   display: inline-block;
   vertical-align: middle;
@@ -365,7 +422,22 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
+*/
 
+/*
+td{
+    color : #666;
+    background-color : #aaa;
+}
+.ivu-table{
+    background-color : #aaa;
+}
+.ivu-table-cell{
+    background-color : #bbb;
+    color : #111;
+    font-color : #444;
+}
+                    */
 
 </style>
 

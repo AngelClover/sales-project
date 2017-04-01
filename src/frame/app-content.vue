@@ -1,6 +1,8 @@
 <template>
+    <!--
     <div class="sixteen wide column">
         <div class="ui text container">
+    -->
             <!--
                 <div class="header">
                 <h1>main page</h1>
@@ -24,8 +26,10 @@
                 </div>
             -->
             <router-view></router-view>
+            <!--
         </div>
     </div>
+            -->
 </template>
 
 <script>
