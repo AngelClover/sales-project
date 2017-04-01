@@ -35,7 +35,7 @@
                 <!--
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
-        <Table width=1100 stripe :columns="titleKey" :data="filteredContent">
+        <Table width=1100 stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
         </Table>
 
         <br/>
@@ -50,7 +50,7 @@
         <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location>
         </detail>
 
-        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false">
+        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;">
         </Creator>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
@@ -295,8 +295,9 @@ address: '深圳市南山区深南大道'
             this.sortOrders = sortOrders
             return sortOrders
        },
-       clickItem : function(item, index){
-            this.detailContent = item
+         clickItem : function(index){ //item, index
+            console.log('on-row-click',  index)
+            this.detailContent = this.filteredContent[index]
             this.clickedIndex = index
             this.showDetails = true
        },

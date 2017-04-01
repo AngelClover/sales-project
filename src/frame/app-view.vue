@@ -1,6 +1,6 @@
 <template>
     <div class="ui grid">
-        <Row type="flex">
+        <Row>
         <div class="layout-breadcrumb">
             <Breadcrumb>
             <Breadcrumb-item href="#">首页</Breadcrumb-item>
@@ -8,7 +8,11 @@
             </Breadcrumb>
         </div>
         </Row>
+        <div class="clear">
+        </div>
+        <Row span=24 >
         <app-content> </app-content>
+        </Row>
         <Row>
             <Col span=24>
         <center>
@@ -76,4 +80,5 @@ export default {
     padding: 10px 0 20px;
     color: #9ea7b4;
 }
+.clear{ clear:both} 
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <Modal v-model="showCreator">
+    <Modal v-model="showCC" @on-cancel="$emit('close')">
         <div slot="header">
             <h2>
             <center>
@@ -55,10 +55,16 @@ export default {
     data: function() {
         return {
             showOutStore : false,
-            newContent : {}
+            newContent : {},
+            //showCC : false,
         }
     },
     props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'showCreator'],
+    computed : {
+        showCC (){
+            return this.showCreator
+        }
+    },
     methods : {
         realCreate(){
             //console.log("!!!!", this.newContent, this.detailContent)
