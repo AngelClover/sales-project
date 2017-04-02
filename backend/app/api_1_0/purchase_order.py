@@ -45,31 +45,47 @@ def get_purchase_order(id):
             'data' : order.to_json()
             })
 
+import datetime
 @api.route('/purchase', methods=['POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['write'])
 def new_purchase_order():
     order = None
     request_json = request.get_json()
+    print "I", request_json
     if request_json is None:
         return jsonify({
                 'error' : 1,
                 'msg' : u'不是application/json类',
                 'data' : {}
                 }), 403
-    print request_json
+    print "II", request_json
     try:
         order = PurchaseOrder()
-        order.sign_date = request_json.get('sign_date') or None
+#sd = request_json.get('sign_date') or None
+        sd = request_json.get('sign_date') or "1970-01-01"
+        if sd is not None:
+            sd = sd.strip(' ')
+            order.sign_date = datetime.datetime.strptime(sd, "%Y-%m-%d")
+        else:
+            order.sign_date = None
         order.provider_info = request_json.get('provider_info') or None
         order.billing_company = request_json.get('billing_company') or None
-        order.arrive_date = request_json.get('arrive_date') or None
+#ad = request_json.get('arrive_date') or None
+        ad = request_json.get('arrive_date') or "1970-01-01 00:00:00"
+        if ad is not None:
+            ad = ad.strip(' ')
+            order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+        else:
+            order.arrive_date = None
         order.get_location = request_json.get('get_location') or None
         order.pay_mode = request_json.get('pay_mode') or None
         order.invoice_type = request_json.get('invoice_type') or None
         order.postage_account = request_json.get('postage_account') or None
         order.state = 1
         #check equipments exist
-        equips = request_json.get('equipment_infos') or []
+        equips = request_json.get('equipments') or []
+        print "III"
+        order.purchase_equipments = []
         for e in equips:
             if e.get('equipment_id') is None:
                 return jsonify({
@@ -78,11 +94,14 @@ def new_purchase_order():
                         })
             Equipment.query.get_or_404(e['equipment_id'])
 
+        print "IV", equips
         x = order.to_json()
+        print "V", x
         #add order for get purchase order id
         db.session.add(order)
         db.session.commit()
         #add equipment
+        print "VI", equips
         for e in equips:
             pe = PurchaseEquipment()
             pe.purchase_id = order.id
@@ -97,6 +116,7 @@ def new_purchase_order():
             db.session.add(pe)
         db.session.commit()
     except Exception, e:
+        print e
         return jsonify({
                 'error' : 2,
                 'msg' : e.message,
