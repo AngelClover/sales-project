@@ -7,23 +7,19 @@
         </div>
             <br/>
             <div class="filter label" v-show="this.filteredList.length > 0">
-                <button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
+                <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
-                </button>
+                </Button>
             </div>
             <br/>
-            <div class='table-container'>
+                <!--
         <table class="ui selected striped padded very basic compact table">
             <thead>
                 <tr>
-                    <!--
-            <th v-for="(val, key, index) in title"> {{val}} </th>
-                    -->
             <th v-for="(item, index) in preference"
                 @click="sortBy(item)"
                 :class="{ active : sortKey == item}" >
                 {{titleMap[item] | capitalize}}
-                <!--{{title[item.item] | capitalize}}-->
                 <span class="arrow" :class="sortOrders[item] > 0 ? 'asc' : 'dsc'">
                 </span>
             </th>
@@ -31,33 +27,42 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in filteredContent" @click=clickItem(item,index)> 
-                <!--
-                <td v-for="(val, key, index) in title">{{item[key]}}</td>
-                -->
                 <td v-for="(prefitem, prefindex) in preference"> {{item[prefitem]}} </td>
             </tr>
             </tbody>
         </table>
-            </div>
+        -->
+                <!--
+                <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
+                -->
+        <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
+            <Table width=auto stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
+            </Table>
+        </div>
 
         <br/>
         <div class="ui buttom" align=center>
-            <button @click=createAction class="ui primary button"> 新建 </button>
-            <button @click=showPrefs class="ui primary button"> 偏好设置 </button>
-            <button @click=showLogTips class="ui primary button"> 变更记录 </button>
+            <Button @click=createAction > 新建 </Button>
+            <Button @click=showPrefs > 偏好设置 </Button>
+            <Button @click=showLogTips > 变更记录 </Button>
         </div>
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent :actionType=actionType @close="showDetails = false;actionType = 'show'" :cbset=cbset :storeForEquipment=stores>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
         </detail>
+
+        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;">
+        </Creator>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
         </Preference>
 
+
         <div v-show=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
+        <!--
         <p> msg : {{msg}} </p>
         <p> title : {{title}} </p>
         <p> content : {{content}} </p>
@@ -66,10 +71,20 @@
         <p> sortOrders : {{sortOrders}} </p>
         <p> sortKey : {{sortKey}} </p>
         <p> searchQuery : {{searchQuery}} </p>
-        <p> filteredContent : {{filteredContent}} </p>
+        -->
+        <p> filteredContent : {{filteredContent.length}} </p>
+        <p> detailContent : {{detailContent.length}} </p>
         <p> showDetails : {{showDetails}} </p>
-        <p> detailContent : {{detailContent}} </p>
+        <p> location : {{location}} </p>
+        <p> showCreator : {{showCreator}} </p>
+        <p> titleKey : {{titleKey}}</p>
         </div>
+        <!--
+        <Table stripe :columns="testTitle" :data="testData">
+        </Table>
+        <Table stripe :columns="titleKey" :data="filteredContent">
+        </Table>
+        -->
 
     </div>
 </template>
@@ -77,13 +92,15 @@
 <script>
 import Detail from './Detail.vue'
 import Preference from './Preference.vue'
+import Creator from './Creator.vue'
 
 export default {
     components : {
         Detail,
-        Preference
+        Preference,
+        Creator
     },
-    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores'],
+    props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores', 'subtitle'],
     data : function(){
         return {
             sortKey : '',
@@ -92,7 +109,6 @@ export default {
             showDetails : false,
             detailContent : {},
             debug : false,
-            actionType : 'show',
             showPref : false,
             clearCache : false,
             allListObj : {
@@ -101,9 +117,59 @@ export default {
             },
             labelFiltercb : obj => {return true},
             clickedIndex : -1,
+            showCreator : false,
+            testTitle : [
+{
+title: '姓名',
+key: 'name'
+},
+{
+title: '年龄',
+key: 'age'
+},
+{
+title: '地址',
+key: 'address'
+}
+                ],
+                testData : [
+{
+name: '王小明',
+age: 18,
+address: '北京市朝阳区芍药居'
+},
+{
+name: '张小刚',
+age: 25,
+address: '北京市海淀区西二旗'
+},
+{
+name: '李小红',
+age: 30,
+address: '上海市浦东新区世纪大道'
+},
+{
+name: '周小伟',
+age: 26,
+address: '深圳市南山区深南大道'
+}
+                    ]
         }
     },
     computed : {
+        titleKey : function(){
+            var ret = []
+            for (var i in this.preference){
+                var t = {}
+                t.key = this.preference[i]
+                t.title = this.titleMap[t.key]
+                t.width = 100
+                t.sortable = true
+                ret.push(t)
+            }
+            console.log('titleKey', ret)
+            return ret
+        },
         preference : function(){
             if (this.clearCache)localStorage.removeItem(this.location)
             var shw = this.showPref
@@ -204,6 +270,8 @@ export default {
         filteredContent : function(x){
             if (this.clickedIndex >= 0 && this.clickedIndex < this.filteredContent.length){
                 this.detailContent = x[this.clickedIndex]
+            }else {
+                this.showDetails = false
             }
         },
         content : function(x){
@@ -229,15 +297,23 @@ export default {
             this.sortOrders = sortOrders
             return sortOrders
        },
-       clickItem : function(item, index){
-            this.detailContent = item
-            this.clickedIndex = index
+         clickItem : function(item){ //item, index
+            console.log('on-row-click',  item)
+            this.detailContent = item //this.filteredContent[index]
+            var i = -1;
+             for (var ind in this.filteredContent){
+                if (this.filteredContent[ind].id == item.id){
+                i = ind
+             break
+                 }
+             }
+            this.clickedIndex = i
+            console.log('on-row-click', this.clickedIndex,  item)
             this.showDetails = true
        },
        createAction(){
            this.detailContent = {}
-           this.actionType='create'
-           this.showDetails = true
+           this.showCreator = true
        },
        showLogTips(){
            this.$store.dispatch('showMsg', '此功能暂不开放', 'info')
@@ -246,6 +322,9 @@ export default {
            console.log('showPrefs', this.showPref)
            this.showPref = !this.showPref
            console.log('showPrefs', this.showPref)
+       },
+       handleDelete : function(item, index){
+           this.cbset.delete(item)
        },
        filterByLabel(obj){
            console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
@@ -302,9 +381,11 @@ table tr:hover tr:nth-child(odd){
 }
 */
 
+/*
 tr:hover td{
     background: none;
 }
+*/
 
 /*
 td {
@@ -312,6 +393,7 @@ td {
 }
 */
 
+/*
 td:hover{
     background-color: #32a963!important;
 }
@@ -328,7 +410,9 @@ th.active {
 th.active .arrow {
   opacity: 1;
 }
+*/
 
+/*
 .arrow {
   display: inline-block;
   vertical-align: middle;
@@ -349,7 +433,22 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
+*/
 
+/*
+td{
+    color : #666;
+    background-color : #aaa;
+}
+.ivu-table{
+    background-color : #aaa;
+}
+.ivu-table-cell{
+    background-color : #bbb;
+    color : #111;
+    font-color : #444;
+}
+                    */
 
 </style>
 

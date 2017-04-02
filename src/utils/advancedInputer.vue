@@ -1,31 +1,33 @@
 <template>
     <div>
         <span>
-            <div v-if="header.immutable">
+            <div v-if="header.immutable" class="input">
                 <label>{{currentValue}}</label>
             </div>
-            <div v-else-if="header.type==='option'" class="ui compact menu">
+            <div v-else-if="header.type==='option'" class="ui compact menu input">
                 <div class="ui simple dropdown item">{{currentValue}}<i class="dropdown icon"></i>
                     <div class=menu>
                         <div v-for="op in header.selectOptions" class=item @click="setOption(op)">{{op}}</div>
                     </div>
                 </div>
             </div>
-            <div v-else-if="header.type==='date'">
+            <div v-else-if="header.type==='date'" class="input">
                 <Date-picker type="date" placeholder="选择日期" style="width: 200px" v-model=currentDate @on-change="setDate"></Date-picker>
             </div>
-            <div v-else-if="header.type==='time'">
+            <div v-else-if="header.type==='time'" class="input">
                 <Date-picker type="datetime" placeholder="选择日期和时间" style="width: 200px" v-model=currentDate @on-change="setDatetime"></Date-picker>
             </div>
-            <div v-else-if="header.type==='number'">
+            <div v-else-if="header.type==='number'" class="input">
                 <Input-number v-model="currentValue"></Input-number>
             </div>
-            <div v-else>
+            <div v-else class="input">
                 <Input v-model="currentValue" style="width: 300px" @on-change="handleInput">
                 </Input>
             </div>
+            <div v-if="debug">
             {{header}}
             {{currentValue}}
+            </div>
         </span>
     </div>
 </template>
@@ -35,6 +37,7 @@
 export default {
     data: function() {
         return {
+            debug : false,
             currentValue: this.value,
             currentDate: this.header && this.header.type === 'date' && this.value && new Date(Date.parse(this.value.replace(/-/g,  "/"))) || new Date()
         }
@@ -83,5 +86,8 @@ export default {
 </script>
 
 <style>
+.input{
+    margin : 5px
+}
 </style>
 

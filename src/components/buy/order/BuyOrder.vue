@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet">
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet" :subtitle=subtitle>
             <h3 slot="titlename" align=center> 采购订单管理 </h3>
         </ListView>
     </div>
@@ -56,9 +56,10 @@ export default {
         },
         preference() {
             return this.$store.getters.buyOrderPreference
-        }
-
-
+        },
+        subtitle() {
+            return this.$store.getters.buyOrderSubtitle
+        },
     },
     created : function(){
         console.log('created this', this)

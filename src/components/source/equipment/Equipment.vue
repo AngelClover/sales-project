@@ -15,12 +15,12 @@ export default {
     data (){
         return {
             cbSet : {
-            get: this.getEquipmentList,
-            update: this.updateEquipment,
-            save: this.saveEquipment,
-            remove: this.removeEquipment,
-            approve: this.approveEquipment
-        }
+                get: this.getEquipmentList,
+                update: this.updateEquipment,
+                save: this.saveEquipment,
+                remove: this.removeEquipment,
+                approve: this.approveEquipment
+            }
         }
     },
     components : {

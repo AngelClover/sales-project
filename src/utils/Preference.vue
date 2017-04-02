@@ -1,10 +1,6 @@
 <template>
-    <div v-show="showPref">
-        <transition name="prefs">
-        <div class='pref-mask'>
-            <div class="pref-wrapper">
-                <div class="pref-container">
-                    <div class="pref-header">
+    <Modal v-model="showPP" @on-close="$emit('close')" @on-cancel="$emit('close')">
+                    <div slot="header">
                         偏好设置
                     </div>
                     <div class="pref-body">
@@ -25,7 +21,7 @@
                             pref:{{preference}}
                         </div>
                     </div>
-                    <div class="pref-footer">
+                    <div slot="footer">
                         <center>
                             <button @click="selectAll" class="ui primary  button">
                                 全选 
@@ -35,12 +31,7 @@
                             </button>
                         </center>
                     </div>
-                </div>
-                
-            </div>
-        </div>
-        </transition>
-    </div>
+    </Modal>
 </template>
 
 <script>
@@ -53,6 +44,9 @@ export default {
         }
     },
     computed : {
+        showPP (){
+            return this.showPref
+        },
         preference : function(){
             //localStorage.removeItem(this.location)
             var readStr = localStorage.getItem(this.location)

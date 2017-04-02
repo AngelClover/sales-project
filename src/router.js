@@ -13,7 +13,9 @@ console.log(router);
 sync(store, router)
 router.beforeEach(function (to, from, next){
     //vm = transition.to.router.app.$root
+    console.log('router in', from.path, '->', to.path)
     if (to.path == '/login' && isLogin()){
+        console.log('router in /', from.path, '->', to.path)
         next('/')
     }
     if (isLogin() || to.path == '/login' || to.path == '/register'){
