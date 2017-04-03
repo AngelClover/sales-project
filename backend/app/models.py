@@ -206,7 +206,7 @@ class PurchaseOrder(db.Model):
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
         (),
-        ('equipment_id', '产品编号'),
+        ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
         ('product_name', u'产品名称', 'immutable'),
@@ -325,7 +325,7 @@ class SaleOrder(db.Model):
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
-        ('product_name', u'产品名称'),
+        ('product_name', u'产品名称', 'immutable'),
         ('spec', u'规格'),
         ('model', u'型号'),
         ('measurement_unit', u'单位'),
@@ -334,7 +334,7 @@ class SaleOrder(db.Model):
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
         ('product_configure', u'产品配置单'),
-        ('equipment_id', u'产品编号'),
+        ('equipment_id', u'产品编号', 'immutable'),
         ('outstore_state', u'出库状态', 'immutable'),
         ]
 

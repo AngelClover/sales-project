@@ -7,6 +7,7 @@ from ..models import Equipment, Permission, SaleOrder, SaleEquipment
 from . import api
 from decorators import permission_required
 from errors import bad_request
+import datetime
 
 @api.route('/sale/headers', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['sale']['read'])
@@ -60,10 +61,26 @@ def new_sale_order():
     print request_json
     try:
         order = SaleOrder()
-        order.sign_date = request_json.get('sign_date') or None
+#order.sign_date = request_json.get('sign_date') or None
+        sd = request_json.get('sign_date') or "1970-01-01"
+        if sd is not None:
+            sd = sd.strip(' ')
+            order.sign_date = datetime.datetime.strptime(sd, "%Y-%m-%d")
+        else:
+            order.sign_date = None
         order.provider_info = request_json.get('provider_info') or None
         order.billing_company = request_json.get('billing_company') or None
-        order.arrive_date = request_json.get('arrive_date') or None
+#order.arrive_date = request_json.get('arrive_date') or None
+        ad = request_json.get('arrive_date') or "1970-01-01 00:00:00"
+        if ad is not None:
+            ad = ad.strip(' ')
+            try:
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+            except Exception, e:
+                print e
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H%M%S")
+        else:
+            order.arrive_date = None
         order.get_location = request_json.get('get_location') or None
         order.pay_mode = request_json.get('pay_mode') or None
         order.invoice_type = request_json.get('invoice_type') or None
@@ -105,6 +122,95 @@ def new_sale_order():
     return jsonify({
             'error' : 0,
             'msg' : u'添加销售订单成功',
+            'data' : order.to_json()
+            })
+
+
+@api.route('/sale/<int:id>', methods=['PUT'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['sale']['write'])
+def modify_sale_order(id):
+    order = SaleOrder.query.get_or_404(id)
+    request_json = request.get_json()
+    if request_json is None:
+        return jsonify({
+                'error' : 1,
+                'msg' : u'不是application/json类',
+                'data' : {}
+                }), 403
+    print request_json
+    if order.state < 0:
+        return jsonify({
+                'error' : 1,
+                'msg' : u'state is %d, 不能修改' % order.state,
+                'data' : {}
+                }), 403
+    try:
+        for p in order.sale_equipments:
+            db.session.delete(p)
+#order = SaleOrder()
+#order.sign_date = request_json.get('sign_date') or None
+        sd = request_json.get('sign_date') or "1970-01-01"
+        if sd is not None:
+            sd = sd.strip(' ')
+            order.sign_date = datetime.datetime.strptime(sd, "%Y-%m-%d")
+        else:
+            order.sign_date = None
+        order.provider_info = request_json.get('provider_info') or None
+        order.billing_company = request_json.get('billing_company') or None
+#order.arrive_date = request_json.get('arrive_date') or None
+        ad = request_json.get('arrive_date') or "1970-01-01 00:00:00"
+        if ad is not None:
+            ad = ad.strip(' ')
+            try:
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+            except Exception, e:
+                print e
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H%M%S")
+        else:
+            order.arrive_date = None
+        order.get_location = request_json.get('get_location') or None
+        order.pay_mode = request_json.get('pay_mode') or None
+        order.invoice_type = request_json.get('invoice_type') or None
+        order.state = 1
+        #check equipments exist
+        equips = request_json.get('equipments') or []
+        for e in equips:
+            if e.get('equipment_id') is None:
+                return jsonify({
+                        'error' : 3,
+                        'msg' : 'equipment id not exist'
+                        })
+            Equipment.query.get_or_404(e['equipment_id'])
+
+        #add order for get sale order id
+#db.session.add(order)
+        x = order.to_json()
+#db.session.commit()
+        #add equipment
+        print "VI", equips
+        for e in equips:
+            pe = SaleEquipment()
+            pe.sale_id = order.id
+            pe.equipment_id = e['equipment_id']
+            pe.service_commitment = e.get('service_commitment') or None
+            pe.warranty_period = e.get('warranty_period') or None
+            pe.measurement_unit = e.get('measurement_unit') or None
+            pe.unit_price = e.get('unit_price') or 0
+            pe.quantity = e.get('quantity') or 0
+            pe.total_price = float(pe.unit_price) * float(pe.quantity)
+            pe.product_configure = e.get('product_configure') or None
+            db.session.add(pe)
+        db.session.commit()
+    except Exception, e:
+        return jsonify({
+                'error' : 2,
+                'msg' : e.message,
+                'data' : {}
+                }), 403
+
+    return jsonify({
+            'error' : 0,
+            'msg' : u'修改销售订单%d成功' % id,
             'data' : order.to_json()
             })
 
