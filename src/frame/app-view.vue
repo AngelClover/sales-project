@@ -1,18 +1,22 @@
 <template>
     <div class="ui grid">
         <Row>
+        <Col span=24>
         <div class="layout-breadcrumb">
             <Breadcrumb>
             <Breadcrumb-item href="#">首页</Breadcrumb-item>
             <Breadcrumb-item>{{displayLocationName}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
+        </Col>
         </Row>
-        <div class="clear">
-        </div>
-        <Row span=24 >
+        <br/>
+        <Row type=flex>
+        <Col span=24>
         <app-content> </app-content>
+        </Col>
         </Row>
+        <br/>
         <Row>
             <Col span=24>
         <center>

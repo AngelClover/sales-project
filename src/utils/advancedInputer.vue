@@ -18,10 +18,10 @@
                 <Date-picker type="datetime" placeholder="选择日期和时间" style="width: 200px" v-model=currentDate @on-change="setDatetime"></Date-picker>
             </div>
             <div v-else-if="header.type==='number'" class="input">
-                <Input-number v-model="currentValue"></Input-number>
+                <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
             </div>
             <div v-else class="input">
-                <Input v-model="currentValue" style="width: 300px" @on-change="handleInput">
+                <Input v-model="currentString" style="width: 300px" @on-change="handleInput">
                 </Input>
             </div>
             <div v-if="debug">
@@ -39,7 +39,9 @@ export default {
         return {
             debug : false,
             currentValue: this.value,
-            currentDate: this.header && this.header.type === 'date' && this.value && new Date(Date.parse(this.value.replace(/-/g,  "/"))) || new Date()
+            currentDate: this.header && this.header.type === 'date' && this.value && new Date(Date.parse(this.value.replace(/-/g,  "/"))) || new Date(),
+            currentString : "",
+            currentNumber : 1,
         }
     },
     props : ['value', 'header'],
@@ -55,8 +57,17 @@ export default {
             }
         },
         currentValue: function(x){
-            //console.log('currentValue various =>', x)
-        }
+            console.log('currentValue various =>', x)
+            this.$emit('input', x)
+        },
+        currentNumber: function(x){
+            console.log('currentNumber various =>', x)
+            this.$emit('input', x)
+        },
+        currentString: function(x){
+            console.log('currentString various =>', x)
+            this.$emit('input', x)
+        },
 
     },
     methods : {
@@ -78,7 +89,11 @@ export default {
         },
         handleInput(event){
             //console.log('set input value ->', this.currentValue)
-            this.$emit('input', this.currentValue)
+            this.$emit('input', this.currentString)
+        },
+        handleNumber(event){
+            console.log('set input number value ->', this.currentNumber)
+            this.$emit('input', this.currentNumber)
         }
     }
 

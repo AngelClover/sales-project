@@ -25,13 +25,13 @@
                     </tr>
                 </tbody>
             </table>
-            <div v-if="location == 'buyorder'">
-                buyorder
-            </div>
+            <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'">
+            </EquipCreator>
+            
         </div>
         <div slot="footer">
             <center>
-            <button class="ui secondary button" @click="$emit('close')">
+                <button class="ui secondary button" @click="newContent={};$emit('close');">
                 放弃
             </button>
             <button class="ui primary button" @click="realCreate">
@@ -47,10 +47,12 @@ import api from '../api'
 import utils from './utils'
 import OutSelector from './outSelector.vue'
 import advancedInputer from './advancedInputer.vue'
+import EquipCreator from './EquipCreator.vue'
 export default {
     components : {
         OutSelector,
         advancedInputer,
+        EquipCreator,
     },
     data: function() {
         return {
@@ -59,7 +61,7 @@ export default {
             //showCC : false,
         }
     },
-    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'showCreator'],
+    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'showCreator', 'detailSubtitle'],
     computed : {
         showCC (){
             return this.showCreator

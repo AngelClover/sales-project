@@ -52,7 +52,7 @@
         <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
         </detail>
 
-        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;">
+        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;" :detailSubtitle=subtitle :location=location>
         </Creator>
 
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
@@ -314,6 +314,7 @@ address: '深圳市南山区深南大道'
        createAction(){
            this.detailContent = {}
            this.showCreator = true
+           this.$store.dispatch('getEquipmentList')
        },
        showLogTips(){
            this.$store.dispatch('showMsg', '此功能暂不开放', 'info')

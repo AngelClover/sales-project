@@ -25,9 +25,8 @@
                     </tr>
                 </tbody>
             </table>
-            <div v-if="location == 'buyorder'">
-                buyorder
-            </div>
+            <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'">
+            </EquipCreator>
         </div>
         <div slot="footer">
             <center>
@@ -48,17 +47,19 @@
 import utils from './utils'
 import OutSelector from './outSelector.vue'
 import advancedInputer from './advancedInputer.vue'
+import EquipCreator from './EquipCreator.vue'
 export default {
     components : {
         OutSelector,
         advancedInputer,
+        EquipCreator,
     },
     data: function() {
         return {
             showOutStore : false,
         }
     },
-    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'newContent', 'showModifier'],
+    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'newContent', 'showModifier', 'detailSubtitle'],
     computed : {
         showMM (){
             return this.showModifier
@@ -69,7 +70,7 @@ export default {
             //console.log("!!!!", this.newContent, this.detailContent)
             //console.log("!!!!", this.cmp(this.newContent, this.detailContent))
             //console.log('real modify', this.newContent)
-            if (this.cmp(this.newContent, this.detailContent)){
+            if (JSON.stringify(this.newContent) == JSON.stringify(this.detailContent)){
                 this.$store.dispatch('showMsg', '无修改', 'info')
                 //this.closeModifier()
             }else{

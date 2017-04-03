@@ -54,7 +54,7 @@
         </transition>
                     -->
         </Modal>
-        <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent>
+        <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
         </Modifier>
     </div>
 </template>
@@ -88,7 +88,7 @@ export default {
         detailContent : function(x){
             if (this.showModifier){
             }else{
-                this.newContent = this.deepCopy(x)
+                this.newContent = JSON.parse(JSON.stringify(x))//this.deepCopy(x)
             }
             console.log('detail various -> ', x)
         },
@@ -106,11 +106,12 @@ export default {
     },
     methods : {
         modifier: function(){
-            this.newContent = this.deepCopy(this.detailContent)
+            this.newContent = JSON.parse(JSON.stringify(this.detailContent))//this.deepCopy(this.detailContent)
             //console.log('deep copy', this.newContent, this.detailContent)
             this.showContent = false
             this.showModifier = true
             console.log("click to modifier ")
+            this.$store.dispatch('getEquipmentList')
         },
         /*
         closeModifier(){

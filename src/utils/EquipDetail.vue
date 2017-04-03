@@ -16,8 +16,8 @@
         </div>
         <div v-if="debug==true">
             -------------Debug for EquipDetail----------
-            subtitle : {{titleForTable}}
-            equipList : {{equipList}}
+            subtitle : {{titleForTable}} <br/>
+            equipList : {{equipList}}<br/>
         </div>
     </div>
 </template>
@@ -26,7 +26,7 @@
 export default {
     data: function() {
         return {
-            debug : false,
+            debug : true,
         }
     },
     props : ['equipList', 'subtitle'],

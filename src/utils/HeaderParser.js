@@ -41,7 +41,24 @@ function pipe(obj){
             obj['displayName'] && obj['displayName'].search('时间')  >= 0){
         obj['type'] = 'time'
     }
-
+    if (obj['item'] && obj['displayName'].search('保修期限') >= 0 ||
+            obj['displayName'] && obj['displayName'].search('日期')  >= 0){
+        obj['type'] = 'date'
+    }
+    
+    switch (obj['displayName']){
+        case '单价':
+            obj['type'] = 'number';
+            break;
+        case '数量':
+            obj['type'] = 'number';
+            break;
+        case '总价':
+            obj['type'] = 'number';
+            break;
+        default : 
+            break;
+    }
     return obj
 }
 function HeaderParser(a){
