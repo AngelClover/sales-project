@@ -7,6 +7,7 @@ from ..models import Equipment, Permission, PurchaseOrder, PurchaseEquipment, St
 from . import api
 from decorators import permission_required
 from errors import bad_request
+import datetime
 
 @api.route('/purchase/headers', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['read'])
@@ -45,7 +46,6 @@ def get_purchase_order(id):
             'data' : order.to_json()
             })
 
-import datetime
 @api.route('/purchase', methods=['POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['write'])
 def new_purchase_order():
@@ -85,7 +85,7 @@ def new_purchase_order():
         #check equipments exist
         equips = request_json.get('equipments') or []
         print "III"
-        order.purchase_equipments = []
+#order.purchase_equipments = []
         for e in equips:
             if e.get('equipment_id') is None:
                 return jsonify({
@@ -126,6 +126,96 @@ def new_purchase_order():
     return jsonify({
             'error' : 0,
             'msg' : u'添加采购订单成功',
+            'data' : order.to_json()
+            })
+
+
+@api.route('/purchase/<int:id>', methods=['PUT'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['purchase']['read'])
+def modify_purchase_order(id):
+    order = PurchaseOrder.query.get_or_404(id) 
+    request_json = request.get_json()
+    print "I", request_json, id
+    if request_json is None:
+        return jsonify({
+                'error' : 1,
+                'msg' : u'不是application/json类',
+                'data' : {}
+                }), 403
+    print "II", request_json
+    if order.state < 0:
+        return jsonify({
+                'error' : 1,
+                'msg' : 'state is %d' % order.state,
+                'data' : {}
+                }), 403
+    try:
+#delete old relation
+        for p in order.purchase_equipments:
+            db.session.delete(p)
+
+        sd = request_json.get('sign_date') or None
+        if sd is not None:
+            sd = sd.strip(' ')
+            order.sign_date = datetime.datetime.strptime(sd, "%Y-%m-%d")
+        if request_json.get('provider_info'):
+            order.provider_info = request_json.get('provider_info')
+        if request_json.get('billing_company'):
+            order.billing_company = request_json.get('billing_company')
+#ad = request_json.get('arrive_date') or None
+        ad = request_json.get('arrive_date') or None
+        if ad is not None:
+            ad = ad.strip(' ')
+            order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+        if request_json.get('get_location'):
+            order.get_location = request_json.get('get_location')
+        if request_json.get('pay_mode'):
+            order.pay_mode = request_json.get('pay_mode')
+        if request_json.get('invoice_type'):
+            order.invoice_type = request_json.get('invoice_type')
+        if request_json.get('postage_account'):
+            order.postage_account = request_json.get('postage_account')
+        order.state = 1
+        #check equipments exist
+        equips = request_json.get('equipments') or []
+
+        print "III"
+#order.purchase_equipments = []
+        for e in equips:
+            if e.get('equipment_id') is None:
+                return jsonify({
+                        'error' : 3,
+                        'msg' : 'equipment id not exist'
+                        })
+            Equipment.query.get_or_404(e['equipment_id'])
+
+        x = order.to_json()
+#db.session.commit()
+#TODO:
+        print "VI", equips
+        for e in equips:
+            pe = PurchaseEquipment()
+            pe.purchase_id = order.id
+            pe.equipment_id = e['equipment_id']
+            pe.warranty_period = e.get('warranty_period') or None
+            pe.install_require = e.get('install_require') or None
+            pe.measurement_unit = e.get('measurement_unit') or None
+            pe.unit_price = e.get('unit_price') or 0
+            pe.quantity = e.get('quantity') or 0
+            pe.total_price = float(pe.unit_price) * float(pe.quantity)
+            pe.product_configure = e.get('product_configure') or None
+            db.session.add(pe)
+        db.session.commit()
+    except Exception, e:
+        print e
+        return jsonify({
+                'error' : 2,
+                'msg' : e.message,
+                'data' : {}
+                }), 403
+    return jsonify({
+            'error' : 0,
+            'msg' : u'修改采购订单%d成功' % id,
             'data' : order.to_json()
             })
 

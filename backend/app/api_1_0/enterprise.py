@@ -57,7 +57,7 @@ def new_enterprise():
                 }), 403
     print enterprise_json
     try:
-        name = enterprise_json['name']
+        name = None #enterprise_json['name']
         register_capital = enterprise_json.get('register_capital') or 0 
         abbr = enterprise_json.get('abbr') or None
         type = enterprise_json.get('type') or None
