@@ -109,6 +109,13 @@ export default {
             //x = []
             //x = this.subtitle
             console.log('computed subtitle', this.subtitle)
+            ret.push({
+                key : 'iindex',
+                title : '编号',
+                type : 'index',
+                width : 40,
+                fixed : 'left',
+            })
             for (var i in this.subtitle){
                 ret.push({
                     key : this.subtitle[i].item,
@@ -118,6 +125,16 @@ export default {
             }
             this.titleKey = ret
             console.log("Angel titleKeyComputed", ret, "subtitle", this.subtitle)
+            ret.push({
+                title : '操作',
+                key : 'action',
+                width: 80,
+                align: 'center',
+                fixed : 'right',
+                render (row, column, index) {
+                    return `<i-button type="error" size="small" @click="newAdderRemove(${index})">删除</i-button>`;
+                },
+            })
             return ret
         },
         equipList : function(){
@@ -173,6 +190,10 @@ export default {
                     return
                 }
             }
+        },
+        newAdderRemove(ind){
+            console.log("newadder remove", ind)
+            this.newContent.splice(ind, 1)
         }
     }
 }

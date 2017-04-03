@@ -34,7 +34,7 @@ export default {
         titleForTable() {
             var ret = []
             ret.push({
-                key : '',
+                key : 'iindex',
                 title : '编号',
                 type : 'index',
                 width : 50,
