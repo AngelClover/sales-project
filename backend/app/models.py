@@ -263,7 +263,7 @@ class PurchaseOrder(db.Model):
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
             'billing_company' : self.billing_company,
-            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H:%M:%S'),
             'get_location' : self.get_location,
             'pay_mode' : self.pay_mode,
             'invoice_type' : self.invoice_type,
@@ -333,7 +333,9 @@ class SaleOrder(db.Model):
         ('quantity', u'数量'),
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
-        ('product_configure', u'产品配置单')
+        ('product_configure', u'产品配置单'),
+        ('equipment_id', u'产品编号'),
+        ('outstore_state', u'出库状态', 'immutable'),
         ]
 
     def to_json(self):
@@ -354,14 +356,15 @@ class SaleOrder(db.Model):
                     'product_name' : e.equipment.info,
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
-                    'equipment_id' : e.equipment_id
+                    'equipment_id' : e.equipment_id,
+                    'outstore_state' : u' 未出库' if e.outstore_state == 0 else (u'部分出库' if e.outstore_state == 1 else (u'全出库' if e.outstore_state == 2 else u'状态异常')),
                     })
 
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
             'billing_company' : self.billing_company,
-            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H:%M:%S'),
             'get_location' : self.get_location,
             'pay_mode' : self.pay_mode,
             'invoice_type' : self.invoice_type,

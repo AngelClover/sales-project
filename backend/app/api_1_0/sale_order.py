@@ -69,7 +69,7 @@ def new_sale_order():
         order.invoice_type = request_json.get('invoice_type') or None
         order.state = 1
         #check equipments exist
-        equips = request_json.get('equipment_infos') or []
+        equips = request_json.get('equipments') or []
         for e in equips:
             if e.get('equipment_id') is None:
                 return jsonify({
