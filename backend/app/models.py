@@ -6,6 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from . import db
 import json
+import datetime
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -205,9 +206,10 @@ class PurchaseOrder(db.Model):
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
         (),
+        ('equipment_id', '产品编号'),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
-        ('product_name', u'产品名称'),
+        ('product_name', u'产品名称', 'immutable'),
         ('spec', u'规格'),
         ('model', u'型号'),
         ('measurement_unit', u'单位'),
@@ -216,16 +218,17 @@ class PurchaseOrder(db.Model):
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
         ('product_configure', u'产品配置单'),
-        ('stored', u'是否入库(0/1)')
+        ('stored', u'是否入库(0/1)', 'immutable')
         ]
 
     def to_json(self):
         total_price = 0
         equipments = []
+        print "IV.I", self.purchase_equipments
         for e in self.purchase_equipments:
             total_price += e.total_price
             equipments.append({
-                    'id' : e.equipment.id,
+                    'equipment_id' : e.equipment.id,
                     'warranty_period' : e.warranty_period,
                     'install_require' : e.install_require,
                     'measurement_unit' : e.measurement_unit,
@@ -234,12 +237,28 @@ class PurchaseOrder(db.Model):
                     'total_price' : e.total_price,
                     'producer' : e.equipment.producer,
                     'product_configure' : e.product_configure,
-                    'product_name' : e.equipment.info,
+                    'product_name' : e.equipment.info,# or json.loads(e.equipment.accessory)['名称'],
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
                     'stored' : e.stored
                     })
+        print "IV.II"
+        print self, equipments, total_price
+        print "Angel ", self.sign_date , type(self.sign_date), type(self.arrive_date)
+#print "Angel ", len(self.sign_date), len(self.arrive_date)
+#print self.sign_date , len(self.sign_date), len(self.sign_date.strip(' '))
+#self.sign_date = self.sign_date.strip(' ')
+#print "Angel ", len(self.sign_date), len(self.arrive_date)
+#sds =  datetime.datetime.strptime(self.sign_date, "%Y-%m-%d")
+#sds = self.sign_date.strftime('%Y-%m-%d')
+#sds =  self.sign_date
+        print self.arrive_date
+#ads =  datetime.datetime.strptime(self.arrive_date.strip(' '), '%Y-%m-%d %H:%M:%S')
+#ads = self.arrive_date.strftime('%Y-%m-%d %H:%M:%S')
+#ads =  self.arrive_date
+        print self.id, self.provider_info, self.billing_company, self.get_location, self.pay_mode, self.invoice_type, self.postage_account 
 
+        print "IV.IIUUU"
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -254,6 +273,7 @@ class PurchaseOrder(db.Model):
             'equipments' : equipments,
             'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
         }
+        print "IV.III"
         return equip_json
 
 #associate PurchaseOrder and Equipment
