@@ -167,6 +167,7 @@ def get_store_equipoment(id):
     equip = Equipment.query.get(id)
     if equip is None:
         return bad_request('no such a equipment')
+    print "get store equipment id", id, len(equip.stores)
     return jsonify({
             'error' : 0,
             'msg' : '',

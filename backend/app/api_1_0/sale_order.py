@@ -214,6 +214,16 @@ def modify_sale_order(id):
             'data' : order.to_json()
             })
 
+@api.route('/sale/confirm/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['sale']['write'])
+def confirm_sale_order(id):
+    sale_order = SaleOrder.query.get_or_404(id)
+    if sale_order.state != 0:
+        return bad_request('cannot store a sale order, that\'s state is not confirmed')
+    sale_order.state = -2
+    db.session.commit()
+    return jsonify({'error' : 0, 'msg' : ''})
+
 @api.route('/sale/<int:id>', methods=['DELETE'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['sale']['approve'])
 def delete_sale_order(id):
@@ -232,7 +242,7 @@ def delete_sale_order(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['sale']['approve'])
 def approve_sale_order(id):
     sale_order = SaleOrder.query.get_or_404(id)
-    if store.state != 1:
+    if sale_order.state != 1:
         return bad_request('wrong order number, cannot approve')
     sale_order.state = 0
     db.session.commit()
@@ -242,3 +252,20 @@ def approve_sale_order(id):
             'data' : {}
             })
 
+"""
+@api.route('/sale/next/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['sale']['approve'])
+def approve_sale_order(id):
+    sale_order = SaleOrder.query.get_or_404(id)
+    if sale_order.state  <= -4:
+        return bad_request('wrong order number, cannot give impetus')
+    sale_order.state -= 1
+    if sale_order.state == -1:
+        sale_order.state -= 1
+    db.session.commit()
+    return jsonify({
+            'error' : 0,
+            'msg' : 'approve sale order successful',
+            'data' : {}
+            })
+"""

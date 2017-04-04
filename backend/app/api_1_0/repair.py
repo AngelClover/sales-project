@@ -63,7 +63,8 @@ def new_repair():
         repair.equipment_name = request_json.get('equipment_name') or None
         repair.repair_address = request_json.get('repair_address') or None
         repair.equipment_type = request_json.get('equipment_type') or None
-        repair.repair_status = request_json.get('repair_status') or None
+#repair.repair_status = request_json.get('repair_status') or None
+        repair.repair_status = u'未完成'
         repair.state = 1
 
         db.session.add(repair)
@@ -78,6 +79,41 @@ def new_repair():
     return jsonify({
             'error' : 0,
             'msg' : u'添加维修单成功',
+            'data' : repair.to_json()
+            })
+
+@api.route('/repair/<int:id>', methods=['PUT'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['repair']['write'])
+def modify_repair(id):
+    repair = Repair.query.get_or_404(id)
+    request_json = request.get_json()
+    if request_json is None:
+        return jsonify({
+                'error' : 1,
+                'msg' : u'不是application/json类',
+                'data' : {}
+                }), 403
+    print request_json
+    try:
+        if request_json.get('equipment_name'):
+            repair.equipment_name = request_json.get('equipment_name') 
+        if request_json.get('repair_address'):
+            repair.repair_address = request_json.get('repair_address') or None
+        if request_json.get('equipment_type'):
+            repair.equipment_type = request_json.get('equipment_type') or None
+        if request_json.get('repair_status'):
+            repair.repair_status = request_json.get('repair_status') or u'未完成'
+        db.session.commit()
+    except Exception, e:
+        return jsonify({
+                'error' : 2,
+                'msg' : e.message,
+                'data' : {}
+                }), 403
+            
+    return jsonify({
+            'error' : 0,
+            'msg' : u'修改维修单成功',
             'data' : repair.to_json()
             })
 
