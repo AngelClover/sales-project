@@ -44,7 +44,22 @@ class Equipment(db.Model):
             obj = json.loads(self.accessory)
             for item in obj:
                 equip_json[item] = obj[item]
+                
         return equip_json
+    
+    def get_name(self):
+        ret = ""
+        if self.accessory is not None:
+            x = json.loads(self.accessory)
+            for key,value in x.items():
+                if key == u'简称' and value is not None and len(value) > 0:
+                    ret = value
+                if key == u'名称' and value is not None and len(value) > 0 and ret == "":
+                    ret = value
+        if self.info is not None and len(self.info) > 0 and ret == "":
+            ret = self.info
+
+        return ret
     
     @staticmethod
     def get_headers():
@@ -206,7 +221,7 @@ class PurchaseOrder(db.Model):
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
         (),
-        ('equipment_id', '产品编号'),
+        ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
         ('product_name', u'产品名称', 'immutable'),
@@ -237,7 +252,7 @@ class PurchaseOrder(db.Model):
                     'total_price' : e.total_price,
                     'producer' : e.equipment.producer,
                     'product_configure' : e.product_configure,
-                    'product_name' : e.equipment.info,# or json.loads(e.equipment.accessory)['名称'],
+                    'product_name' : e.equipment.get_name(),# or json.loads(e.equipment.accessory)['名称'],
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
                     'stored' : e.stored
@@ -263,7 +278,7 @@ class PurchaseOrder(db.Model):
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
             'billing_company' : self.billing_company,
-            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H:%M:%S'),
             'get_location' : self.get_location,
             'pay_mode' : self.pay_mode,
             'invoice_type' : self.invoice_type,
@@ -307,7 +322,7 @@ class SaleOrder(db.Model):
     pay_mode = db.Column(db.String(256))#付款方式
     invoice_type = db.Column(db.String(256))#发票类型
     #state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
-    state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(占位) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
+    state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(合同生成) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
     total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
 
     @staticmethod
@@ -325,15 +340,18 @@ class SaleOrder(db.Model):
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
-        ('product_name', u'产品名称'),
+        ('product_name', u'产品名称', 'immutable'),
         ('spec', u'规格'),
         ('model', u'型号'),
         ('measurement_unit', u'单位'),
         ('unit_price', u'单价'),
-        ('quantity', u'数量'),
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
-        ('product_configure', u'产品配置单')
+        ('product_configure', u'产品配置单'),
+        ('equipment_id', u'产品编号', 'immutable'),
+        ('outstore_quantity', u'已出库数量', 'immutable'),
+        ('quantity', u'数量'),
+        ('outstore_state', u'出库状态', 'immutable'),
         ]
 
     def to_json(self):
@@ -351,22 +369,24 @@ class SaleOrder(db.Model):
                     'total_price' : e.total_price,
                     'producer' : e.equipment.producer,
                     'product_configure' : e.product_configure,
-                    'product_name' : e.equipment.info,
+                    'product_name' : e.equipment.get_name(), #.info,
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
-                    'equipment_id' : e.equipment_id
+                    'equipment_id' : e.equipment_id,
+                    'outstore_state' : u' 未出库' if e.outstore_state == 0 else (u'部分出库' if e.outstore_state == 1 else (u'全出库' if e.outstore_state == 2 else u'状态异常')),
+                    'outstore_quantity' : e.outstore_quantity,
                     })
 
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
             'billing_company' : self.billing_company,
-            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H%M%S'),
+            'arrive_date' : self.arrive_date.strftime('%Y-%m-%d %H:%M:%S'),
             'get_location' : self.get_location,
             'pay_mode' : self.pay_mode,
             'invoice_type' : self.invoice_type,
             'total_price' : total_price,
-            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常'))))),
+            'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'合同生成' if self.state == -1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常')))))),
             'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
             'equipments' : equipments
         }
@@ -407,9 +427,9 @@ class Logistic(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [('id', u'物流单号(系统自分配)', 'immutable'),
-        ('equipment_name', u'待送设备名称'),
+        ('equipment_name', u'待送设备名称', 'immutable'),
         ('delivery_address', u'送货地址'),
-        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
         ('delivery_status', u'完成状态', 'immutable')
         ]
 
@@ -438,9 +458,9 @@ class Repair(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [('id', u'维修单号(系统自分配)', 'immutable'),
-        ('equipment_name', u'待维修设备名称'),
+        ('equipment_name', u'待维修设备名称', 'immutable'),
         ('repair_address', u'维修地址'),
-        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
         ('repair_status', u'完成状态', 'immutable')
         ]
 
@@ -460,6 +480,7 @@ class Store(db.Model):
     purchase_id = db.Column(db.Integer, db.ForeignKey('purchase_order.id'))
     store_number = db.Column(db.Integer)#在库数字
     #state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+    bad_date = db.Column(db.Date)
 
     purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="stores")
     equipment = db.relationship(Equipment, uselist=False, backref="stores")
@@ -471,19 +492,21 @@ class Store(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [('id', u'仓库信息编号(系统自分配)', 'immutable'),
-        ('equipment_name', u'设备名称'),
-        ('abbr', u'简称'),
-        ('equipment_type', u'设备类型(设备/试剂/耗材等)'),
-        ('store_number', u'在库数字')
+        ('equipment_name', u'设备名称', 'immutable'),
+#('abbr', u'简称'),
+#('equipment_type', u'设备类型(设备/试剂/耗材等)'),
+        ('store_number', u'在库数字'),
+        ('bad_date', u'过期日期')
         ]
 
     def to_json(self):
         return {
             'id' : self.id,
-            'equipment_name' : self.equipment.info,
-            'abbr' : self.equipment.abbr,
-            'equipment_type' : self.equipment.type,
-            'store_number' : self.store_number
+            'equipment_name' : self.equipment.get_name(), #info,
+#'abbr' : self.equipment.abbr,
+#'equipment_type' : self.equipment.type,
+            'store_number' : self.store_number,
+            'bad_date' : 'NULL' if self.bad_date is None else self.bad_date.strftime('%Y-%m-%d'),
         }
 
 

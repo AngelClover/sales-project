@@ -7,6 +7,7 @@ from ..models import Equipment, Permission, Store, SaleEquipment
 from . import api
 from decorators import permission_required
 from errors import bad_request
+import datetime
 
 @api.route('/store/headers', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['read'])
@@ -61,8 +62,16 @@ def new_store():
         store = Store()
         store.equipment_id = request_json.get('equipment_id') or None
         store.purchase_id = request_json.get('purchase_id') or None
-        store.store_num = request_json.get('store_number') or None
+        store.store_number = request_json.get('store_number') or 1
+        sd = request_json.get('bad_date') or None
+        if sd is not None:
+            sd = sd.strip(' ')
+            store.bad_date = datetime.datetime.strptime(sd, "%Y-%m-%d")
+        else:
+            today = datetime.date.today()
+            store.bad_date = datetime.date(today.year + 1, today.month, today.day)
 
+        print "Angel", store
         db.session.add(store)
         db.session.commit()
     except Exception, e:
@@ -74,7 +83,7 @@ def new_store():
 
     return jsonify({
             'error' : 0,
-            'msg' : u'添加物流单成功',
+            'msg' : u'设备入库成功',
             'data' : store.to_json()
             })
 
@@ -86,7 +95,7 @@ def delete_store(id):
     db.session.commit()
     return jsonify({
             'error' : 0,
-            'msg' : u'删除物流单成功',
+            'msg' : u'仓库设备删除成功',
             'data' : {}
             })
 
@@ -118,8 +127,8 @@ def out_store_equipments():
         sale_equipment = SaleEquipment.query.get(sale_equipment_id)
         if sale_equipment is None:
             return jsonify({'error' : 1, 'msg' : u'sale equipment id not exist'}), 404
-        if sale_equipment.sale_order.state != 0:
-            return jsonify({'error' : 1, 'msg' : u'not approved sale order'}), 400
+        if sale_equipment.sale_order.state != -2:
+            return jsonify({'error' : 1, 'msg' : u'此订单不是待出库状态'}), 400
 
         provide_quantity = 0
         for store_json in stores:

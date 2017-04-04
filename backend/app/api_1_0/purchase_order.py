@@ -74,7 +74,11 @@ def new_purchase_order():
         ad = request_json.get('arrive_date') or "1970-01-01 00:00:00"
         if ad is not None:
             ad = ad.strip(' ')
-            order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+            try:
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H:%M:%S")
+            except Exception, e:
+                print e
+                order.arrive_date = datetime.datetime.strptime(ad, "%Y-%m-%d %H%M%S")
         else:
             order.arrive_date = None
         order.get_location = request_json.get('get_location') or None
