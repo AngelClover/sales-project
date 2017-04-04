@@ -65,6 +65,10 @@ export default {
     transferSaleOrder: function(payload){
         //TODO
     },
+    confirmSaleOrder: function(payload){
+        return SaleOrderResource.query({id:payload.id, action:"confirm"}, payload)
+        //TODO
+    },
 
     //BuyOrder
     getBuyOrderList: function() {

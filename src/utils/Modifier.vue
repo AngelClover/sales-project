@@ -10,6 +10,11 @@
             </h2>
         </div>
         <div class="detail-body">
+            <div class="selector" v-if="location=='storehouse'||location=='repair'||location=='logistic'">
+                <Select v-model="tmpID" placeholder="请选择设备名" @on-change=selectEquip>
+                    <Option v-for="item in equipList" :value=item.id :key="item" > {{item.id}} | {{item['简称'] || item['名称']}} </Option>
+                </Select>
+            </div>
             <table>
                 <tbody>
                     <tr v-for="(v, key) in detailTitle">
@@ -25,7 +30,7 @@
                     </tr>
                 </tbody>
             </table>
-            <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'">
+            <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'||location=='saleorder'">
             </EquipCreator>
         </div>
         <div slot="footer">
@@ -38,8 +43,10 @@
             </button>
             </center>
         </div>
+        <!--
         <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
         </OutSelector>
+        -->
     </Modal>
 </template>
 
@@ -57,13 +64,24 @@ export default {
     data: function() {
         return {
             showOutStore : false,
+            tmpID : -1,
         }
     },
     props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'newContent', 'showModifier', 'detailSubtitle'],
     computed : {
         showMM (){
             return this.showModifier
+        },
+        equipList : function(){
+            return this.$store.getters.equipmentContent
         }
+    },
+    watch : {
+        tmpID : function(x){
+            console.log('tmpID change', x)
+            this.newContent.equipment_id = x
+            this.selectEquip(x)
+        },
     },
     methods : {
         realModify(){
@@ -85,6 +103,15 @@ export default {
         },
         cmp : function( x, y ) {  
             return utils.cmp(x, y)
+        },
+        selectEquip : function(id){
+            console.log("on-change select")
+            for (var i in this.equipList){
+                if (this.equipList[i].id == id){
+                    this.newContent.equipment_name = this.equipList[i].info || this.equipList[i]['名称'] || this.equipList[i]['简称']
+                    return
+                }
+            }
         },
     }
 }

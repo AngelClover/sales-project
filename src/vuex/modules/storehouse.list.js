@@ -171,7 +171,7 @@ const outStoreEquipmentList = (store, payload) => {
     var failMessage = "出库失败"
     api.storeOut(payload).then(response => {
         console.log("outstore request succ", response)
-        if (response.status == 200 && reponse.data.error == 0){
+        if (response.status == 200 && response.data.error == 0){
             console.log("outstore succ", response)
             store.dispatch('showMsg', '出库成功', 'success')
             store.dispatch('getStoreHouseList')

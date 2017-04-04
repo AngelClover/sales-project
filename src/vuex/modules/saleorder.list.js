@@ -146,13 +146,31 @@ const approveSaleOrder = (store, payload) => {
         failBack(store, failMessage + response.status + response.statusText)
     })
 }
+const confirmSaleOrder = (store, payload) => {
+    var failMessage = "订单确认失败"
+    api.confirmSaleOrder(payload).then(response => {
+        console.log('save response succ', response)
+        if (response.status == 200){
+            if (response.data.error != 0){
+                failBack(store, failMessage + response.data.error + response.data.msg)
+            }else{
+                store.dispatch('showMsg', '订单确认成功', 'success')
+            }
+        }else{
+            failBack(store, failMessage + response.status + response.statusText)
+        }
+    }, response => {
+        failBack(store, failMessage + response.status + response.statusText)
+    })
+}
 
 const actions = {
     getSaleOrderList,
     updateSaleOrder,
     saveSaleOrder,
     removeSaleOrder,
-    approveSaleOrder
+    approveSaleOrder,
+    confirmSaleOrder,
 }
 
 export default{

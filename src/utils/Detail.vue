@@ -11,7 +11,7 @@
                     </div>
                     <div class="detail-container" >
                         <div class="detail-body">
-                            <table >
+                            <table border=1>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
                                         <td><p>{{value.displayName}}</p>
@@ -36,10 +36,12 @@
                             <center>
                             <button class="ui secondary button" @click="$emit('close')"> OK </button>
                             <button class="ui primary button" @click="modifier"> 修改 </button>
-                            <button class="ui primary  button" @click="approve" > 审批 </button>
-                            <button class="ui primary button" @click="transfer" > 采购 </button>
-                            <button class="ui primary button" @click="storeInAll" > 入库 </button>
-                            <button class="ui primary button" @click="storeOut" > 出库 </button>
+                            <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
+                            <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
+                            <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
+                            <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 入库 </button>
+                            <button class="ui primary button" v-if="location=='saleorder'"@click="saleOrderConfirm" > 订单确认 </button>
+                            <button class="ui primary button" v-if="location=='saleorder'"@click="storeOut" > 出库 </button>
                             <Button @click="handleDelete"> 删除 </Button>
                                 <!--
                             <button class="ui green button" @click="storeInOne" >
@@ -56,6 +58,7 @@
         </Modal>
         <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
         </Modifier>
+        <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
     </div>
 </template>
 
@@ -81,7 +84,8 @@ export default {
             showContent : true,
             showModifier : false,
             contentVisible : true,
-            showEquipmentLists : true
+            showEquipmentLists : true,
+            showOutStore : false,
         }
     },
     watch : {
@@ -141,7 +145,22 @@ export default {
         },
         handleDelete : function(){
             this.cbset.remove(this.detailContent)
-        }
+        },
+        complete : function(){
+            if (this.location == "repair"){
+                this.$store.dispatch('updateRepair', {id:this.detailContent.id, repair_status:'已完成'})
+                setTimeout(this.$store.dispatch('getRepairList'), 1000)
+            }
+            if (this.location == "logistic"){
+                this.$store.dispatch('updateLogistic', {id:this.detailContent.id, delivery_status:'已完成'})
+                setTimeout(this.$store.dispatch('getLogisticList'), 1000)
+            }
+        },
+        saleOrderConfirm : function(){
+            //this.cbset.confirmSaleOrder(this.detailContent)
+            this.$store.dispatch('confirmSaleOrder', {id:this.detailContent.id})
+            //TODO: if success , trigger the repair && logistic
+        },
     }
 
 }

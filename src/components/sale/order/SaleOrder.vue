@@ -64,7 +64,11 @@ export default {
         approveSaleOrder(content){
             this.$store.dispatch('approveSaleOrder', {id:content.id})
             this.getSaleOrderList()
-        }
+        },
+        confirmSaleOrder(content){
+            this.$store.dispatch('confirmSaleOrder', {id:content.id})
+            this.getSaleOrderList()
+        },
     },
 
 }

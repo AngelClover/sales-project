@@ -26,7 +26,7 @@
 export default {
     data: function() {
         return {
-            debug : true,
+            debug : false,
         }
     },
     props : ['equipList', 'subtitle'],

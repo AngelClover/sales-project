@@ -56,6 +56,9 @@ function pipe(obj){
         case '总价':
             obj['type'] = 'number';
             break;
+        case '在库数字':
+            obj['type'] = 'number';
+            break;
         default : 
             break;
     }
