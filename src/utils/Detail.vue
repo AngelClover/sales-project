@@ -11,6 +11,7 @@
                     </div>
                     <div class="detail-container" >
                         <div class="detail-body">
+                            <!--
                             <table border=1>
                                 <tbody>
                                     <tr v-for="(value, key) in detailTitle">
@@ -20,6 +21,25 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            -->
+                            <Form :label-width=100>
+                                <div v-for="(value, key) in detailTitle">
+                                <Form-item :label=value.displayName class="formitem">
+                                    <div v-if="value.type != 'file'">
+                                        <Label>{{detailTitle[value.item]}}</Label>
+                                    </div>
+                                    <div v-if="value.type === 'file'">
+                                        <div v-if="detailContent[value.item] instanceof Array">
+                                            <div v-for="item in detailContent[value.item]">
+                                                <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
+                                        </div>
+                                    </div>
+                                </Form-item>
+                            </Form>
         <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
         </EquipDetail>
 
@@ -86,6 +106,7 @@ export default {
             contentVisible : true,
             showEquipmentLists : true,
             showOutStore : false,
+            uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
         }
     },
     watch : {
@@ -246,6 +267,10 @@ td{
         .ivu-modal{
             top: 0;
         }
+}
+
+div.formitem.ivu-form-item{
+    margin-bottom: 0px;
 }
 
 </style>

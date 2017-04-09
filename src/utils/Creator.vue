@@ -95,7 +95,8 @@ export default {
                 console.log("!!!!", this.newContent, this.detailContent)
                 //this.showContent = true
                 console.log('create', this.newContent)
-                this.cbset.save(this.newContent)
+                //if (false)
+                    this.cbset.save(this.newContent)
                 //this.closeModifier()
             }
             setTimeout(this.$emit('close'), 1000)

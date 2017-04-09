@@ -45,6 +45,10 @@ function pipe(obj){
             obj['displayName'] && obj['displayName'].search('日期')  >= 0){
         obj['type'] = 'date'
     }
+    if (obj['item'] && obj['displayName'].search('文件') >= 0 ||
+            obj['displayName'] && obj['displayName'].search('材料')  >= 0){
+        obj['type'] = 'file'
+    }
     
     switch (obj['displayName']){
         case '单价':

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>
+        <div v-if="titleForTable.length > 0 && equipList">
             <p> 设备清单: </p>
         </div>
         <!--
@@ -14,7 +14,7 @@
             <Table :columns=titleForTable :data=equipList>
             </Table>
         </div>
-        <div v-if="debug==true">
+        <div v-if="debug">
             -------------Debug for EquipDetail----------
             subtitle : {{titleForTable}} <br/>
             equipList : {{equipList}}<br/>

@@ -30,9 +30,11 @@ import App from './components/App.vue'
 import CacheClear from './components/CacheClear.vue'
 import UserInfoModify from './components/login/modify.vue'
 import UserAuth from './components/admin/UserAuth.vue'
+import uploadd from './components/upload.vue'
 
 var routes = [
     //{path: '/', component: App},
+    {path: '/upload', component  : uploadd},
     {path: '/login', component: Login},
     {path: '/register', component: Register}, 
     {path: '/cacheclear', component: CacheClear},

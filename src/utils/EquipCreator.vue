@@ -46,7 +46,7 @@
             <Button @click=clearItem> 清空 </Button>
         </div>
 
-        <div class="name" v-if=debug>
+        <div class="name" v-if="debug">
             newContent : {{newContent}} <br/>
             subtitle : {{subtitle}} <br/>
             titleKey : {{titleKey}} <br/>
@@ -67,7 +67,7 @@ export default {
         return {
             newContent : [],
             newAdder : {},
-            debug : true,
+            debug : false,
             titleKey : [],
             tmpID : -1,
         }

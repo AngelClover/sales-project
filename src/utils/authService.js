@@ -10,7 +10,7 @@ export function saveCookie(name,value) {
 }
 
 export function getCookie(name) {
-  return cookie.load(name)
+  return cookie.load(name. cookieConfig)
 }
 
 export function removeCookie(name) {

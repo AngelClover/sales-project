@@ -20,6 +20,16 @@
             <div v-else-if="header.type==='number'" class="input">
                 <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
             </div>
+            <div v-else-if="header.type==='file'" class="input">
+                <div v-if="currentFileList.length > 0">
+                    <div v-for="(item, index) in currentFileList">
+                        <a :href="uploadPrefix + item" align=left target="_blank">file:{{item}} </a>
+                        <Button class="filelistbutton" @click=deleteFileIndex(index)>删除</Button>
+                    </div>
+                </div>
+                <Uploader v-model=currentFileListtmp>
+                </Uploader>
+            </div>
             <div v-else class="input">
                 <Input v-model="currentString" style="width: 300px" @on-change="handleInput">
                 </Input>
@@ -34,6 +44,7 @@
 
 <script>
 //import DatePicker from '../../node_modules/iview/src/components/date-picker';
+import Uploader from './uploader.vue'
 export default {
     data: function() {
         return {
@@ -42,9 +53,15 @@ export default {
             currentDate: this.header && this.header.type === 'date' && this.value && new Date(Date.parse(this.value.replace(/-/g,  "/"))) || new Date(),
             currentString : "",
             currentNumber : 1,
+            currentFileList : [],
+            currentFileListtmp : [],
+            uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
         }
     },
     props : ['value', 'header'],
+    components : {
+        Uploader
+    },
     watch : {
         value : function(x){
             if (x){
@@ -53,6 +70,13 @@ export default {
                 if (this.header && this.header.type === 'date'){
                     this.currentDate = new Date(Date.parse(x.replace(/-/g, "/")));
                     console.log('x:', x, '-> now:', this.currentDate)
+                }
+                if (this.header && this.header.type === 'file'){
+                    if (x instanceof Array)
+                        this.currentFileList = x
+                    else
+                        this.currentFileList.push(x)
+                    console.log('currentFileList <-', x)
                 }
             }
         },
@@ -68,7 +92,14 @@ export default {
             console.log('currentString various =>', x)
             this.$emit('input', x)
         },
-
+        currentFileList: function(x){
+            console.log('currentFileList ->', x)
+            this.$emit('input', x)
+        },
+        currentFileListtmp: function(x){
+            console.log('currentFileList ->', x)
+            this.currentFileList = this.currentFileList.concat(this.currentFileList)
+        }
     },
     methods : {
         setOption(op){
@@ -94,7 +125,13 @@ export default {
         handleNumber(event){
             console.log('set input number value ->', this.currentNumber)
             this.$emit('input', this.currentNumber)
-        }
+        },
+        deleteFileIndex(index){
+            console.log("delete file index:", index)
+            if (this.currentFileList.length > index){
+                this.currentFileList.splice(index, 1)
+            }
+        },
     }
 
 }

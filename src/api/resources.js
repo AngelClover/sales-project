@@ -38,6 +38,7 @@ Vue.http.interceptors.push((request, next)=>{
     }
   })
 })
+//when change here, think about the hardcode in upload components
 const apiBase = 'api/v1.0/'
 
 export const EquipmentResource = Vue.resource(API_ROOT + apiBase + 'equipment{/action}{/id}')
