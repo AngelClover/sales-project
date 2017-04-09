@@ -239,7 +239,7 @@ class PurchaseOrder(db.Model):
     def to_json(self):
         total_price = 0
         equipments = []
-        print "IV.I", self.purchase_equipments
+#print "IV.I", self.purchase_equipments
         for e in self.purchase_equipments:
             total_price += e.total_price
             equipments.append({
@@ -257,9 +257,9 @@ class PurchaseOrder(db.Model):
                     'model' : e.equipment.model,
                     'stored' : e.stored
                     })
-        print "IV.II"
-        print self, equipments, total_price
-        print "Angel ", self.sign_date , type(self.sign_date), type(self.arrive_date)
+#print "IV.II"
+#print self, equipments, total_price
+#print "Angel ", self.sign_date , type(self.sign_date), type(self.arrive_date)
 #print "Angel ", len(self.sign_date), len(self.arrive_date)
 #print self.sign_date , len(self.sign_date), len(self.sign_date.strip(' '))
 #self.sign_date = self.sign_date.strip(' ')
@@ -267,13 +267,13 @@ class PurchaseOrder(db.Model):
 #sds =  datetime.datetime.strptime(self.sign_date, "%Y-%m-%d")
 #sds = self.sign_date.strftime('%Y-%m-%d')
 #sds =  self.sign_date
-        print self.arrive_date
+#print self.arrive_date
 #ads =  datetime.datetime.strptime(self.arrive_date.strip(' '), '%Y-%m-%d %H:%M:%S')
 #ads = self.arrive_date.strftime('%Y-%m-%d %H:%M:%S')
 #ads =  self.arrive_date
-        print self.id, self.provider_info, self.billing_company, self.get_location, self.pay_mode, self.invoice_type, self.postage_account 
+#print self.id, self.provider_info, self.billing_company, self.get_location, self.pay_mode, self.invoice_type, self.postage_account 
 
-        print "IV.IIUUU"
+#print "IV.IIUUU"
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -288,7 +288,7 @@ class PurchaseOrder(db.Model):
             'equipments' : equipments,
             'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
         }
-        print "IV.III"
+#print "IV.III"
         return equip_json
 
 #associate PurchaseOrder and Equipment
