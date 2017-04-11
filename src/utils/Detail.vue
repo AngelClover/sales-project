@@ -34,7 +34,7 @@
                                                 <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
                                             </div>
                                         </div>
-                                        <div v-else>
+                                        <div v-else-if="detailContent[value.item] != null">
                                             <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
                                         </div>
                                     </div>
