@@ -1,13 +1,13 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="saleorder" :subtitle=subtitle>
+        <SaleListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="saleorder" :subtitle=subtitle>
             <h3 slot="titlename" align=center> 销售订单管理 </h3>
-        </ListView>
+        </SaleListView>
     </div>
 </template>
 
 <script>
-import ListView from '../../../utils/ListView.vue'
+import SaleListView from '../../../utils/saleListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     data (){
@@ -22,7 +22,7 @@ export default {
         }
     },
     components : {
-        ListView
+        SaleListView
     },
     computed : {
         title() {

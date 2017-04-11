@@ -22,6 +22,10 @@
                                 </tbody>
                             </table>
                             -->
+                            <Steps :current="currentState">
+                                <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
+                            </Steps>
+                            <br/>
                             <Form :label-width=100>
                                 <div v-for="(value, key) in detailTitle">
                                 <Form-item :label=value.displayName class="formitem">
@@ -58,8 +62,6 @@
                             <button class="ui primary button" @click="modifier"> 修改 </button>
                             <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
                             <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
-                            <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
-                            <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 入库 </button>
                             <button class="ui primary button" v-if="location=='saleorder'"@click="saleOrderConfirm" > 订单确认 </button>
                             <button class="ui primary button" v-if="location=='saleorder'"@click="storeOut" > 出库 </button>
                             <Button @click="handleDelete"> 删除 </Button>
@@ -107,6 +109,8 @@ export default {
             showEquipmentLists : true,
             showOutStore : false,
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
+            stateSet : ['待审核', '审核通过', '待出库', '出库中', '已出库'],
+            stateDescription : ['待审核','待确认','待出库','部分已出库','出库完成'],
         }
     },
     watch : {
@@ -127,6 +131,17 @@ export default {
         showDetails : function(x){
             this.showModifier = false
             this.showContent = true
+        }
+    },
+    computed : {
+        currentState (){
+            var ret = 0;
+            for (var i = 0; i < this.stateSet.length; ++i){
+                if (this.stateSet[i] == this.detailContent.state){
+                    return i;
+                }
+            }
+            return ret;
         }
     },
     methods : {
