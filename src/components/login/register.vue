@@ -48,7 +48,7 @@
       </div>
     -->
     
-    <Form ref="formInline" :model="formInline" :rules="ruleInline" label-position="left" :label-width="100">
+    <Form ref="formInline" :model="formInline" :rules="ruleInline" label-position="left" :label-width=100>
         <Form-item prop="username" label="用户名">
             <Input type="text" v-model="formInline.user" placeholder="请输入用户名">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -65,7 +65,7 @@
             </Input>
         </Form-item>
         <Form-item prop="email" label="电子邮箱">
-            <Input type="email" v-model="formInline.email" placeholder="请输入电子邮箱">
+            <Input type="text" v-model="formInline.email" placeholder="请输入电子邮箱">
             <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
         </Form-item>
@@ -188,7 +188,25 @@ export default {
                 password: this.password,
                 password2: this.password2
             })
-        }
+        },
+        handleSubmit (name) {
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.$Message.success('提交成功!');
+
+                    this.$store.dispatch('register', {
+                        username: this.formInline.user,
+                        email: this.formInline.email,
+                        nickname: this.formInline.nickname,
+                        password: this.formInline.password,
+                        password2: this.formInline.confirmPassword
+                    })
+                } else {
+                    this.$Message.error('表单验证失败!');
+                }
+            })
+        },
+
     }
 }
 </script>

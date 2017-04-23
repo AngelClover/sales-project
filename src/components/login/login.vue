@@ -32,20 +32,20 @@
     </div>
     -->
 
-    <Form ref="formInline" :model="formInline" :rules="ruleInline">
-        <Form-item prop="username">
+    <Form ref="formInline" :model="formInline" :rules="ruleInline" label-position="left" :label-width=100>
+        <Form-item prop="username" label="用户名">
             <Input type="text" v-model="formInline.user" placeholder="请输入用户名">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
             </Input>
         </Form-item>
-        <Form-item prop="password">
+        <Form-item prop="password" label="密码">
             <Input type="password" v-model="formInline.password" placeholder="请输入密码">
             <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
         </Form-item>
         <Form-item>
             <Button type="primary" @click="handleSubmit('formInline')">登录</Button>
-            <Button type="secondary"><p class="reg"><router-link to="/register">注册</router-link></p></Button>
+            <Button type="ghost"><p class="reg"><router-link to="/register">注册</router-link></p></Button>
         </Form-item>
     </Form>
   </div>
