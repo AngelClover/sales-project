@@ -179,6 +179,17 @@ address: '深圳市南山区深南大道'
             console.log('titleKey', ret)
             return ret
         },
+        listTitle : function(){
+            var ret = []
+            for (var it of this.title){
+                console.log("listTitle", it)
+                if (typeof (it.displayInList) != undefined  && it.displayInList){
+                    ret.push(it)
+                }
+            }
+            console.log("listTitle", ret)
+            return ret;
+        },
         preference : function(){
             if (this.clearCache)localStorage.removeItem(this.location)
             var shw = this.showPref
@@ -190,10 +201,10 @@ address: '深圳市南山区深南大道'
             var ret = []
             console.log("preference list prefarray", prefarray)
             if (typeof(prefarray) == undefined || prefarray.length == 0){
-                console.log('preference in listview branch 1', this.title)
-                if (this.title && Object.values(this.title).length >= 1){ //To be better
-                    for (var item in this.title){
-                        ret.push(this.title[item].item)
+                console.log('preference in listview branch 1', this.listTitle)
+                if (this.listTitle && Object.values(this.listTitle).length >= 1){ //To be better
+                    for (var item in this.listTitle){
+                        ret.push(this.listTitle[item].item)
                     }
                     console.log('preference in listview branch 2')
                 }

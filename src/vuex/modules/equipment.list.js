@@ -44,7 +44,19 @@ const mutations = {
             }
             state.title.push(d)
             */
-            state.title.push(hp.HeaderParser(response_data.headers[item]))
+            var header = hp.HeaderParser(response_data.headers[item])
+//            for (var it in headers){
+            if (header.displayName.search('医疗器械标准码') >= 0 ||
+                        header.displayName.search('医疗器械分类') >= 0 ||
+                        header.displayName.search('型号') >= 0 ||
+                        header.displayName.search('英文名称') >= 0){
+                header.displayInList = false
+            }else {
+                header.displayInList = true
+            }
+//            console.log('header in vuex', header)
+//            }
+            state.title.push(header)
         }
         //console.log(state.title)
     },
