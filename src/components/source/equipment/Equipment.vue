@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import ListView from '../../../utils/ListView.vue'
+import ListView from './ListView.vue'
 //import api from '../../../api'
 //import { getEquipmentList } from '../../../vuex/actions'
 import { mapGetters, mapActions } from 'vuex'

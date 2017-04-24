@@ -22,7 +22,7 @@
         <center>
             <div class="layout-copy">
                 <p>
-                2017 &copy; 国泰安华
+                2017 &copy; 天津市汇天利商贸有限公司
                 </p>
             </div>
         </center>
