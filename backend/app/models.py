@@ -94,21 +94,21 @@ class Equipment(db.Model):
     def get_ordered_headers():
         return [
         ('id', u'产品编号', 'immutable'),
-('名称', '名称'),
-('简称', '简称'),
-('医疗器械标准码', '医疗器械标准码'),
-('医疗器械分类', '医疗器械分类'),
-('英文名称', '英文名称'),
-('规格', '规格'),
-('型号', '型号'),
-('单位', '单位'),
-('产品类别', '产品类别', 'option', ['设备', '试剂', '耗材']),
-('厂商', '厂商'),
-('产品注册证到期日期', '产品注册证到期日期'),
-('审核材料附件', '审核材料附件'),
-('是否冷链', '是否冷链'),
-    ('create_user', '创建人'),
-    ('approve_user', '审核人'),
+        ('名称', '名称'),
+        ('简称', '简称'),
+        ('医疗器械标准码', '医疗器械标准码'),
+        ('医疗器械分类', '医疗器械分类'),
+        ('英文名称', '英文名称'),
+        ('规格', '规格'),
+        ('型号', '型号'),
+        ('单位', '单位'),
+        ('产品类别', '产品类别', 'option', ['设备', '试剂', '耗材']),
+        ('厂商', '厂商'),
+        ('产品注册证到期日期', '产品注册证到期日期'),
+        ('审核材料附件', '审核材料附件'),
+        ('是否冷链', '是否冷链'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
 #('流程编号', '流程编号'),
         ]
 #return [('id', u'产品编号'),
@@ -133,8 +133,10 @@ class Enterprise(db.Model):
     location = db.Column(db.String(1024))#住所
     establish_date = db.Column(db.Date)#成立日期
     accessory = db.Column(db.String(1024)) #json
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
-    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory):
+    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
         self.name = name
         self.register_capital = register_capital
         self.abbr = abbr
@@ -144,8 +146,21 @@ class Enterprise(db.Model):
         self.location = location
         self.establish_date = establish_date
         self.accessory = accessory
+        self.create_user = create_user
+        self.approve_user = approve_user
     
     def to_json(self):
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         enterprise_json = { 'id' : self.id,
 #'name' : self.name,
 #'register_capital' : self.register_capital,
@@ -155,6 +170,8 @@ class Enterprise(db.Model):
 #'legal_representor' : self.legal_representor,
 #'location' : self.location,
 #'establish_date' : self.establish_date,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name,
         }
         if self.accessory:
             obj = json.loads(self.accessory)
@@ -201,6 +218,8 @@ class Enterprise(db.Model):
             ('备注', '备注'),
             ('维护人员', '维护人员'),
             ('结算单位', '结算单位'),
+            ('create_user', '创建人'),
+            ('approve_user', '审核人'),
         ]
 #return [('id', u'首营企业编号(系统自动分配)'),
 #('name', u'供应商名称'),
@@ -227,6 +246,8 @@ class PurchaseOrder(db.Model):
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:买货中(占位) -2:待入库 -3:入库中(partial) -4：已入库
     total_stored = db.Column(db.Integer, default=0)#是否完全入库, 0:未入库；1：部分入库；2:完全入库
     contract = db.Column(db.String(256))#合同文件名
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
     @staticmethod
     def get_ordered_headers():
@@ -242,6 +263,8 @@ class PurchaseOrder(db.Model):
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
         ('contract', u'合同文件'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
         (),
         ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
@@ -296,6 +319,18 @@ class PurchaseOrder(db.Model):
 #print self.id, self.provider_info, self.billing_company, self.get_location, self.pay_mode, self.invoice_type, self.postage_account 
 
 #print "IV.IIUUU"
+
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -309,7 +344,9 @@ class PurchaseOrder(db.Model):
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待入库' if self.state == -2 else (u'入库中' if self.state == -3 else (u'已入库' if self.state == -4 else u'状态异常'))))),
             'equipments' : equipments,
             'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库'),
-            'contract' : self.contract
+            'contract' : self.contract,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         }
 #print "IV.III"
         return equip_json
@@ -348,6 +385,8 @@ class SaleOrder(db.Model):
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(合同生成) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
     total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
     contract = db.Column(db.String(256))#合同文件
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
     @staticmethod
     def get_ordered_headers():
@@ -362,6 +401,8 @@ class SaleOrder(db.Model):
         ('state', u'订单状态', 'immutable'),
         ('total_outstore', u'出库情况(未/部分/完全', 'immutable'),
         ('contract', u'合同文件'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
@@ -402,6 +443,17 @@ class SaleOrder(db.Model):
                     'outstore_quantity' : e.outstore_quantity,
                     })
 
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -414,7 +466,9 @@ class SaleOrder(db.Model):
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'合同生成' if self.state == -1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常')))))),
             'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
             'equipments' : equipments,
-            'contract' : self.contract
+            'contract' : self.contract,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         }
         return equip_json
 

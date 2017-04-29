@@ -85,6 +85,8 @@ def new_purchase_order():
         order.pay_mode = request_json.get('pay_mode') or None
         order.invoice_type = request_json.get('invoice_type') or None
         order.postage_account = request_json.get('postage_account') or None
+        order.create_user = request_json.get('create_user') or None
+        order.approve_user = request_json.get('approve_user') or None
         order.state = 1
         #check equipments exist
         equips = request_json.get('equipments') or []
@@ -179,6 +181,10 @@ def modify_purchase_order(id):
             order.invoice_type = request_json.get('invoice_type')
         if request_json.get('postage_account'):
             order.postage_account = request_json.get('postage_account')
+        if request_json.get('create_user'):
+            order.create_user = request_json.get('create_user')
+        if request_json.get('approve_user'):
+            order.approve_user = request_json.get('approve_user')
         order.state = 1
         #check equipments exist
         equips = request_json.get('equipments') or []
@@ -243,6 +249,19 @@ def approve_purchase_order(id):
     purchase_order = PurchaseOrder.query.get_or_404(id)
     if purchase_order.state != 1:
         return bad_request('wrong order number, cannot approve')
+
+    try:
+        request_json = request.get_json()
+        if request_json.get('approve_user'):
+            purchase_order.approve_user = request_json.get('approve_user')
+    except Exception, e:
+        print e
+        return jsonify({
+                'error' : 1,
+                'msg' : 'approve_user cannot get',
+                'data' : ''
+                })
+
     purchase_order.state = 0
     db.session.commit()
     return jsonify({
