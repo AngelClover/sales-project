@@ -62,6 +62,7 @@ def new_logistic():
         logis.equipment_name = request_json.get('equipment_name') or None
         logis.delivery_address = request_json.get('delivery_address') or None
         logis.equipment_type = request_json.get('equipment_type') or None
+        logis.order_num = request_json.get('order_num') or None
 #logis.delivery_status = request_json.get('delivery_status') or None
         logis.delivery_status = u'未完成'
         logis.state = 1
@@ -101,6 +102,8 @@ def modify_logistic(id):
             logis.delivery_address = request_json.get('delivery_address') or None
         if request_json.get('equipment_type'):
             logis.equipment_type = request_json.get('equipment_type') or None
+        if request_json.get('order_num'):
+            logis.order_num = request_json.get('order_num') or None
 #logis.delivery_status = request_json.get('delivery_status') or None
         if request_json.get('delivery_status'):
             logis.delivery_status = request_json.get('delivery_status') or u'未完成'

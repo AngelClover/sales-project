@@ -63,6 +63,7 @@ def new_repair():
         repair.equipment_name = request_json.get('equipment_name') or None
         repair.repair_address = request_json.get('repair_address') or None
         repair.equipment_type = request_json.get('equipment_type') or None
+        repair.order_num = request_json.get('order_num') or None
 #repair.repair_status = request_json.get('repair_status') or None
         repair.repair_status = u'未完成'
         repair.state = 1
@@ -101,6 +102,8 @@ def modify_repair(id):
             repair.repair_address = request_json.get('repair_address') or None
         if request_json.get('equipment_type'):
             repair.equipment_type = request_json.get('equipment_type') or None
+        if request_json.get('order_num'):
+            repair.order_num = request_json.get('order_num') or None
         if request_json.get('repair_status'):
             repair.repair_status = request_json.get('repair_status') or u'未完成'
         db.session.commit()

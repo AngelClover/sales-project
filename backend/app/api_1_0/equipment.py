@@ -69,14 +69,16 @@ def new_equipment():
         spec = None #equip_json['spec'] or None
         model = None #equip_json['model'] or None
         producer = None #equip_json['producer'] or None
+        create_user = equip_json.get('create_user') or None
+        approve_user = equip_json.get('approve_user') or None
 
         a = {}
         for item in equip_json:
-            if item != 'id' and item != 'state':
+            if item != 'id' and item != 'state' and item != 'create_user' and item != 'approve_user':
                 a[item] = equip_json[item]
         accessory = json.dumps(a)
 
-        equip = Equipment(info, abbr, type, spec, model, producer, accessory)
+        equip = Equipment(info, abbr, type, spec, model, producer, accessory, create_user, approve_user)
         db.session.add(equip)
         db.session.commit()
     except Exception, e:
@@ -118,10 +120,14 @@ def edit_equipment(id):
         equip.model = equip_json['model']
     if equip_json.get('producer') is not None:
         equip.producer = equip_json['producer']
+    if equip_json.get('create_user') is not None:
+        equip.create_user = equip_json['create_user']
+    if equip_json.get('approve_user') is not None:
+        equip.approve = equip_json['approve_user']
 
     a = {}
     for item in equip_json:
-        if item != 'id' and item != 'state':
+        if item != 'id' and item != 'state' and item !='create_user' and item !='approve_user':
             a[item] = equip_json[item]
     equip.accessory = json.dumps(a)
 
@@ -133,12 +139,26 @@ def edit_equipment(id):
             'data' : equip.to_json()
             })
  
+#这里可以反复调用，不是很合理，tofix
 @api.route('/equipment/approve/<int:id>', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['equipment']['approve'])
 def approve_new_equipment(id):
     equip = Equipment.query.get(id)
     if equip is None:
         return bad_request('no such a equipment')
+
+    try:
+        equip_json = request.get_json()
+        if equip_json.get('approve_user') is not None:
+            equip.approve_user = equip_json['approve_user']
+    except Exception, e:
+        print e
+        return jsonify({
+                'error' : 1,
+                'msg' : 'approve_user cannot get',
+                'data' : ''
+                })
+
     equip.state = 0
     db.session.commit()
     return jsonify({

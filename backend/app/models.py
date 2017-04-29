@@ -19,8 +19,11 @@ class Equipment(db.Model):
     producer = db.Column(db.String(256))#产品厂家
     state = db.Column(db.Integer) #当前的状态 0:正常状态， 1:需要审批状态
     accessory = db.Column(db.String(1024))#json
+#create_person = db.relationship('User')
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
-    def __init__(self, info, abbr, type, spec, model, producer, accessory):
+    def __init__(self, info, abbr, type, spec, model, producer, accessory, create_user, approve_user):
         self.info = info
         self.abbr = abbr
         self.type = type
@@ -29,8 +32,23 @@ class Equipment(db.Model):
         self.producer = producer
         self.state = 1
         self.accessory = accessory
+        self.create_user = create_user
+        self.approve_user = approve_user
     
     def to_json(self):
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            print cu
+            if cu is not None:
+                create_user_name = cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.username
+        print "create/approve", create_user_name, approve_user_name
+
         equip_json = { 'id' : self.id,
 #'info' : self.info,
 #            'abbr' : self.abbr,
@@ -39,6 +57,8 @@ class Equipment(db.Model):
 #            'model' : self.model,
 #            'producer' : self.producer,
             'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         } 
         if self.accessory:
             obj = json.loads(self.accessory)
@@ -89,6 +109,8 @@ class Equipment(db.Model):
 ('产品注册证到期日期', '产品注册证到期日期'),
 ('审核材料附件', '审核材料附件'),
 ('是否冷链', '是否冷链'),
+    ('create_user', '创建人'),
+    ('approve_user', '审核人'),
 #('流程编号', '流程编号'),
         ]
 #return [('id', u'产品编号'),
@@ -206,6 +228,7 @@ class PurchaseOrder(db.Model):
     postage_account = db.Column(db.String(256))#运费承担方
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:买货中(占位) -2:待入库 -3:入库中(partial) -4：已入库
     total_stored = db.Column(db.Integer, default=0)#是否完全入库, 0:未入库；1：部分入库；2:完全入库
+    contract = db.Column(db.String(256))#合同文件名
 
     @staticmethod
     def get_ordered_headers():
@@ -220,6 +243,7 @@ class PurchaseOrder(db.Model):
         ('postage_account', u'运费承担方'),
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
+        ('contract', u'合同文件'),
         (),
         ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
@@ -286,7 +310,8 @@ class PurchaseOrder(db.Model):
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待入库' if self.state == -2 else (u'入库中' if self.state == -3 else (u'已入库' if self.state == -4 else u'状态异常'))))),
             'equipments' : equipments,
-            'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
+            'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库'),
+            'contract' : self.contract
         }
 #print "IV.III"
         return equip_json
@@ -324,6 +349,7 @@ class SaleOrder(db.Model):
     #state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(合同生成) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
     total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
+    contract = db.Column(db.String(256))#合同文件
 
     @staticmethod
     def get_ordered_headers():
@@ -337,6 +363,7 @@ class SaleOrder(db.Model):
         ('invoice_type', u'发票类型'),
         ('state', u'订单状态', 'immutable'),
         ('total_outstore', u'出库情况(未/部分/完全', 'immutable'),
+        ('contract', u'合同文件'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
@@ -388,7 +415,8 @@ class SaleOrder(db.Model):
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'合同生成' if self.state == -1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常')))))),
             'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
-            'equipments' : equipments
+            'equipments' : equipments,
+            'contract' : self.contract
         }
         return equip_json
 
@@ -420,6 +448,7 @@ class Logistic(db.Model):
     equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
     delivery_status = db.Column(db.String(64))#完成状态
     state = db.Column(db.Integer, default=1) #当前状态 0:审批通过，1:待审批
+    order_num = db.Column(db.Integer)
 
     def __init__(self):
         self.state = 1
@@ -430,7 +459,8 @@ class Logistic(db.Model):
         ('equipment_name', u'待送设备名称', 'immutable'),
         ('delivery_address', u'送货地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
-        ('delivery_status', u'完成状态', 'immutable')
+        ('delivery_status', u'完成状态', 'immutable'),
+        ('order_num', u'相关销售订单编号')
         ]
 
     def to_json(self):
@@ -439,7 +469,8 @@ class Logistic(db.Model):
             'equipment_name' : self.equipment_name,
             'delivery_address' : self.delivery_address,
             'equipment_type' : self.equipment_type,
-            'delivery_status' : self.delivery_status
+            'delivery_status' : self.delivery_status,
+            'order_num' : self.order_num,
         }
 
 class Repair(db.Model):
@@ -451,6 +482,7 @@ class Repair(db.Model):
     equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
     repair_status = db.Column(db.String(64))#完成状态
     state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+    order_num = db.Column(db.Integer)
 
     def __init__(self):
         self.state = 1
@@ -461,7 +493,8 @@ class Repair(db.Model):
         ('equipment_name', u'待维修设备名称', 'immutable'),
         ('repair_address', u'维修地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
-        ('repair_status', u'完成状态', 'immutable')
+        ('repair_status', u'完成状态', 'immutable'),
+        ('order_num', u'相关销售订单编号')
         ]
 
     def to_json(self):
@@ -470,7 +503,8 @@ class Repair(db.Model):
             'equipment_name' : self.equipment_name,
             'repair_address' : self.repair_address,
             'equipment_type' : self.equipment_type,
-            'repair_status' : self.repair_status
+            'repair_status' : self.repair_status,
+            'order_num' : self.order_num,
         }
 
 class Store(db.Model):
