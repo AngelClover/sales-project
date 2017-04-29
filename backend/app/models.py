@@ -39,15 +39,13 @@ class Equipment(db.Model):
         create_user_name = self.create_user
         if self.create_user is not None:
             cu = User.query.get(self.create_user)
-            print cu
             if cu is not None:
-                create_user_name = cu.username
+                create_user_name = cu.nickname or cu.username
         approve_user_name = self.approve_user
         if self.approve_user is not None:
             au = User.query.get(self.approve_user)
             if au is not None:
-                approve_user_name = au.username
-        print "create/approve", create_user_name, approve_user_name
+                approve_user_name = au.nickname or au.username
 
         equip_json = { 'id' : self.id,
 #'info' : self.info,
@@ -629,11 +627,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     permission = db.Column(db.BigInteger, default=0)
+    nickname = db.Column(db.String(64))
 
-    def __init__(self, email, username, password):
+    def __init__(self, email, username, password, nickname):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        self.nickname = nickname
         if username == current_app.config['FLASKY_ADMIN']:
             self.permission = Permission.MODULE_PERMISSION_DICT['administer']
         
@@ -651,7 +651,8 @@ class User(db.Model):
             'email' : self.email,
             'username' : self.username,
             'module' : Permission.get_modules(self.permission),
-            'permission' : Permission.get_permission(self.permission)
+            'permission' : Permission.get_permission(self.permission),
+            'nickname' : self.nickname,
         }
         return user_json
 
