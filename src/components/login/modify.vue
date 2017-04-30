@@ -121,7 +121,7 @@ export default {
             error : false,
             msg : "",
             formInline: {
-                user: '',
+                username: '',
                 password: '',
                 confirmPassword: '',
                 email: '',

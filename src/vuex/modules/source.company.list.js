@@ -33,7 +33,10 @@ const mutations = {
             if (response_data.headers.length >= 3){
             }
             */
-            state.title.push(hp.HeaderParser(response_data.headers[item]))
+            var header = hp.HeaderParser(response_data.headers[item])
+            header.displayInList = true
+            console.log('header in vuex', header)
+            state.title.push(header)
         }
     }
 }

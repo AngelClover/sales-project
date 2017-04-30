@@ -20,8 +20,10 @@
                     <tr v-for="(v, key) in detailTitle">
                         <td>{{v.displayName}}</td>
                         <td>
+                            <!--
                             <advancedInputer v-model="newContent[v.item]" :header=v>
                             </advancedInputer>
+                            -->
                         <!--
                             <input v-model=newContent[value.item]>
                             </input>
@@ -53,12 +55,12 @@
 <script>
 import utils from '../../../utils/utils'
 //import OutSelector from './outSelector.vue'
-import advancedInputer from '../../../utils/advancedInputer.vue'
+//import advancedInputer from './advancedInputer.vue'
 import EquipCreator from './EquipCreator.vue'
 export default {
     components : {
 //        OutSelector,
-        advancedInputer,
+//        advancedInputer,
         EquipCreator,
     },
     data: function() {

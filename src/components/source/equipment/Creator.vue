@@ -30,6 +30,56 @@
                     </tr>
                 </tbody>
             </table>
+            <!--
+            <Form ref="formData" :model="formData" :rules="formRule" label-position="left" :label-width=100>
+                <Form-item prop="name" label="名称">
+                    <Input type="text" v-model="formData.name" placeholder="请输入名称">
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="abbr" label="简称">
+                    <Input type="text" v-model="formData.abbr" placeholder="请输入简称">
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="specification" label="描述">
+                    <Input type="text" v-model="formData.specification">
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="size" label="规格">
+                    <Input type="text" v-model="formData.size" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="unit" label="单位">
+                    <Input type="text" v-model="formData.unit" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="company" label="厂商">
+                    <Input type="text" v-model="formData.company" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="badDate" label="产品注册证到期日期">
+                    <Input type="text" v-model="formData.badDate" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="accessoryFile" label="审核材料附件">
+                    <Input type="text" v-model="formData.accessoryFile" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+                <Form-item prop="cold" label="是否冷链">
+                    <Input type="text" v-model="formData.cold" >
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </Form-item>
+            </Form>
+            {{detailTitle}}
+            -->
             <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'||location=='saleorder'">
             </EquipCreator>
             
@@ -65,6 +115,28 @@ export default {
             newContent : {},
             //showCC : false,
             tmpID : -1,
+            formData : {
+                name : '',
+                abbr : '',
+                specification : '',
+                size : '',
+                unit : '',
+                company : '',
+                badDate : '',
+                accessoryFile : '',
+                cold : '',
+                code : '', //医疗器械标准码
+                classify : '', //医疗器械分类
+                englishName : '', 
+            },
+            formRule : {
+                name : [
+                { required: true, message: '请填写名称', trigger: 'blur'}
+                    ],
+                abbr : [
+                { required: true, message: '请填写名称', trigger: 'blur'}
+                    ],
+            },
         }
     },
     props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'showCreator', 'detailSubtitle'],

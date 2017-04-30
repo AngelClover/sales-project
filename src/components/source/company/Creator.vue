@@ -1,10 +1,10 @@
 <template>
-    <Modal v-model="showMM" @on-cancel="$emit('close')" @on-ok="$emit('close')">
+    <Modal v-model="showCC" @on-cancel="$emit('close')">
         <div slot="header">
             <h2>
             <center>
             <div class="detail-header" >
-                修改
+                新建
             </div>
             </center>
             </h2>
@@ -32,45 +32,45 @@
             </table>
             <EquipCreator :subtitle=detailSubtitle v-model=newContent.equipments v-if="location=='buyorder'||location=='saleorder'">
             </EquipCreator>
+            
         </div>
         <div slot="footer">
             <center>
-            <button class="ui secondary button" @click="$emit('close')">
+                <button class="ui secondary button" @click="newContent={};$emit('close');">
                 放弃
             </button>
-            <button class="ui primary button" @click="realModify" >
-                修改
+            <button class="ui primary button" @click="realCreate">
+                新建
             </button>
             </center>
         </div>
-        <!--
-        <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
-        </OutSelector>
-        -->
     </Modal>
 </template>
 
 <script>
+import api from '../../../api'
 import utils from '../../../utils/utils'
 //import OutSelector from './outSelector.vue'
 import advancedInputer from '../../../utils/advancedInputer.vue'
 import EquipCreator from './EquipCreator.vue'
 export default {
     components : {
-//        OutSelector,
+        //OutSelector,
         advancedInputer,
         EquipCreator,
     },
     data: function() {
         return {
             showOutStore : false,
+            newContent : {},
+            //showCC : false,
             tmpID : -1,
         }
     },
-    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'newContent', 'showModifier', 'detailSubtitle'],
+    props : ['detailTitle', 'cbset', 'stores', 'location', 'detailContent', 'showCreator', 'detailSubtitle'],
     computed : {
-        showMM (){
-            return this.showModifier
+        showCC (){
+            return this.showCreator
         },
         equipList : function(){
             return this.$store.getters.equipmentContent
@@ -84,25 +84,28 @@ export default {
         },
     },
     methods : {
-        realModify(){
+        realCreate(){
             //console.log("!!!!", this.newContent, this.detailContent)
             //console.log("!!!!", this.cmp(this.newContent, this.detailContent))
-            //console.log('real modify', this.newContent)
-            if (JSON.stringify(this.newContent) == JSON.stringify(this.detailContent)){
-                this.$store.dispatch('showMsg', '无修改', 'info')
+            //console.log('real creator', this.newContent)
+            if (this.cmp(this.newContent, this.detailContent)){
+                this.$store.dispatch('showMsg', '无修改新建', 'info')
                 //this.closeModifier()
             }else{
                 console.log("!!!!", this.newContent, this.detailContent)
                 //this.showContent = true
-                console.log('modify', this.newContent)
-                //this.newContent.id = this.showContent.id
-                this.cbset.update(this.newContent)
+                console.log('create', this.newContent)
+                //if (false)
+                    this.cbset.save(this.newContent)
                 //this.closeModifier()
             }
             setTimeout(this.$emit('close'), 1000)
         },
         cmp : function( x, y ) {  
             return utils.cmp(x, y)
+        },
+        mounted(){
+            this.$store.dispatch('getEquipmentList')
         },
         selectEquip : function(id){
             console.log("on-change select")
