@@ -7,6 +7,7 @@ from flask import current_app
 from . import db
 import json
 import datetime
+import os
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -788,7 +789,43 @@ class User(db.Model):
             return None
         return User.query.get(data['id'])
 
+class UploadFile(db.Model):
+    __tablename__ = 'upload_files'
+    UPLOAD_DIR ="../uploadfiles"
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer)
+    filename = db.Column(db.String(256))
+
+    def __init__(self, userid, filename):
+        self.userid = userid
+        self.filename = filename
+
+    def to_json(self):
+        upload_user_name = self.userid
+        if self.userid is not None:
+            cu = User.query.get(self.userid)
+            if cu is not None:
+                upload_user_name = cu.nickname or cu.username
+        if upload_user_name == 0:
+            upload_user_name = 'AnonymousUser'
+        filejson = {'id' : self.id,
+            'upload_user' : upload_user_name,
+            'filename' : self.target_filename(), 
+        }
+        return filejson
+
+    def target_filename(self):
+        return os.path.join(self.UPLOAD_DIR, self.filename)
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'文件编号', 'immutable'),
+        ('userid', u'上传用户编号', 'immutable'),
+        ('filename', u'文件名', 'immutable'),
+        ]
+
 class AnonymousUser:
+    id = 0
     def can(self, permissions):
         return False
     def is_administrator(self):

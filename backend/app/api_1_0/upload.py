@@ -6,6 +6,7 @@ from .. import db
 from .errors import bad_request, unauthorized, forbidden
 from .authentication import auth
 from .decorators import permission_required, admin_required
+from ..models import UploadFile
 import re
 import os
 
@@ -49,14 +50,72 @@ def upload_file():
         file = request.files['file']
         filename = get_right_filename(file.filename)
         target = target_filename(filename)
-        print 'save file -> ', target
+        userid = int(request.args.get('userid')) if request.args.get('userid') is not None else None
+        if userid is None:
+            userid = g.current_user.id
+        print 'save file -> ', target, 'userid:', userid
         file.save(target)
+        uf = UploadFile(userid, filename)
+        db.session.add(uf)
+        db.session.commit()
 
     except Exception as e:
+        print e
         return bad_request('parse error')
 
     return jsonify({
             'error' : 0,
-            'msg' : 'xx',
+            'msg' : 'file upload success',
             'data' : {'filename': filename},
+            })
+
+@api.route('/upload', methods=['GET'])
+def get_file_list():
+    userid = int(request.args.get('userid')) if request.args.get('userid') is not None else None
+    print 'userid:', userid
+    files = []
+    if userid is None:
+        files = UploadFile.query.all()
+    else:
+        files = UploadFile.query.filter_by(userid=userid).all()
+    return jsonify({
+            'error' : 0,
+            'msg' : '',
+            'data' : {
+            'headers': UploadFile.get_ordered_headers(),
+            'files': [f.to_json() for f in files]
+            }
+            })
+
+
+@api.route('/upload/<int:id>', methods=['GET'])
+def get_file(id):
+    f = UploadFile.query.get_or_404(id)
+    return jsonify({
+            'error' : 0,
+            'msg' : '',
+            'data' : f.to_json()
+            })
+
+@api.route('/upload/<int:id>', methods=['DELETE'])
+def delete_file(id):
+    f = UploadFile.query.get_or_404(id)
+    try:
+        name = f.target_filename()
+        print "userid:", g.current_user.id, "delete file ----->", name
+        os.remove(name)
+        db.session.delete(f)
+        db.session.commit()
+    except Exception, e:
+        print e
+        return jsonify({
+                'error' : 1,
+                'msg' : e,
+                'data' : {}
+                })
+
+    return jsonify({
+            'error' : 0,
+            'msg' : 'delete file successful',
+            'data' : {}
             })
