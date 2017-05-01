@@ -367,6 +367,12 @@ class PurchaseEquipment(db.Model):
     total_price = db.Column(db.Float)#总价
     product_configure = db.Column(db.Text)#产品配置单
     stored = db.Column(db.Integer, default=0)#0:未入库，1:已入库
+    stored_user = db.Column(db.Integer)
+    received = db.Column(db.Integer, default=0)
+    received_user = db.Column(db.Integer)
+    inspected = db.Column(db.Integer, default=0)
+    inspected_user = db.Column(db.Integer)
+    
     
     purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="purchase_equipments")
     equipment = db.relationship(Equipment, uselist=False, backref="purchase_order")

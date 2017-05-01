@@ -86,6 +86,8 @@ def new_purchase_order():
         order.invoice_type = request_json.get('invoice_type') or None
         order.postage_account = request_json.get('postage_account') or None
         order.create_user = request_json.get('create_user') or None
+        if order.create_user is None:
+            order.create_user = g.current_user.id
         order.approve_user = request_json.get('approve_user') or None
         order.state = 1
         #check equipments exist
@@ -252,8 +254,11 @@ def approve_purchase_order(id):
 
     try:
         request_json = request.get_json()
-        if request_json.get('approve_user'):
-            purchase_order.approve_user = request_json.get('approve_user')
+        if request_json is not None:
+            if request_json.get('approve_user'):
+                purchase_order.approve_user = request_json.get('approve_user')
+        if purchase_order.approve_user is None:
+            purchase_order.approve_user = g.current_user.id
     except Exception, e:
         print e
         return jsonify({
@@ -280,6 +285,9 @@ def purchase_can_store(id):
     db.session.commit()
     return jsonify({'error' : 0, 'msg' : ''})
 
+##########above is order related
+##########equipment related is under
+
 @api.route('/purchase/store_one/<int:id>', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_one_equipment(id):
@@ -287,8 +295,14 @@ def store_one_equipment(id):
     if p_equipment.purchase_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
     if p_equipment.stored == 1:
-        return bac_request('already stored in houseware')
+        return bad_request('already stored in houseware')
+
     p_equipment.stored = 1
+    stored_userid = int(request.args.get('stored_userid')) if request.args.get('stored_userid') is not None else None
+    if stored_userid is None:
+        stored_userid = g.current_user.id
+    p_equipment.stored_user = stored_userid
+
     equipments = p_equipment.purchase_order.purchase_equipments
     part_stored = False;
     for e in equipments:
@@ -317,6 +331,48 @@ def store_one_equipment(id):
             'data' : {}
             })
 
+@api.route('/purchase/receive_one/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def receive_one_equipment(id):
+    p_equipment = PurchaseEquipment.query.get_or_404(id)
+    if p_equipment.purchase_order.state > -2:
+        return bad_request('purchase order not at ready to receive ') 
+    if p_equipment.received == 1:
+        return bad_request('already received')
+
+    p_equipment.received = 1
+    received_userid = int(request.args.get('received_userid')) if request.args.get('received_userid') is not None else None
+    if received_userid is None:
+        received_userid = g.current_user.id
+    p_equipment.received_user = received_userid
+    db.session.commit()
+    return jsonify({
+            'error' : 0,
+            'msg' : 'receive one equipment successful',
+            'data' : {}
+            })
+
+@api.route('/purchase/inspect_one/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def inspect_one_equipment(id):
+    p_equipment = PurchaseEquipment.query.get_or_404(id)
+    if p_equipment.purchase_order.state > -2:
+        return bad_request('purchase order not at ready to inspect') 
+    if p_equipment.inspected == 1:
+        return bad_request('already inspected in houseware')
+
+    p_equipment.inspected = 1
+    inspected_userid = int(request.args.get('inspected_userid')) if request.args.get('inspected_userid') is not None else None
+    if inspected_userid is None:
+        inspected_userid = g.current_user.id
+    p_equipment.inspected_user = inspected_userid
+    db.session.commit()
+    return jsonify({
+            'error' : 0,
+            'msg' : 'inspect one equipment successful',
+            'data' : {}
+            })
+
 @api.route('/purchase/store_all/<int:id>', methods=['GET', 'POST'])
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_all_equipments(id):
@@ -334,13 +390,62 @@ def store_all_equipments(id):
         new_store.state = 1
         db.session.add(new_store)
         p_equipment.stored = 1
+        stored_userid = int(request.args.get('stored_userid')) if request.args.get('stored_userid') is not None else None
+        if stored_userid is None:
+            stored_userid = g.current_user.id
+        p_equipment.stored_user = stored_userid
     p_order.total_stored = 2
     p_order.state = -4
     db.session.commit()
 
     return jsonify({
             'error' : 0,
-            'msg' : 'store one equipment successful',
+            'msg' : 'store all equipment successful',
             'data' : {}
             })
 
+@api.route('/purchase/receive_all/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def receive_all_equipments(id):
+    p_order = PurchaseOrder.query.get_or_404(id)
+    if p_order.state > -2:
+        return bad_request('purchase order not at ready to store state') 
+
+    for p_equipment in p_order.purchase_equipments:
+        if p_equipment.received == 1:
+            continue
+        p_equipment.received = 1
+        received_userid = int(request.args.get('received_userid')) if request.args.get('received_userid') is not None else None
+        if received_userid is None:
+            received_userid = g.current_user.id
+        p_equipment.received_user = received_userid
+    db.session.commit()
+
+    return jsonify({
+            'error' : 0,
+            'msg' : 'received all equipment successful',
+            'data' : {}
+            })
+
+@api.route('/purchase/inspect_all/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
+def inspect_all_equipments(id):
+    p_order = PurchaseOrder.query.get_or_404(id)
+    if p_order.state > -2:
+        return bad_request('purchase order not at ready to store state') 
+
+    for p_equipment in p_order.purchase_equipments:
+        if p_equipment.inspected == 1:
+            continue
+        p_equipment.inspected = 1
+        inspected_userid = int(request.args.get('inspected_userid')) if request.args.get('inspected_userid') is not None else None
+        if inspected_userid is None:
+            inspected_userid = g.current_user.id
+        p_equipment.inspected_user = inspected_userid
+    db.session.commit()
+
+    return jsonify({
+            'error' : 0,
+            'msg' : 'inspect all equipment successful',
+            'data' : {}
+            })
