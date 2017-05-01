@@ -105,8 +105,20 @@ export default {
     removeStoreHouse: function(payload){
         return StoreHouseResource.remove({id:payload.id})
     },
+    receiveInOne: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"receive_one"}, payload)
+    },
+    inspectInOne: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"inspect_one"}, payload)
+    },
     storeInOne: function(payload){
         return BuyOrderResource.save({id:payload.id, action:"store_one"}, payload)
+    },
+    receiveInAll: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"receive_all"}, payload)
+    },
+    inspectInAll: function(payload){
+        return BuyOrderResource.save({id:payload.id, action:"inspect_all"}, payload)
     },
     storeInAll: function(payload){
         return BuyOrderResource.save({id:payload.id, action:"store_all"}, payload)
