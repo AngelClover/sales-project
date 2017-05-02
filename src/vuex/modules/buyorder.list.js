@@ -167,6 +167,34 @@ const transferBuyOrder = (store, payload) => {
     })
 }
 
+const receiveInAllBuyOrder = (store, payload) => {
+    var failMessage = "采购订单接收操作失败"
+    api.receiveInAll(payload).then(response => {
+        console.log('transfer response succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            store.dispatch('showMsg', '采购订单接收操作成功', 'successs')
+            store.dispatch('getBuyOrderList')
+        }else{
+            failBack(store, failMessage + response.data.error + response.data.msg)
+        }
+    }, response => {
+        failBack(store, failMessage + response.data.error + response.data.msg)
+    })
+}
+const inspectInAllBuyOrder = (store, payload) => {
+    var failMessage = "采购订单检验操作失败"
+    api.inspectInAll(payload).then(response => {
+        console.log('transfer response succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            store.dispatch('showMsg', '采购订单检验操作成功', 'successs')
+            store.dispatch('getBuyOrderList')
+        }else{
+            failBack(store, failMessage + response.data.error + response.data.msg)
+        }
+    }, response => {
+        failBack(store, failMessage + response.data.error + response.data.msg)
+    })
+}
 const storeInAllBuyOrder = (store, payload) => {
     var failMessage = "采购订单入库操作失败"
     api.storeInAll(payload).then(response => {
@@ -182,12 +210,40 @@ const storeInAllBuyOrder = (store, payload) => {
     })
 }
 
+const receiveInOneBuyOrder = (store, payload) => {
+    var failMessage = "采购订单单个物品接收操作失败"
+    api.receiveInOne(payload).then(response => {
+        console.log('transfer response succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            store.dispatch('showMsg', '采购订单单个物品接收操作成功', 'successs')
+            store.dispatch('getBuyOrderList')
+        }else{
+            failBack(store, failMessage + response.data.error + response.data.msg)
+        }
+    }, response => {
+        failBack(store, failMessage + response.data.error + response.data.msg)
+    })
+}
+const inspectInOneBuyOrder = (store, payload) => {
+    var failMessage = "采购订单单个物品检验操作失败"
+    api.inspectInOne(payload).then(response => {
+        console.log('transfer response succ', response)
+        if (response.status == 200 && response.data.error == 0){
+            store.dispatch('showMsg', '采购订单单个物品检验操作成功', 'successs')
+            store.dispatch('getBuyOrderList')
+        }else{
+            failBack(store, failMessage + response.data.error + response.data.msg)
+        }
+    }, response => {
+        failBack(store, failMessage + response.data.error + response.data.msg)
+    })
+}
 const storeInOneBuyOrder = (store, payload) => {
-    var failMessage = "采购订单单个入库操作失败"
+    var failMessage = "采购订单单个物品入库操作失败"
     api.storeInOne(payload).then(response => {
         console.log('transfer response succ', response)
         if (response.status == 200 && response.data.error == 0){
-            store.dispatch('showMsg', '采购订单单个入库操作成功', 'successs')
+            store.dispatch('showMsg', '采购订单单个物品入库操作成功', 'successs')
             store.dispatch('getBuyOrderList')
         }else{
             failBack(store, failMessage + response.data.error + response.data.msg)
@@ -204,7 +260,11 @@ const actions = {
     removeBuyOrder,
     approveBuyOrder,
     transferBuyOrder,
+    receiveInAllBuyOrder,
+    inspectInAllBuyOrder,
     storeInAllBuyOrder,
+    receiveInOneBuyOrder,
+    inspectInOneBuyOrder,
     storeInOneBuyOrder,
 }
 

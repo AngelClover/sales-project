@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import BuyListView from '../../../utils/buyListView.vue'
+import BuyListView from './buyListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     data (){
@@ -19,7 +19,11 @@ export default {
                 remove: this.removeBuyOrder,
                 approve: this.approveBuyOrder,
                 transfer: this.transferBuyOrder,
+                receiveInAll: this.receiveInAllBuyOrder,
+                inspectInAll: this.inspectInAllBuyOrder,
                 storeInAll: this.storeInAllBuyOrder,
+                receiveInOne: this.receiveInOneBuyOrder,
+                inspectInOne: this.inspectInOneBuyOrder,
                 storeInOne: this.storeInOneBuyOrder,
             },
             labelFilterSet : [
@@ -30,9 +34,15 @@ export default {
                 },
             },
             {
+                displayName : "待采购",
+                filtercb : function(obj) {
+                    return obj && obj.state && obj.state == "审核通过" 
+                },
+            },
+            {
                 displayName : "待入库",
                 filtercb : function(obj) {
-                    return obj && obj.state && obj.state == "审核通过" || obj.state == "入库中"
+                    return obj && obj.state && obj.state == "入库中"
                 },
             },
             {
@@ -91,11 +101,23 @@ export default {
         transferBuyOrder(content){
             this.$store.dispatch('transferBuyOrder', {id:content.id})
         },
+        receiveInAllBuyOrder(content){
+            this.$store.dispatch('receiveInAllBuyOrder', {id:content.id})
+        },
+        inspectInAllBuyOrder(content){
+            this.$store.dispatch('inspectInAllBuyOrder', {id:content.id})
+        },
         storeInAllBuyOrder(content){
             this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
         },
+        receiveInOneBuyOrder(content){
+            this.$store.dispatch('receiveInOneBuyOrder', {id:content.id})
+        },
+        inspectInOneBuyOrder(content){
+            this.$store.dispatch('inspectInOneuyOrder', {id:content.id})
+        },
         storeInOneBuyOrder(content){
-            this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('storeInOneBuyOrder', {id:content.id})
         },
     },
 
