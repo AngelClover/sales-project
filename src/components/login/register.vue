@@ -6,6 +6,7 @@
           用户注册
       </div>
     </h2>
+    <!--
     <form class="ui large form">
       <div class="ui stacked segment">
         <div class="field">
@@ -45,6 +46,38 @@
       <div class="ui error message" v-show="error">
           {{msg}}
       </div>
+    -->
+    
+    <Form ref="formInline" :model="formInline" :rules="ruleInline" label-position="left" :label-width=100>
+        <Form-item prop="username" label="用户名">
+            <Input type="text" v-model="formInline.user" placeholder="请输入用户名">
+            <Icon type="ios-person-outline" slot="prepend"></Icon>
+            </Input>
+        </Form-item>
+        <Form-item prop="password" label="密码">
+            <Input type="password" v-model="formInline.password" placeholder="请输入密码">
+            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+            </Input>
+        </Form-item>
+        <Form-item prop="confirmPassword" label="确认密码">
+            <Input type="password" v-model="formInline.confirmPassword" placeholder="请输入确认密码">
+            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+            </Input>
+        </Form-item>
+        <Form-item prop="email" label="电子邮箱">
+            <Input type="text" v-model="formInline.email" placeholder="请输入电子邮箱">
+            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+            </Input>
+        </Form-item>
+        <Form-item prop="nickname" label="昵称">
+            <Input type="text" v-model="formInline.nickname" placeholder="请输入昵称">
+            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+            </Input>
+        </Form-item>
+        <Form-item>
+            <Button type="primary" @click="handleSubmit('formInline')">注册</Button>
+        </Form-item>
+    </Form>
   </div>
   <Toaster></Toaster>
 </div>
@@ -53,7 +86,27 @@
 <script>
 import Toaster from '../toaster'
 export default {
-    data : () => {
+    data () {
+        const validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.formInline.confirmPassword !== '') {
+                    // 对第二个密码框单独验证
+                    this.$refs.formInline.validateField('confirmPassword');
+                }
+                callback();
+            }
+        };
+        const validatePassCheck = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.formInline.password) {
+                callback(new Error('密码与确认密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
             username : "",
             password : "",
@@ -61,7 +114,36 @@ export default {
             nickname : "",
             email : "",
             error : false,
-            msg : ""
+            msg : "",
+            formInline: {
+                user: '',
+                password: '',
+                confirmPassword: '',
+                email: '',
+                nickname: '',
+            },
+            ruleInline: {
+                user: [
+                { required: true, message: '请填写用户名', trigger: 'blur' },
+                {type: 'string', min: 3, message: '用户名长度不能小于3位', trigger: 'blur'}
+                ],
+                password: [
+                { required: true, message: '请填写密码', trigger: 'blur' },
+                { type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur' },
+                { validator: validatePass, trigger: 'blur'},
+                ],
+                confirmPassword: [
+                { required: true, message: '请填写确认密码', trigger: 'blur' },
+                { type: 'string', min: 6, message: '确认密码长度不能小于6位', trigger: 'blur' },
+                { validator: validatePassCheck, trigger: 'blur' },
+                ],
+                email: [
+                { type: 'email', message: '电子邮箱合适有误，例abc@123.com', trigger: 'blur' }
+                ],
+                nickname: [
+                { type: 'string', message: '', trigger: 'blur' }
+                ],
+            }
         }
     },
     components : {
@@ -106,7 +188,25 @@ export default {
                 password: this.password,
                 password2: this.password2
             })
-        }
+        },
+        handleSubmit (name) {
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.$Message.success('提交成功!');
+
+                    this.$store.dispatch('register', {
+                        username: this.formInline.user,
+                        email: this.formInline.email,
+                        nickname: this.formInline.nickname,
+                        password: this.formInline.password,
+                        password2: this.formInline.confirmPassword
+                    })
+                } else {
+                    this.$Message.error('表单验证失败!');
+                }
+            })
+        },
+
     }
 }
 </script>

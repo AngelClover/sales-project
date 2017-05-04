@@ -78,20 +78,22 @@
         </Modal>
         <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
         </Modifier>
+        <!--
         <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
+        -->
     </div>
 </template>
 
 <script>
-import api from '../api'
-import utils from './utils'
-import OutSelector from './outSelector.vue'
-import advancedInputer from './advancedInputer.vue'
+import api from '../../../api'
+import utils from '../../../utils/utils'
+//import OutSelector from './outSelector.vue'
+import advancedInputer from '../../../utils/advancedInputer.vue'
 import Modifier from './Modifier.vue'
 import EquipDetail from './EquipDetail.vue'
 export default {
     components : {
-        OutSelector,
+//        OutSelector,
         advancedInputer,
         Modifier,
         EquipDetail,

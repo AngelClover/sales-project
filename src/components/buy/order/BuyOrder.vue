@@ -1,13 +1,13 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet" :subtitle=subtitle>
+        <BuyListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet" :subtitle=subtitle>
             <h3 slot="titlename" align=center> 采购订单管理 </h3>
-        </ListView>
+        </BuyListView>
     </div>
 </template>
 
 <script>
-import ListView from '../../../utils/ListView.vue'
+import BuyListView from '../../../utils/buyListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     data (){
@@ -45,7 +45,7 @@ export default {
         }
     },
     components : {
-        ListView
+        BuyListView
     },
     computed : {
         title() {
