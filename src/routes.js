@@ -31,6 +31,7 @@ import CacheClear from './components/CacheClear.vue'
 import UserInfoModify from './components/login/modify.vue'
 import UserAuth from './components/admin/UserAuth.vue'
 import uploadd from './components/upload.vue'
+import printer from './components/printer/printer.vue'
 
 var routes = [
     //{path: '/', component: App},
@@ -39,6 +40,7 @@ var routes = [
     {path: '/register', component: Register}, 
     {path: '/cacheclear', component: CacheClear},
     {path: '/userinfomodify', component: UserInfoModify},
+    {path: '/printer/:id', name: 'printer', component: printer},
     {path: '/', component: App,
         children: [
     //{path: '/home', component:  require('./components/Home.vue')},

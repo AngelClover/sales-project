@@ -337,6 +337,7 @@ class SaleOrder(db.Model):
         ('invoice_type', u'发票类型'),
         ('state', u'订单状态', 'immutable'),
         ('total_outstore', u'出库情况(未/部分/完全', 'immutable'),
+        ('total_price', u'总价', 'immutable'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),

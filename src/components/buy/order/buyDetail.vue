@@ -4,8 +4,9 @@
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
-        -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
+        -->
+        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')">
                     <div slot="header">
                         详细信息
                     </div>
@@ -46,7 +47,7 @@
                             </Form>
         <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle :cbset=cbset>
         </EquipDetail>
-        <div>
+        <div style="margin:20px">
             <center>
                 <button class="ui primary button" v-if="location=='buyorder'" @click="receiveInAll" > 全部接收 </button>
                 <button class="ui primary button" v-if="location=='buyorder'" @click="inspectInAll" > 全部检验通过 </button>
@@ -116,7 +117,7 @@ export default {
             showOutStore : false,
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
             stateSet : ['待审核', '审核通过', '待入库', '入库中', '已入库'],
-            stateDescription : ['待审核','待采购','待入库','部分已入库','入库完成'],
+            stateDescription : ['待审核','待采购','接收、检验、入库','部分已入库','入库完成'],
         }
     },
     watch : {

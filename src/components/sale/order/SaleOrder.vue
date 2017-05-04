@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import SaleListView from '../../../utils/saleListView.vue'
+import SaleListView from './saleListView.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     data (){

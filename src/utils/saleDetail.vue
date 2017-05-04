@@ -4,8 +4,9 @@
         <transition name="detail">
             <div class="detail-mask">
                 <div class="detail-wrapper">
-        -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
+        -->
+        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" >
                     <div slot="header">
                         详细信息
                     </div>

@@ -42,7 +42,7 @@ export default {
             {
                 displayName : "待入库",
                 filtercb : function(obj) {
-                    return obj && obj.state && obj.state == "入库中"
+                    return obj && obj.state && obj.state == "待入库"
                 },
             },
             {

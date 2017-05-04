@@ -49,8 +49,8 @@
 
         <br/>
 
-        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
-        </detail>
+        <SaleDetail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
+        </SaleDetail>
 
         <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;" :detailSubtitle=subtitle :location=location>
         </Creator>
@@ -90,13 +90,13 @@
 </template>
 
 <script>
-import Detail from './Detail.vue'
-import Preference from './Preference.vue'
+import SaleDetail from './saleDetail.vue'
+import Preference from '../../../utils/Preference.vue'
 import Creator from './Creator.vue'
 
 export default {
     components : {
-        Detail,
+        SaleDetail,
         Preference,
         Creator
     },
@@ -165,12 +165,6 @@ address: '深圳市南山区深南大道'
                 t.title = this.titleMap[t.key]
                 t.width = 100
                 t.sortable = true
-                //why?
-                /*
-                if (t.key === 'id' || t.title.search('编号') >= 0){
-                    t.fixed = 'left'
-                }
-                */
                 ret.push(t)
             }
             console.log('titleKey', ret)
