@@ -69,7 +69,10 @@ def new_equipment():
         spec = None #equip_json['spec'] or None
         model = None #equip_json['model'] or None
         producer = None #equip_json['producer'] or None
+#print "current_user", g.current_user.id
         create_user = equip_json.get('create_user') or None
+        if create_user is None:
+            create_user = g.current_user.id
         approve_user = equip_json.get('approve_user') or None
 
         a = {}
@@ -151,6 +154,8 @@ def approve_new_equipment(id):
         equip_json = request.get_json()
         if equip_json.get('approve_user') is not None:
             equip.approve_user = equip_json['approve_user']
+        if equip.approve_user is None:
+            equip.approve_user = g.current_user.id
     except Exception, e:
         print e
         return jsonify({

@@ -85,6 +85,8 @@ def new_sale_order():
         order.pay_mode = request_json.get('pay_mode') or None
         order.invoice_type = request_json.get('invoice_type') or None
         order.create_user = request_json.get('create_user') or None
+        if order.create_user is None:
+            order.create_user = g.current_user.id
         order.approve_user = request_json.get('approve_user') or None
         order.state = 1
         #check equipments exist
@@ -255,6 +257,8 @@ def approve_sale_order(id):
         request_json = request.get_json()
         if request_json.get('approve_user'):
             sale_order.approve_user = request_json.get('approve_user')
+        if sale_order.approve_user is None:
+            sale_order.approve_user = g.current_user.id
     except Exception, e:
         print e
         return jsonify({

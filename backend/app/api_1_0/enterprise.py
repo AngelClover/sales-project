@@ -66,6 +66,8 @@ def new_enterprise():
         location = enterprise_json.get('location') or None
         establish_date = enterprise_json.get('establish_date') or None
         create_user = enterprise_json.get('create_user') or None
+        if create_user is None:
+            create_user = g.current_user.id
         approve_user = enterprise_json.get('approve_user') or None
         a = {}
         for item in enterprise_json:

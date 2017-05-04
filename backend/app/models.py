@@ -279,7 +279,12 @@ class PurchaseOrder(db.Model):
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
         ('product_configure', u'产品配置单'),
-        ('stored', u'是否入库(0/1)', 'immutable')
+        ('received', u'是否接收', 'immutable'),
+        ('received_user', u'接收人', 'immutable'),
+        ('inspected', u'是否检验', 'immutable'),
+        ('inspected_user', u'检验人', 'immutable'),
+        ('stored', u'是否入库', 'immutable'),
+        ('stored_user', u'入库人', 'immutable'),
         ]
 
     def to_json(self):
@@ -288,6 +293,21 @@ class PurchaseOrder(db.Model):
 #print "IV.I", self.purchase_equipments
         for e in self.purchase_equipments:
             total_price += e.total_price
+            ru = e.received_user
+            if ru is not None:
+                ru = User.query.get(ru)
+                if ru is not None:
+                    ru = ru.nickname or ru.username
+            iu = e.inspected_user
+            if iu is not None:
+                iu = User.query.get(iu)
+                if iu is not None:
+                    iu = iu.nickname or iu.username
+            su = e.stored_user
+            if su is not None:
+                su = User.query.get(su)
+                if su is not None:
+                    su = su.nickname or su.username
             equipments.append({
                     'equipment_id' : e.equipment.id,
                     'warranty_period' : e.warranty_period,
@@ -301,7 +321,12 @@ class PurchaseOrder(db.Model):
                     'product_name' : e.equipment.get_name(),# or json.loads(e.equipment.accessory)['名称'],
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
-                    'stored' : e.stored
+                    'received' : e.received,
+                    'received_user' : ru,
+                    'inspected' : e.inspected,
+                    'inspected_user' : iu,
+                    'stored' : e.stored,
+                    'stored_user' : su,
                     })
 #print "IV.II"
 #print self, equipments, total_price
