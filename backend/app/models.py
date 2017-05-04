@@ -7,6 +7,7 @@ from flask import current_app
 from . import db
 import json
 import datetime
+import os
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -19,8 +20,11 @@ class Equipment(db.Model):
     producer = db.Column(db.String(256))#产品厂家
     state = db.Column(db.Integer) #当前的状态 0:正常状态， 1:需要审批状态
     accessory = db.Column(db.String(1024))#json
+#create_person = db.relationship('User')
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
-    def __init__(self, info, abbr, type, spec, model, producer, accessory):
+    def __init__(self, info, abbr, type, spec, model, producer, accessory, create_user, approve_user):
         self.info = info
         self.abbr = abbr
         self.type = type
@@ -29,8 +33,21 @@ class Equipment(db.Model):
         self.producer = producer
         self.state = 1
         self.accessory = accessory
+        self.create_user = create_user
+        self.approve_user = approve_user
     
     def to_json(self):
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         equip_json = { 'id' : self.id,
 #'info' : self.info,
 #            'abbr' : self.abbr,
@@ -39,6 +56,8 @@ class Equipment(db.Model):
 #            'model' : self.model,
 #            'producer' : self.producer,
             'state' : (u'审核通过' if self.state == 0 else u'待审核'),
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         } 
         if self.accessory:
             obj = json.loads(self.accessory)
@@ -76,19 +95,21 @@ class Equipment(db.Model):
     def get_ordered_headers():
         return [
         ('id', u'产品编号', 'immutable'),
-('名称', '名称'),
-('简称', '简称'),
-('医疗器械标准码', '医疗器械标准码'),
-('医疗器械分类', '医疗器械分类'),
-('英文名称', '英文名称'),
-('规格', '规格'),
-('型号', '型号'),
-('单位', '单位'),
-('产品类别', '产品类别', 'option', ['设备', '试剂', '耗材']),
-('厂商', '厂商'),
-('产品注册证到期日期', '产品注册证到期日期'),
-('审核材料附件', '审核材料附件'),
-('是否冷链', '是否冷链'),
+        ('名称', '名称'),
+        ('简称', '简称'),
+        ('医疗器械标准码', '医疗器械标准码'),
+        ('医疗器械分类', '医疗器械分类'),
+        ('英文名称', '英文名称'),
+        ('规格', '规格'),
+        ('型号', '型号'),
+        ('单位', '单位'),
+        ('产品类别', '产品类别', 'option', ['设备', '试剂', '耗材']),
+        ('厂商', '厂商'),
+        ('产品注册证到期日期', '产品注册证到期日期'),
+        ('审核材料附件', '审核材料附件'),
+        ('是否冷链', '是否冷链'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
 #('流程编号', '流程编号'),
         ]
 #return [('id', u'产品编号'),
@@ -113,8 +134,10 @@ class Enterprise(db.Model):
     location = db.Column(db.String(1024))#住所
     establish_date = db.Column(db.Date)#成立日期
     accessory = db.Column(db.String(1024)) #json
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
-    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory):
+    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
         self.name = name
         self.register_capital = register_capital
         self.abbr = abbr
@@ -124,8 +147,21 @@ class Enterprise(db.Model):
         self.location = location
         self.establish_date = establish_date
         self.accessory = accessory
+        self.create_user = create_user
+        self.approve_user = approve_user
     
     def to_json(self):
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         enterprise_json = { 'id' : self.id,
 #'name' : self.name,
 #'register_capital' : self.register_capital,
@@ -135,6 +171,8 @@ class Enterprise(db.Model):
 #'legal_representor' : self.legal_representor,
 #'location' : self.location,
 #'establish_date' : self.establish_date,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name,
         }
         if self.accessory:
             obj = json.loads(self.accessory)
@@ -181,6 +219,8 @@ class Enterprise(db.Model):
             ('备注', '备注'),
             ('维护人员', '维护人员'),
             ('结算单位', '结算单位'),
+            ('create_user', '创建人'),
+            ('approve_user', '审核人'),
         ]
 #return [('id', u'首营企业编号(系统自动分配)'),
 #('name', u'供应商名称'),
@@ -206,6 +246,9 @@ class PurchaseOrder(db.Model):
     postage_account = db.Column(db.String(256))#运费承担方
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:买货中(占位) -2:待入库 -3:入库中(partial) -4：已入库
     total_stored = db.Column(db.Integer, default=0)#是否完全入库, 0:未入库；1：部分入库；2:完全入库
+    contract = db.Column(db.String(256))#合同文件名
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
     @staticmethod
     def get_ordered_headers():
@@ -220,6 +263,9 @@ class PurchaseOrder(db.Model):
         ('postage_account', u'运费承担方'),
         ('state', u'当前状态', 'immutable'),
         ('total_stored', u'入库情况（未/部分/完全)', 'immutable'),
+        ('contract', u'合同文件'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
         (),
         ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
@@ -233,7 +279,12 @@ class PurchaseOrder(db.Model):
         ('total_price', u'总价'),
         ('producer', u'生产厂商'),
         ('product_configure', u'产品配置单'),
-        ('stored', u'是否入库(0/1)', 'immutable')
+        ('received', u'是否接收', 'immutable'),
+        ('received_user', u'接收人', 'immutable'),
+        ('inspected', u'是否检验', 'immutable'),
+        ('inspected_user', u'检验人', 'immutable'),
+        ('stored', u'是否入库', 'immutable'),
+        ('stored_user', u'入库人', 'immutable'),
         ]
 
     def to_json(self):
@@ -242,6 +293,21 @@ class PurchaseOrder(db.Model):
 #print "IV.I", self.purchase_equipments
         for e in self.purchase_equipments:
             total_price += e.total_price
+            ru = e.received_user
+            if ru is not None:
+                ru = User.query.get(ru)
+                if ru is not None:
+                    ru = ru.nickname or ru.username
+            iu = e.inspected_user
+            if iu is not None:
+                iu = User.query.get(iu)
+                if iu is not None:
+                    iu = iu.nickname or iu.username
+            su = e.stored_user
+            if su is not None:
+                su = User.query.get(su)
+                if su is not None:
+                    su = su.nickname or su.username
             equipments.append({
                     'equipment_id' : e.equipment.id,
                     'warranty_period' : e.warranty_period,
@@ -255,7 +321,12 @@ class PurchaseOrder(db.Model):
                     'product_name' : e.equipment.get_name(),# or json.loads(e.equipment.accessory)['名称'],
                     'spec' : e.equipment.spec,
                     'model' : e.equipment.model,
-                    'stored' : e.stored
+                    'received' : e.received,
+                    'received_user' : ru,
+                    'inspected' : e.inspected,
+                    'inspected_user' : iu,
+                    'stored' : e.stored,
+                    'stored_user' : su,
                     })
 #print "IV.II"
 #print self, equipments, total_price
@@ -274,6 +345,18 @@ class PurchaseOrder(db.Model):
 #print self.id, self.provider_info, self.billing_company, self.get_location, self.pay_mode, self.invoice_type, self.postage_account 
 
 #print "IV.IIUUU"
+
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -286,7 +369,10 @@ class PurchaseOrder(db.Model):
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'待入库' if self.state == -2 else (u'入库中' if self.state == -3 else (u'已入库' if self.state == -4 else u'状态异常'))))),
             'equipments' : equipments,
-            'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库')
+            'total_stored' : u'未入库' if self.total_stored == 0 else (u'部分入库' if self.total_stored == 1 else u'完全入库'),
+            'contract' : self.contract,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         }
 #print "IV.III"
         return equip_json
@@ -306,6 +392,12 @@ class PurchaseEquipment(db.Model):
     total_price = db.Column(db.Float)#总价
     product_configure = db.Column(db.Text)#产品配置单
     stored = db.Column(db.Integer, default=0)#0:未入库，1:已入库
+    stored_user = db.Column(db.Integer)
+    received = db.Column(db.Integer, default=0)
+    received_user = db.Column(db.Integer)
+    inspected = db.Column(db.Integer, default=0)
+    inspected_user = db.Column(db.Integer)
+    
     
     purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="purchase_equipments")
     equipment = db.relationship(Equipment, uselist=False, backref="purchase_order")
@@ -324,6 +416,9 @@ class SaleOrder(db.Model):
     #state = db.Column(db.Integer, default=1)#状态， 0:正常，1:创建，待审核
     state = db.Column(db.Integer, default=1)#状态，1:创建，待审核, 0:已审批, -1:(合同生成) -2:(待出库 ==> 已审批) -3:出库中(partial) -4：已出库
     total_outstore = db.Column(db.Integer, default=0)#出库状态，0:未出库; 1:部分出库; 2:完全出库
+    contract = db.Column(db.String(256))#合同文件
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
 
     @staticmethod
     def get_ordered_headers():
@@ -338,6 +433,9 @@ class SaleOrder(db.Model):
         ('state', u'订单状态', 'immutable'),
         ('total_outstore', u'出库情况(未/部分/完全', 'immutable'),
         ('total_price', u'总价', 'immutable'),
+        ('contract', u'合同文件'),
+        ('create_user', '创建人'),
+        ('approve_user', '审核人'),
         (),
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
@@ -378,6 +476,17 @@ class SaleOrder(db.Model):
                     'outstore_quantity' : e.outstore_quantity,
                     })
 
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
         equip_json = {'id' : self.id,
             'sign_date' : self.sign_date.strftime('%Y-%m-%d'),
             'provider_info' : self.provider_info,
@@ -389,7 +498,10 @@ class SaleOrder(db.Model):
             'total_price' : total_price,
             'state' : (u'审核通过' if self.state == 0 else (u'待审核' if self.state == 1 else (u'合同生成' if self.state == -1 else (u'待出库' if self.state == -2 else (u'出库中' if self.state == -3 else (u'已出库' if self.state == -4 else u'状态异常')))))),
             'total_outstore' : u'未出库' if self.total_outstore == 0  else (u'部分出库' if self.total_outstore == 1 else u'完全出库'),
-            'equipments' : equipments
+            'equipments' : equipments,
+            'contract' : self.contract,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name
         }
         return equip_json
 
@@ -421,6 +533,7 @@ class Logistic(db.Model):
     equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
     delivery_status = db.Column(db.String(64))#完成状态
     state = db.Column(db.Integer, default=1) #当前状态 0:审批通过，1:待审批
+    order_num = db.Column(db.Integer)
 
     def __init__(self):
         self.state = 1
@@ -431,7 +544,8 @@ class Logistic(db.Model):
         ('equipment_name', u'待送设备名称', 'immutable'),
         ('delivery_address', u'送货地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
-        ('delivery_status', u'完成状态', 'immutable')
+        ('delivery_status', u'完成状态', 'immutable'),
+        ('order_num', u'相关销售订单编号')
         ]
 
     def to_json(self):
@@ -440,7 +554,8 @@ class Logistic(db.Model):
             'equipment_name' : self.equipment_name,
             'delivery_address' : self.delivery_address,
             'equipment_type' : self.equipment_type,
-            'delivery_status' : self.delivery_status
+            'delivery_status' : self.delivery_status,
+            'order_num' : self.order_num,
         }
 
 class Repair(db.Model):
@@ -452,6 +567,7 @@ class Repair(db.Model):
     equipment_type = db.Column(db.String(64))#设备类型(设备/试剂/耗材等)
     repair_status = db.Column(db.String(64))#完成状态
     state = db.Column(db.Integer, default=1)#当前状态, 0:审核完成, 1:待审核
+    order_num = db.Column(db.Integer)
 
     def __init__(self):
         self.state = 1
@@ -462,7 +578,8 @@ class Repair(db.Model):
         ('equipment_name', u'待维修设备名称', 'immutable'),
         ('repair_address', u'维修地址'),
         ('equipment_type', u'设备类型(设备/试剂/耗材等)', 'immutable'),
-        ('repair_status', u'完成状态', 'immutable')
+        ('repair_status', u'完成状态', 'immutable'),
+        ('order_num', u'相关销售订单编号')
         ]
 
     def to_json(self):
@@ -471,7 +588,8 @@ class Repair(db.Model):
             'equipment_name' : self.equipment_name,
             'repair_address' : self.repair_address,
             'equipment_type' : self.equipment_type,
-            'repair_status' : self.repair_status
+            'repair_status' : self.repair_status,
+            'order_num' : self.order_num,
         }
 
 class Store(db.Model):
@@ -596,11 +714,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     permission = db.Column(db.BigInteger, default=0)
+    nickname = db.Column(db.String(64))
 
-    def __init__(self, email, username, password):
+    def __init__(self, email, username, password, nickname):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        self.nickname = nickname
         if username == current_app.config['FLASKY_ADMIN']:
             self.permission = Permission.MODULE_PERMISSION_DICT['administer']
         
@@ -618,7 +738,8 @@ class User(db.Model):
             'email' : self.email,
             'username' : self.username,
             'module' : Permission.get_modules(self.permission),
-            'permission' : Permission.get_permission(self.permission)
+            'permission' : Permission.get_permission(self.permission),
+            'nickname' : self.nickname,
         }
         return user_json
 
@@ -700,7 +821,43 @@ class User(db.Model):
             return None
         return User.query.get(data['id'])
 
+class UploadFile(db.Model):
+    __tablename__ = 'upload_files'
+    UPLOAD_DIR ="../uploadfiles"
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer)
+    filename = db.Column(db.String(256))
+
+    def __init__(self, userid, filename):
+        self.userid = userid
+        self.filename = filename
+
+    def to_json(self):
+        upload_user_name = self.userid
+        if self.userid is not None:
+            cu = User.query.get(self.userid)
+            if cu is not None:
+                upload_user_name = cu.nickname or cu.username
+        if upload_user_name == 0:
+            upload_user_name = 'AnonymousUser'
+        filejson = {'id' : self.id,
+            'upload_user' : upload_user_name,
+            'filename' : self.target_filename(), 
+        }
+        return filejson
+
+    def target_filename(self):
+        return os.path.join(self.UPLOAD_DIR, self.filename)
+
+    @staticmethod
+    def get_ordered_headers():
+        return [('id', u'文件编号', 'immutable'),
+        ('userid', u'上传用户编号', 'immutable'),
+        ('filename', u'文件名', 'immutable'),
+        ]
+
 class AnonymousUser:
+    id = 0
     def can(self, permissions):
         return False
     def is_administrator(self):

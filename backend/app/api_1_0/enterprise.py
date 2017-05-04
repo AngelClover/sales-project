@@ -65,13 +65,17 @@ def new_enterprise():
         legal_representor = enterprise_json.get('legal_representor') or None
         location = enterprise_json.get('location') or None
         establish_date = enterprise_json.get('establish_date') or None
+        create_user = enterprise_json.get('create_user') or None
+        if create_user is None:
+            create_user = g.current_user.id
+        approve_user = enterprise_json.get('approve_user') or None
         a = {}
         for item in enterprise_json:
             print item
             if item != 'id':
                 a[item] = enterprise_json[item]
         accessory = json.dumps(a)
-        enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory)
+        enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user)
         db.session.add(enterprise)
         db.session.commit()
     except Exception, e:
@@ -117,7 +121,7 @@ def edit_enterprise(id):
 #        enterprise.establish_date = enterprise_json['establish_date']
     a = {}
     for item in enterprise_json:
-        if item != 'id':
+        if item != 'id' and item != 'create_user' and item != 'approve_user':
             a[item] = enterprise_json[item]
     enterprise.accessory = json.dumps(a)
     db.session.commit()

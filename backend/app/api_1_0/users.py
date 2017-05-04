@@ -43,8 +43,9 @@ def new_user():
         email = user_json['email']
         name = user_json['username']
         password = user_json['password']
-        new_user = User(email, name, password)
-        print "%s,%s,%s" % (email, name, password)
+        nickname = user_json.get('nickname')
+        new_user = User(email, name, password, nickname)
+        print "%s,%s,%s,%s" % (email, name, password, nickname)
     except Exception as e:
         return bad_request('email|name|password is not in json')
 
@@ -90,12 +91,14 @@ def change_user(id):
     if user is None:
         return bad_request('no such a user')
     try:
-        if 'name' in request.get_json():
-            user.username = request.get_json()['name']
+        if 'username' in request.get_json():
+            user.username = request.get_json()['username']
         if 'password' in request.get_json():
             user.password = request.get_json()['password']
         if 'email' in request.get_json():
             user.email = request.get_json()['email']
+        if 'nickname' in request.get_json():
+            user.nickname = request.get_json()['nickname']
         db.session.commit()
     except Exception as e:
         db.session.rollback()
