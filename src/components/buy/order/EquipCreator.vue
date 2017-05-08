@@ -183,10 +183,17 @@ export default {
             for (var i in this.equipList){
                 if (this.equipList[i].id == id){
                     this.newAdder.product_name = this.equipList[i].info || this.equipList[i]['名称'] || this.equipList[i]['简称']
+                    this.newAdder.spec = this.equipList[i]["规格"]
+                    this.newAdder.model = this.equipList[i]["型号"]
+                    this.newAdder.measurement_unit = this.equipList[i]["单位"]
+                    this.newAdder.producer = this.equipList[i]["厂商"]
                     this.newAdder.unit_price = 0
                     this.newAdder.quantity = 1
                     //TODO :  change to the right price
                     this.newAdder.total_price = 0
+//                    this.newAdder.product_configure = "产品配置单"
+//                    this.newAdder.warranty_period = "保修期限"
+//                    this.newAdder.install_require = "安装调试要求"
                     return
                 }
             }

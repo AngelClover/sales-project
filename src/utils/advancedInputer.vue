@@ -20,6 +20,9 @@
             <div v-else-if="header.type==='number'" class="input">
                 <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
             </div>
+            <div v-else-if="header.type==='price'" class="input">
+                <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
+            </div>
             <div v-else-if="header.type==='file'" class="input">
                 <div v-if="currentFileList.length > 0">
                     <div v-for="(item, index) in currentFileList">

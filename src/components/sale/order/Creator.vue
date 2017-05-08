@@ -154,6 +154,13 @@ export default {
             this.newContent.equipment_id = x
             this.selectEquip(x)
         },
+        newContent : function(x, old){
+            console.log('newConent refresh')
+            if (old.number != x.numbder || x.unit_price != old.unit_price){
+                console.log('price', x.unit_price, x.number)
+                newContent.total_price = x.unit_price * x.number
+            }
+        }
     },
     methods : {
         realCreate(){

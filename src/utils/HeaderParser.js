@@ -52,16 +52,23 @@ function pipe(obj){
     
     switch (obj['displayName']){
         case '单价':
-            obj['type'] = 'number';
+            obj['type'] = 'price';
             break;
         case '数量':
             obj['type'] = 'number';
             break;
         case '总价':
-            obj['type'] = 'number';
+            obj['type'] = 'price';
+//            obj['immutable'] = true;
             break;
         case '在库数字':
             obj['type'] = 'number';
+            break;
+        case '审核人':
+            obj['immutable'] = true;
+            break;
+        case '创建人':
+            obj['immutable'] = true;
             break;
         default : 
             break;
