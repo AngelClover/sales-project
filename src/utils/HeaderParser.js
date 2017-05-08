@@ -53,22 +53,51 @@ function pipe(obj){
     switch (obj['displayName']){
         case '单价':
             obj['type'] = 'price';
+            obj['invisable'] = true;
             break;
         case '数量':
             obj['type'] = 'number';
+            obj['invisable'] = true;
             break;
         case '总价':
             obj['type'] = 'price';
-//            obj['immutable'] = true;
+            obj['immutable'] = true;
+            obj['invisable'] = true;
             break;
         case '在库数字':
             obj['type'] = 'number';
             break;
         case '审核人':
             obj['immutable'] = true;
+            obj['invisable'] = true;
             break;
         case '创建人':
             obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否接收':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否检验':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否入库':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '接收人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '检验人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '入库人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
             break;
         default : 
             break;

@@ -18,8 +18,10 @@
             <table>
                 <tbody>
                     <tr v-for="(v, key) in detailTitle">
-                        <td>{{v.displayName}}</td>
-                        <td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>{{v.displayName}}</td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>
                             <advancedInputer v-model="newContent[v.item]" :header=v>
                             </advancedInputer>
                         <!--
@@ -154,6 +156,7 @@ export default {
             this.newContent.equipment_id = x
             this.selectEquip(x)
         },
+        /*
         newContent : function(x, old){
             console.log('newConent refresh')
             if (old.number != x.numbder || x.unit_price != old.unit_price){
@@ -161,6 +164,7 @@ export default {
                 newContent.total_price = x.unit_price * x.number
             }
         }
+        */
     },
     methods : {
         realCreate(){

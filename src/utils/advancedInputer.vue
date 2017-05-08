@@ -1,7 +1,9 @@
 <template>
     <div>
         <span>
-            <div v-if="header.immutable" class="input">
+            <div v-if="header.invisable" class="">
+            </div>
+            <div v-else-if="header.immutable" class="input">
                 <label>{{currentValue}}</label>
             </div>
             <div v-else-if="header.type==='option'" class="ui compact menu input">

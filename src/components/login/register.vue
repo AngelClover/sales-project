@@ -75,6 +75,7 @@
             </Input>
         </Form-item>
         <Form-item>
+            <Button type="secondary"><router-link to='/login'>返回</router-link></Button>
             <Button type="primary" @click="handleSubmit('formInline')">注册</Button>
         </Form-item>
     </Form>
@@ -192,7 +193,7 @@ export default {
         handleSubmit (name) {
             this.$refs[name].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('提交成功!');
+                    this.$Message.success('表单验证成功!');
 
                     this.$store.dispatch('register', {
                         username: this.formInline.user,
