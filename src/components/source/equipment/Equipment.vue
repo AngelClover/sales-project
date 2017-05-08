@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference  :cbset=cbSet location="equipment">
+        <ListView msg="asd" :title=title :content=content :pref=preference  :cbset=cbSet location="equipment" :filterList="labelFilterSet">
             <h3 slot="titlename" align=center> 首营设备管理 </h3>
         </ListView>
     </div>
@@ -20,7 +20,33 @@ export default {
                 save: this.saveEquipment,
                 remove: this.removeEquipment,
                 approve: this.approveEquipment
+            },
+            labelFilterSet : [
+            {
+                displayName : "一月过期提醒",
+                filtercb : function(obj){
+                    if (typeof(obj) != undefined && typeof(obj['产品注册证到期日']) != undefined && obj['产品注册证到期日'] != "NULL"){
+                        var d = Date.parse(obj['产品注册证到期日'])
+                        var now = new Date()
+                        var future = new Date().setMonth((new Date().getMonth()-1))
+                        if (now <= d && d <= future)return true
+                    }
+                    return false
+                },
+            },
+            {
+                displayName : "过期提醒",
+                filtercb : function(obj){
+                    if (typeof(obj) != undefined && typeof(obj['产品注册证到期日期']) != undefined && obj['产品注册证到期日期'] != "NULL"){
+                        var d = Date.parse(obj['产品注册证到期日期'])
+                        var now = new Date()
+                        //var future = new Date().setMonth((new Date().getMonth()-1))
+                        if (d <= now)return true
+                    }
+                    return false
+                },
             }
+            ]
         }
     },
     components : {
