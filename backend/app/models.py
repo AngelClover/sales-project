@@ -271,13 +271,13 @@ class PurchaseOrder(db.Model):
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
         ('product_name', u'产品名称', 'immutable'),
-        ('spec', u'规格'),
-        ('model', u'型号'),
-        ('measurement_unit', u'单位'),
+        ('spec', u'规格', 'immutable'),
+        ('model', u'型号', 'immutable'),
+        ('measurement_unit', u'单位', 'immutable'),
         ('unit_price', u'单价'),
         ('quantity', u'数量'),
         ('total_price', u'总价'),
-        ('producer', u'生产厂商'),
+        ('producer', u'生产厂商', 'immutable'),
         ('product_configure', u'产品配置单'),
         ('received', u'是否接收', 'immutable'),
         ('received_user', u'接收人', 'immutable'),
@@ -424,7 +424,7 @@ class SaleOrder(db.Model):
     def get_ordered_headers():
         return [('id', u'销售订单编号', 'immutable'),
         ('sign_date', u'签订日期'),
-        ('provider_info', u'供应商名称、地址、电话'),
+        ('provider_info', u'客户名称、地址、电话'),
         ('billing_company', u'结算公司'),
         ('arrive_date', u'到货时间'),
         ('get_location', u'收货地点'),
@@ -440,12 +440,12 @@ class SaleOrder(db.Model):
         ('service_commitment', u'售后服务承诺'),
         ('warranty_period', u'保修期限'),
         ('product_name', u'产品名称', 'immutable'),
-        ('spec', u'规格'),
-        ('model', u'型号'),
-        ('measurement_unit', u'单位'),
+        ('spec', u'规格', 'immutable'),
+        ('model', u'型号', 'immutable'),
+        ('measurement_unit', u'单位', 'immutable'),
         ('unit_price', u'单价'),
         ('total_price', u'总价'),
-        ('producer', u'生产厂商'),
+        ('producer', u'生产厂商', 'immutable'),
         ('product_configure', u'产品配置单'),
         ('equipment_id', u'产品编号', 'immutable'),
         ('outstore_quantity', u'已出库数量', 'immutable'),
@@ -827,10 +827,14 @@ class UploadFile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer)
     filename = db.Column(db.String(256))
+    displayName = db.Column(db.String(256))#此变量风格用错
+    upload_time = db.Column(db.DateTime)
 
-    def __init__(self, userid, filename):
+    def __init__(self, userid, filename, displayName, todaytime):
         self.userid = userid
         self.filename = filename
+        self.displayName = displayName
+        self.upload_time = todaytime
 
     def to_json(self):
         upload_user_name = self.userid
@@ -843,7 +847,8 @@ class UploadFile(db.Model):
         filejson = {'id' : self.id,
             'upload_user' : upload_user_name,
             'filename' : self.target_filename(), 
-        }
+            'displayName' : self.displayName,
+            'upload_time' : self.upload_time.strftime('%Y-%m-%d %H:%M:%S') if self.upload_time is not None else None, }
         return filejson
 
     def target_filename(self):
@@ -854,6 +859,8 @@ class UploadFile(db.Model):
         return [('id', u'文件编号', 'immutable'),
         ('userid', u'上传用户编号', 'immutable'),
         ('filename', u'文件名', 'immutable'),
+        ('displayName', u'原始文件名', 'immutable'),
+        ('upload_time', u'上传时间', 'immutable'),
         ]
 
 class AnonymousUser:

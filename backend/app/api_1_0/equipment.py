@@ -151,9 +151,10 @@ def approve_new_equipment(id):
         return bad_request('no such a equipment')
 
     try:
-        equip_json = request.get_json()
-        if equip_json.get('approve_user') is not None:
-            equip.approve_user = equip_json['approve_user']
+        if request:
+            equip_json = request.get_json()
+            if equip_json.get('approve_user') is not None:
+                equip.approve_user = equip_json['approve_user']
         if equip.approve_user is None:
             equip.approve_user = g.current_user.id
     except Exception, e:
