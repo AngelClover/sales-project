@@ -12,6 +12,7 @@ import os
 class Equipment(db.Model):
     __tablename__ = 'equipment'
     id = db.Column(db.Integer, primary_key=True)#产品ID
+    stdid = db.Column(db.String(256))#新增产品编号
     info = db.Column(db.String(256))#产品信息
     abbr = db.Column(db.String(256))#产品简称
     type = db.Column(db.String(256))#产品类型，可选的类型
@@ -24,7 +25,8 @@ class Equipment(db.Model):
     create_user = db.Column(db.Integer)
     approve_user = db.Column(db.Integer)
 
-    def __init__(self, info, abbr, type, spec, model, producer, accessory, create_user, approve_user):
+    def __init__(self, stdid, info, abbr, type, spec, model, producer, accessory, create_user, approve_user):
+        self.stdid = stdid
         self.info = info
         self.abbr = abbr
         self.type = type
@@ -94,7 +96,8 @@ class Equipment(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [
-        ('id', u'产品编号', 'immutable'),
+        ('id', u'编号', 'immutable'),
+        ('stdid', u'产品编号'),
         ('名称', '名称'),
         ('简称', '简称'),
         ('医疗器械标准码', '医疗器械标准码'),
@@ -136,6 +139,7 @@ class Enterprise(db.Model):
     accessory = db.Column(db.String(1024)) #json
     create_user = db.Column(db.Integer)
     approve_user = db.Column(db.Integer)
+#files = db.Column(db.String(256))#资质文件名
 
     def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
         self.name = name
@@ -221,6 +225,7 @@ class Enterprise(db.Model):
             ('结算单位', '结算单位'),
             ('create_user', '创建人'),
             ('approve_user', '审核人'),
+            ('filenames', '资质文件'),
         ]
 #return [('id', u'首营企业编号(系统自动分配)'),
 #('name', u'供应商名称'),
@@ -255,7 +260,7 @@ class PurchaseOrder(db.Model):
         return [('id', u'合同编号', 'immutable'),
         ('sign_date', u'签订日期'),
         ('provider_info', u'供应商名称、地址、电话'),
-        ('billing_company', u'结算公司'),
+        ('billing_company', u'结算公司', 'option', ['天津市汇天利商贸有限公司']),
         ('arrive_date', u'到货时间'),
         ('get_location', u'收货地点'),
         ('pay_mode', u'付款方式'),
@@ -267,6 +272,7 @@ class PurchaseOrder(db.Model):
         ('create_user', '创建人'),
         ('approve_user', '审核人'),
         (),
+        ('id', u'入库设备编号', 'immutable', 'invisable'),
         ('equipment_id', '产品编号', 'immutable'),
         ('warranty_period', u'保修期限'),
         ('install_require', u'安装调试要求'),
@@ -309,6 +315,7 @@ class PurchaseOrder(db.Model):
                 if su is not None:
                     su = su.nickname or su.username
             equipments.append({
+                    'id' : e.id,
                     'equipment_id' : e.equipment.id,
                     'warranty_period' : e.warranty_period,
                     'install_require' : e.install_require,
@@ -425,7 +432,7 @@ class SaleOrder(db.Model):
         return [('id', u'销售订单编号', 'immutable'),
         ('sign_date', u'签订日期'),
         ('provider_info', u'客户名称、地址、电话'),
-        ('billing_company', u'结算公司'),
+        ('billing_company', u'结算公司', 'option', ['天津市汇天利商贸有限公司']),
         ('arrive_date', u'到货时间'),
         ('get_location', u'收货地点'),
         ('pay_mode', u'付款方式'),

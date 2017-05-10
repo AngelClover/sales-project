@@ -76,9 +76,14 @@ def new_enterprise():
                 a[item] = enterprise_json[item]
         accessory = json.dumps(a)
         enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user)
-        db.session.add(enterprise)
-        db.session.commit()
+        try:
+            db.session.add(enterprise)
+            db.session.commit()
+        except Exception, e:
+            print e
+            db.session.rollback()
     except Exception, e:
+        print e
         return jsonify({
                 'error' : 2,
                 'msg' : 'fields not complete or error:name|register_capital|abbr|type|ever_name|legal_representor|location|estabilish_date|accessory',

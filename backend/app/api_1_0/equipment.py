@@ -63,6 +63,7 @@ def new_equipment():
     print 'asd'
     equip = None
     try:
+        stdid = equip_json.get('stdid')
         info = None #equip_json['info'] or None
         abbr = None #equip_json['abbr'] or None
         type = None #equip_json['type'] or None
@@ -77,18 +78,18 @@ def new_equipment():
 
         a = {}
         for item in equip_json:
-            if item != 'id' and item != 'state' and item != 'create_user' and item != 'approve_user':
+            if item != 'id' and item != 'state' and item != 'create_user' and item != 'approve_user' and item != 'stdid':
                 a[item] = equip_json[item]
         accessory = json.dumps(a)
 
-        equip = Equipment(info, abbr, type, spec, model, producer, accessory, create_user, approve_user)
+        equip = Equipment(stdid, info, abbr, type, spec, model, producer, accessory, create_user, approve_user)
         db.session.add(equip)
         db.session.commit()
     except Exception, e:
         print e
         return jsonify({
                 'error' : 2,
-                'msg' : 'fields not complete or error:info|abbr|spec|model|producer|accessory',
+                'msg' : 'fields not complete or error:stdid|info|abbr|spec|model|producer|accessory',
                 'data' : {}
                 }), 403
     
@@ -111,6 +112,8 @@ def edit_equipment(id):
                 'data' : {}
                 }), 403
     print equip_json
+    if equip_json.get('stdid') is not None:
+        equip.info = equip_json['stdid']
     if equip_json.get('info') is not None:
         equip.info = equip_json['info']
     if equip_json.get('abbr') is not None:
@@ -130,7 +133,7 @@ def edit_equipment(id):
 
     a = {}
     for item in equip_json:
-        if item != 'id' and item != 'state' and item !='create_user' and item !='approve_user':
+        if item != 'id' and item != 'state' and item !='create_user' and item !='approve_user' and item != 'stdid':
             a[item] = equip_json[item]
     equip.accessory = json.dumps(a)
 
