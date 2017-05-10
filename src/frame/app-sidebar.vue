@@ -27,6 +27,7 @@
                     <Menu-item class=title name=home>
                         <p> <router-link to="/home"> Home </router-link> </p>
                     </Menu-item>
+                    <div v-if="userInfo.module">
                     <Submenu v-show="userInfo.module.indexOf('equipment') >= 0" name="source">
                         <template slot="title"> <p>首营审批</p> </template>
                         <Menu-item name=equipment>
@@ -71,6 +72,7 @@
                             <p> <router-link to="/userauth"> <Icon type="person"></Icon> 用户权限管理 </router-link> </p>
                         </div>
                     </Menu-item>
+                    </div>
                     <!--
                 </div>
                     -->

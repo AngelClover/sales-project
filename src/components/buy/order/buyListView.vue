@@ -277,6 +277,12 @@ address: '深圳市南山区深南大道'
         content : function(x){
         }
     },
+    created : function(){
+        console.log('created this', this)
+        if (this.$store.state.sourceCompanyList.title.length < 1){
+//            this.$store.dispatch('getSourceCompanyList')
+        }
+    },
    methods: {
        sortBy: function (key) {
            //console.log('sortBy', key)
@@ -333,6 +339,8 @@ address: '深圳市南山区深南大道'
        },
        mounted(){
            $('table').tablesort()
+            this.$store.dispatch('getEquipmentList')
+            this.$store.dispatch('getSourceCompanyList')
        },
    }
 }

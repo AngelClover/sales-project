@@ -62,6 +62,9 @@ export default {
                 width: 80,
                 align: 'center',
                 render (row, column, index) {
+                    if (row.received && row.received == 1)
+                        return row.received_user
+                    else 
                     return `<i-button type="primary" size="small" @click="receive(${index})">接收</i-button>`;
                 }
             })
@@ -72,6 +75,9 @@ export default {
                 width: 80,
                 align: 'center',
                 render (row, column, index) {
+                    if (row.inspected && row.inspected == 1)
+                        return row.inspected_user
+                    else 
                     return `<i-button type="primary" size="small" @click="inspect(${index})">检验</i-button>`;
                 }
             })
@@ -82,6 +88,9 @@ export default {
                 width: 80,
                 align: 'center',
                 render (row, column, index) {
+                    if (row.stored && row.stored == 1)
+                        return row.stored_user
+                    else 
                     return `<i-button type="primary" size="small" @click="store(${index})">入库</i-button>`;
                 }
             })
@@ -91,21 +100,21 @@ export default {
     },
     methods : {
         receive : function(index){
-            console.log('receive click', index, this.equipList[index].equipment_id, this.cbset)
+            console.log('receive click', index, this.equipList[index].id, this.cbset)
             if (this.equipList[index]){
-                this.cbset.receiveInOne({id:this.equipList[index].equipment_id})
+                this.cbset.receiveInOne({id:this.equipList[index].id})
             }
         },
         inspect : function(index){
-            console.log('inspect click', index, this.equipList[index].equipment_id, this.cbset)
+            console.log('inspect click', index, this.equipList[index].id, this.cbset)
             if (this.equipList[index]){
-                this.cbset.inspectInOne({id:this.equipList[index].equipment_id})
+                this.cbset.inspectInOne({id:this.equipList[index].id})
             }
         },
         store : function(index){
-            console.log('store click', index, this.equipList[index].equipment_id, this.cbset)
+            console.log('store click', index, this.equipList[index].id, this.cbset)
             if (this.equipList[index]){
-                this.cbset.storeInOne({id:this.equipList[index].equipment_id})
+                this.cbset.storeInOne({id:this.equipList[index].id})
             }
         },
     }

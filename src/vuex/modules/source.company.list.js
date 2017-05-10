@@ -61,6 +61,7 @@ const failBack = ({commit, dispatch}, content, mutation=GET_SOURCE_COMPANY_LIST_
 }
 export const getSourceCompanyList = (store) => {
     var failMessage = "请求失败"
+    console.log('getSourceCompanyList dispatched')
     api.getSourceCompanyList().then(response => {
         if (response.status == 200){
             if (response.data.error != 0){

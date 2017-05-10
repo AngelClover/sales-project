@@ -114,7 +114,10 @@ export default {
     data: function() {
         return {
             showOutStore : false,
-            newContent : {},
+            newContent : {
+                sign_date : this.getDateString(new Date()),
+                arrive_date : this.getTimeString(new Date()),
+            },
             //showCC : false,
             tmpID : -1,
             formData : {
@@ -189,6 +192,7 @@ export default {
         },
         mounted(){
             this.$store.dispatch('getEquipmentList')
+            //this.newContent.sign_date = ""
         },
         selectEquip : function(id){
             console.log("on-change select")
@@ -198,6 +202,32 @@ export default {
                     return
                 }
             }
+        },
+        getDateString(date){
+            console.log('date now', date)
+            var y = 1900 + date.getYear()
+            var m = 1 + date.getMonth()
+            var d = date.getDate()
+            return  y + '-' + m + '-' + d
+        },
+        getTimeString(date){
+            console.log('time now', date)
+            var y = date.getFullYear()
+            var m = 1 + date.getMonth()
+            var d = date.getDate()
+            var h = date.getHours()
+            var mm = date.getMinutes()
+            var s = date.getSeconds()
+            var hh = ""
+            if (h < 10) hh = "0" + h
+            else hh = h
+            var mmm = ""
+            if (mm < 10) mmm = "0" + mm
+            else mmm = mm
+            var ss = ""
+            if (s < 10) mm = "0" + s
+            else ss = s
+            return  y + '-' + m + '-' + d + ' ' + hh + ':' + mmm + ':' + ss
         },
     }
 }

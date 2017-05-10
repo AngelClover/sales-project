@@ -18,8 +18,10 @@
             <table>
                 <tbody>
                     <tr v-for="(v, key) in detailTitle">
-                        <td>{{v.displayName}}</td>
-                        <td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>{{v.displayName}}</td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>
                             <advancedInputer v-model="newContent[v.item]" :header=v>
                             </advancedInputer>
                         <!--

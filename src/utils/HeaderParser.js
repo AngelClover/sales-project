@@ -14,7 +14,7 @@ function pipe(obj){
             obj['type'] = 'star'; break;
         case '单位':
             obj['type'] = 'option';
-            obj['selectOptions'] = ['', '盒', '瓶'];
+            obj['selectOptions'] = ['台', '盒', '瓶', '套', '张'];
             break;
             /*
         case '厂商':
@@ -98,6 +98,21 @@ function pipe(obj){
         case '入库人':
             obj['immutable'] = true;
             obj['invisable'] = true;
+            break;
+        case '供应商名称、地址、电话':
+            obj['immutable'] = true;
+            break;
+        case '发票类型':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['无', '普票', '增值税专用发票'];
+            break;
+        case '运费承担方':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['供方承担','需方承担'];
+            break;
+        case '付款方式':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['', '现金', '打款'];
             break;
         default : 
             break;

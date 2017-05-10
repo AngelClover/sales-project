@@ -25,7 +25,7 @@
         </div>
         <div class=spliter>
         </div>
-        <div class="detail add">
+        <div class="detail-add">
             <div class="name">
                 <Select v-model="tmpID" placeholder="请选择设备名">
                     <Option v-for="item in equipList" :value=item.id :key="item" @on-change=selectEquip> {{item.id}} | {{item['简称'] || item['名称']}} </Option>
@@ -98,7 +98,7 @@ export default {
             titleKey : [],
             tmpID : -1,
             newUnitPrice : 0,
-            newNumber : 0,
+            newNumber : 1,
 //            newTotalPrice : 0,
             newUnitPriceHeader : {
                 type : 'number',
@@ -236,15 +236,14 @@ export default {
                     this.newAdder.model = this.equipList[i]["型号"]
                     this.newAdder.measurement_unit = this.equipList[i]["单位"]
                     this.newAdder.producer = this.equipList[i]["厂商"]
-                    this.newAdder.unit_price = 0
-                    this.newAdder.quantity = 0
+                    this.newAdder.unit_price = this.newUnitPrice = 0
+                    this.newAdder.quantity = this.newNumber = 1
                     //TODO :  change to the right price
-                    this.newAdder.total_price = 0
+//                    this.newAdder.total_price = 0
+                    this.newAdder.total_price = this.computedNewTotalPrice 
 //                    this.newAdder.product_configure = "产品配置单"
 //                    this.newAdder.warranty_period = "保修期限"
 //                    this.newAdder.install_require = "安装调试要求"
-                    this.newUnitPrice = 0
-                    this.newNumber = 0
                     return
                 }
             }

@@ -76,6 +76,9 @@ export default {
         if (this.$store.state.buyOrderList.title.length < 1){
             this.getBuyOrderList()
         }
+        if (this.$store.state.sourceCompanyList.title.length < 1){
+//            this.$store.dispatch('getSourceCompanyList')
+        }
     },
     methods : {
         getBuyOrderList (){
@@ -114,7 +117,7 @@ export default {
             this.$store.dispatch('receiveInOneBuyOrder', {id:content.id})
         },
         inspectInOneBuyOrder(content){
-            this.$store.dispatch('inspectInOneuyOrder', {id:content.id})
+            this.$store.dispatch('inspectInOneBuyOrder', {id:content.id})
         },
         storeInOneBuyOrder(content){
             this.$store.dispatch('storeInOneBuyOrder', {id:content.id})
