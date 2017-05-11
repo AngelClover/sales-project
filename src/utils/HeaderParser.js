@@ -1,8 +1,12 @@
 
 function normalizeList(obj){
+    //console.log('normalize', typeof(obj))
+    return obj
+        /*
     if (typeof(obj) == Array)return obj
     else if (typeof(obj) == Object)return [obj]
     else return null
+    */
 }
 /* immutable 放在服务端，客户端暂时不做
  */
@@ -128,8 +132,9 @@ function HeaderParser(a){
     for (var i = 2; i < a.length; ++i){
         if (a[i] == 'option'){
             i++
-            obj['type'] = 'select'
+            obj['type'] = 'option'
             obj['selectOptions'] = normalizeList(a[i])
+            console.log('optionstest', a[i])
         }
         if (a[i] == 'number'){
             obj['type'] = 'number'

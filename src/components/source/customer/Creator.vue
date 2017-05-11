@@ -18,10 +18,8 @@
             <table>
                 <tbody>
                     <tr v-for="(v, key) in detailTitle">
-                        <td v-if="v.invisable"> </td>
-                        <td v-else>{{v.displayName}}</td>
-                        <td v-if="v.invisable"> </td>
-                        <td v-else>
+                        <td>{{v.displayName}}</td>
+                        <td>
                             <advancedInputer v-model="newContent[v.item]" :header=v>
                             </advancedInputer>
                         <!--
@@ -50,14 +48,14 @@
 </template>
 
 <script>
-import api from '../api'
-import utils from './utils'
-import OutSelector from './outSelector.vue'
-import advancedInputer from './advancedInputer.vue'
+import api from '../../../api'
+import utils from '../../../utils/utils'
+//import OutSelector from './outSelector.vue'
+import advancedInputer from '../../../utils/advancedInputer.vue'
 import EquipCreator from './EquipCreator.vue'
 export default {
     components : {
-        OutSelector,
+        //OutSelector,
         advancedInputer,
         EquipCreator,
     },

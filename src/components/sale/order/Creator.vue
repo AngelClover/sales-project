@@ -225,7 +225,7 @@ export default {
             if (mm < 10) mmm = "0" + mm
             else mmm = mm
             var ss = ""
-            if (s < 10) mm = "0" + s
+            if (s < 10) ss = "0" + s
             else ss = s
             return  y + '-' + m + '-' + d + ' ' + hh + ':' + mmm + ':' + ss
         },

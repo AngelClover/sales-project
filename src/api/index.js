@@ -45,6 +45,18 @@ export default {
     getSourceCustomerList: function(){
         return SourceCustomerResource.get()
     },
+    updateSourceCustomer: function(payload){
+        return SourceCustomerResource.update({id:payload.id}, payload)
+    },
+    saveSourceCustomer: function(payload){
+        return SourceCustomerResource.save(payload)
+    },
+    approveSourceCustomer: function(payload){
+        return SourceCustomerResource.get({id:payload.id, action:"approve"},payload)
+    },
+    removeSourceCustomer: function(payload){
+        return SourceCustomerResource.remove({id:payload.id})
+    },
 
     //SaleOrder
     getSaleOrderList: function() {

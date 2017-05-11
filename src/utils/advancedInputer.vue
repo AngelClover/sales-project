@@ -102,8 +102,9 @@ export default {
             this.$emit('input', x)
         },
         currentFileListtmp: function(x){
-            console.log('currentFileList ->', x)
-            this.currentFileList = this.currentFileList.concat(this.currentFileList)
+            console.log('currentFileListtmp ->', x)
+            this.currentFileList = x //this.currentFileList.concat(this.currentFileList)
+//            this.$emit('input', this.currentFileList)
         }
     },
     methods : {

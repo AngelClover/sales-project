@@ -36,6 +36,9 @@
                         <Menu-item name=sourcecompany>
                             <p> <router-link to="/sourcecompany"> <Icon type="person-stalker"></Icon> 首营企业</router-link> </p>
                         </Menu-item>
+                        <Menu-item name=sourcecustomer>
+                            <p> <router-link to="/sourcecustomer"> <Icon type="person-stalker"></Icon> 客户管理</router-link> </p>
+                        </Menu-item>
                     </Submenu>
                     <Menu-item v-show="userInfo.module.indexOf('purchase') >= 0" name=buy>
                         <div class="title">

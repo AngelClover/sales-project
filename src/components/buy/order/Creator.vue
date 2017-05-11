@@ -230,8 +230,11 @@ export default {
             console.log('date now', date)
             var y = 1900 + date.getYear()
             var m = 1 + date.getMonth()
+            var mm = ""
+            if (m < 10)mm = '0' + m
+            else mm = m
             var d = date.getDate()
-            return  y + '-' + m + '-' + d
+            return  y + '-' + mm + '-' + d
         },
         getTimeString(date){
             console.log('time now', date)
@@ -248,7 +251,7 @@ export default {
             if (mm < 10) mmm = "0" + mm
             else mmm = mm
             var ss = ""
-            if (s < 10) mm = "0" + s
+            if (s < 10) ss = "0" + s
             else ss = s
             return  y + '-' + m + '-' + d + ' ' + hh + ':' + mmm + ':' + ss
         },
