@@ -47,11 +47,35 @@
                             </Form>
         <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle :cbset=cbset>
         </EquipDetail>
-        <div style="margin:20px">
+        <div style="margin:100px">
             <center>
                 <button class="ui primary button" v-if="location=='buyorder'" @click="receiveInAll" > 全部接收 </button>
                 <button class="ui primary button" v-if="location=='buyorder'" @click="inspectInAll" > 全部检验通过 </button>
                 <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 全部入库 </button>
+            </center>
+            <center>
+        <Row>
+            <Label>接收温度:</Label>
+            <Input v-model=receive_temperature style="width:100px">
+            </Input>
+            <Label>接收备注:</Label>
+            <Input v-model=receive_message style="width:100px">
+            </Input>
+            <br/>
+        <Label>检验合格数量:</Label>
+            <InputNumber v-model=inspect_ok_number style="width:100px">
+            </InputNumber>
+            <Label>检验备注:</Label>
+            <Input v-model=inspect_message style="width:100px">
+            </Input>
+            <br/>
+            <Label>入库温度:</Label>
+            <Input v-model=store_temperature style="width:100px">
+            </Input>
+            <Label>入库备注:</Label>
+            <Input v-model=store_message style="width:100px">
+            </Input>
+        </Row>
             </center>
         </div>
 
@@ -118,6 +142,12 @@ export default {
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
             stateSet : ['待审核', '审核通过', '待入库', '入库中', '已入库'],
             stateDescription : ['待审核','待采购','接收、检验、入库','部分已入库','入库完成'],
+            receive_message : "",
+            receive_temperature : "",
+            inspect_message : "",
+            inspect_ok_number : 0,
+            store_message : "",
+            store_temperature : "",
         }
     },
     watch : {
@@ -180,13 +210,28 @@ export default {
             this.cbset.transfer(this.detailContent)
         },
         receiveInAll : function(){
-            this.cbset.receiveInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                receive_message: this.receive_message,
+                receive_temperature: this.receive_temperature,
+            }
+            this.cbset.receiveInAll(tmp)
         },
         inspectInAll : function(){
-            this.cbset.inspectInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                inspect_message: this.inspect_message,
+                inspect_ok_number: this.inspect_ok_number,
+            }
+            this.cbset.inspectInAll(tmp)
         },
         storeInAll : function(){
-            this.cbset.storeInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                store_message: this.store_message,
+                store_temperature: this.store_temperature,
+            }
+            this.cbset.storeInAll(tmp)
         },
         storeOut : function(){
             this.showOutStore = true;

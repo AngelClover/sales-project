@@ -105,13 +105,13 @@ export default {
             this.$store.dispatch('transferBuyOrder', {id:content.id})
         },
         receiveInAllBuyOrder(content){
-            this.$store.dispatch('receiveInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('receiveInAllBuyOrder', content)
         },
         inspectInAllBuyOrder(content){
-            this.$store.dispatch('inspectInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('inspectInAllBuyOrder', content)
         },
         storeInAllBuyOrder(content){
-            this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('storeInAllBuyOrder', content)
         },
         receiveInOneBuyOrder(content){
             this.$store.dispatch('receiveInOneBuyOrder', content)

@@ -14,6 +14,7 @@
             <Table :columns=titleForTable :data=equipList>
             </Table>
         </div>
+        <center>
         <Row>
             <Label>接收温度:</Label>
             <Input v-model=receive_temperature style="width:100px">
@@ -36,6 +37,7 @@
             <Input v-model=store_message style="width:100px">
             </Input>
         </Row>
+        </center>
         <!--
         <Modal v-if=showReceive class="zmodel" @on-ok="receive" @on-cancel="showReceive=false">
             <Label>接收温度:</Label>
@@ -61,7 +63,7 @@
 export default {
     data: function() {
         return {
-            debug : true,
+            debug : false,
             showReceive : false,
             receive_id : -1,
             receive_message : "",
