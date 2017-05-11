@@ -51,6 +51,7 @@ class Equipment(db.Model):
                 approve_user_name = au.nickname or au.username
 
         equip_json = { 'id' : self.id,
+            'stdid' : self.stdid,
 #'info' : self.info,
 #            'abbr' : self.abbr,
 #            'type' : self.type,
@@ -237,6 +238,118 @@ class Enterprise(db.Model):
 #('location', u'住所'),
 #('establish_date', u'成立日期')
 #]
+        '''
+class Customer(db.Model):
+    __tablename__ = 'enterprise'
+    id = db.Column(db.Integer, primary_key=True)#客户系统编号
+    name = db.Column(db.String(256))#客户名称
+#register_capital = db.Column(db.Integer)#注册资金
+    abbr = db.Column(db.String(256))#简称
+    type = db.Column(db.String(256))#供应商类型(设备/试剂/耗材等)
+    ever_name = db.Column(db.String(256))#曾用名
+    legal_representor = db.Column(db.String(256))#法人代表
+    location = db.Column(db.String(1024))#住所
+    establish_date = db.Column(db.Date)#成立日期
+    accessory = db.Column(db.String(1024)) #json
+    create_user = db.Column(db.Integer)
+    approve_user = db.Column(db.Integer)
+#files = db.Column(db.String(256))#资质文件名
+
+    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
+        self.name = name
+        self.register_capital = register_capital
+        self.abbr = abbr
+        self.type = type
+        self.ever_name = ever_name
+        self.legal_representor = legal_representor
+        self.location = location
+        self.establish_date = establish_date
+        self.accessory = accessory
+        self.create_user = create_user
+        self.approve_user = approve_user
+    
+    def to_json(self):
+        create_user_name = self.create_user
+        if self.create_user is not None:
+            cu = User.query.get(self.create_user)
+            if cu is not None:
+                create_user_name = cu.nickname or cu.username
+        approve_user_name = self.approve_user
+        if self.approve_user is not None:
+            au = User.query.get(self.approve_user)
+            if au is not None:
+                approve_user_name = au.nickname or au.username
+
+        enterprise_json = { 'id' : self.id,
+#'name' : self.name,
+#'register_capital' : self.register_capital,
+#'abbr' : self.abbr,
+#'type' : self.type,
+#'ever_name' : self.ever_name,
+#'legal_representor' : self.legal_representor,
+#'location' : self.location,
+#'establish_date' : self.establish_date,
+            'create_user' : create_user_name,
+            'approve_user' : approve_user_name,
+        }
+        if self.accessory:
+            obj = json.loads(self.accessory)
+            for item in obj:
+                enterprise_json[item] = obj[item]
+        return enterprise_json
+    
+    @staticmethod
+    def get_headers():
+        headers = {
+            'id' : u'首营企业编号(系统自动分配)',
+            'name' : u'供应商名称',
+            'register_capital' : u'注册资金',
+            'abbr' : u'简称',
+            'type' : u'供应商类型(设备/试剂/耗材等)',
+            'ever_name' : u'曾用名',
+            'legal_representor' : u'法人代表',
+            'location' : u'住所',
+            'establish_date' : u'成立日期'
+        }
+        return headers
+    
+    @staticmethod
+    def get_ordered_headers():
+        return [
+            ('id', '客户系统编号', 'immutable'),
+            ('abbr', '简称'),
+            ('name', '名称'),
+            ('type', '类型'),
+            ('状态', '成立日期'),
+            ('分类', '注册资金'),
+            ('', '法人')
+            ('联系人', '联系人'),
+            ('手机', '手机'),
+            ('电话', '电话'),
+            ('传真', '传真'),
+            ('地址', '地址'),
+            ('邮箱', '邮箱'),
+            ('网址', '网址'),
+            ('', '营业执照注册号'),
+            ('', '营业期限'),
+            ('', '组织机构代码证号码'),
+            ('', '有效期'),
+            ('', '开户许可证'),
+            ('', '医疗器械经营企业备案证书'),
+            ('', '医疗器械经营许可证'),
+            ('', '税务登记证'),
+            ('', '税号'),
+            ('', '是否一般纳税人'),
+            ('', '开户行'),
+            ('', '账户'),
+            ('', '开票地址'),
+            ('', '开票账户'),
+            ('备注', '备注'),
+            ('create_user', '创建人'),
+            ('approve_user', '审核人'),
+            ('filenames', '资质文件'),
+        ]
+        '''
 
 class PurchaseOrder(db.Model):
     __tablename__ = 'purchase_order'
@@ -287,10 +400,19 @@ class PurchaseOrder(db.Model):
         ('product_configure', u'产品配置单'),
         ('received', u'是否接收', 'immutable'),
         ('received_user', u'接收人', 'immutable'),
+        ('receive_temperature', u'接收温度', 'immutable'),
+        ('receive_message', u'接收备注', 'immutable'),
+        ('receive_time', u'接收时间', 'immutable'),
         ('inspected', u'是否检验', 'immutable'),
         ('inspected_user', u'检验人', 'immutable'),
+        ('inspect_ok_number', u'检验合格数', 'immutable'),
+        ('inspect_message', u'检验备注', 'immutable'),
+        ('inspect_time', u'检验时间', 'immutable'),
         ('stored', u'是否入库', 'immutable'),
         ('stored_user', u'入库人', 'immutable'),
+        ('store_temperature', u'入库温度', 'immutable'),
+        ('store_message', u'入库备注', 'immutable'),
+        ('store_time', u'入库时间', 'immutable'),
         ]
 
     def to_json(self):
@@ -334,6 +456,15 @@ class PurchaseOrder(db.Model):
                     'inspected_user' : iu,
                     'stored' : e.stored,
                     'stored_user' : su,
+                    'receive_message' : e.receive_message,
+                    'inspect_message' : e.inspect_message,
+                    'store_message' : e.store_message,
+                    'receive_time' : e.receive_time,
+                    'inspect_time' : e.inspect_time,
+                    'store_time' : e.store_time,
+                    'receive_temperature' : e.receive_temperature,
+                    'inspect_ok_number' : e.inspect_ok_number,
+                    'store_temperature' : e.store_temperature,
                     })
 #print "IV.II"
 #print self, equipments, total_price
@@ -400,11 +531,20 @@ class PurchaseEquipment(db.Model):
     product_configure = db.Column(db.Text)#产品配置单
     stored = db.Column(db.Integer, default=0)#0:未入库，1:已入库
     stored_user = db.Column(db.Integer)
+    store_message = db.Column(db.String(256))
+    store_time = db.Column(db.String(256))
+    store_temperature = db.Column(db.String(256))
     received = db.Column(db.Integer, default=0)
     received_user = db.Column(db.Integer)
+    receive_message = db.Column(db.String(256))
+    receive_time = db.Column(db.String(256))
+    receive_temperature = db.Column(db.String(256))
     inspected = db.Column(db.Integer, default=0)
     inspected_user = db.Column(db.Integer)
-    
+    inspect_message = db.Column(db.String(256))
+    inspect_time = db.Column(db.String(256))
+    inspect_ok_number = db.Column(db.Integer)
+
     
     purchase_order = db.relationship(PurchaseOrder, uselist=False, backref="purchase_equipments")
     equipment = db.relationship(Equipment, uselist=False, backref="purchase_order")

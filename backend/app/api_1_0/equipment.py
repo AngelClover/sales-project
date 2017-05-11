@@ -60,10 +60,9 @@ def new_equipment():
                 'data' : {}
                 }), 403
     print equip_json
-    print 'asd'
     equip = None
     try:
-        stdid = equip_json.get('stdid')
+        stdid = equip_json.get('stdid') 
         info = None #equip_json['info'] or None
         abbr = None #equip_json['abbr'] or None
         type = None #equip_json['type'] or None
