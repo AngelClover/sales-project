@@ -36,28 +36,36 @@ def get_user_list():
 @api.route('/users', methods=['POST'])
 def new_user():
     user_json = request.get_json()
+    print 'user_json', user_json
     if user_json is None:
         return bad_request('user json data error')
     new_user = None
     try:
-        email = user_json['email']
-        name = user_json['username']
-        password = user_json['password']
+        email = user_json.get('email')
+        name = user_json.get('username')
+        password = user_json.get('password')
         nickname = user_json.get('nickname')
+        if email == u"":
+            email = None
+        if nickname == u"":
+            nickname = None
         new_user = User(email, name, password, nickname)
         print "%s,%s,%s,%s" % (email, name, password, nickname)
     except Exception as e:
+        print e
         return bad_request('email|name|password is not in json')
-
+    print new_user
     if new_user is not None:
         try:
             db.session.add(new_user)
             db.session.commit()
-        except:
+        except Exception as e:
+            print e
             db.session.rollback()
             return bad_request('email or username duplicated')
     else:
         return bad_request('something error, can\'t add to db')
+    print "ok"
 
     return jsonify({
             'error' : 0,

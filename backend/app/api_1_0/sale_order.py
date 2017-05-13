@@ -88,6 +88,7 @@ def new_sale_order():
         if order.create_user is None:
             order.create_user = g.current_user.id
         order.approve_user = request_json.get('approve_user') or None
+        order.contract = request_json.get('contract') or None
         order.state = 1
         #check equipments exist
         equips = request_json.get('equipments') or []
@@ -180,6 +181,7 @@ def modify_sale_order(id):
         if request_json.get('approve_user'):
             order.approve_user = request_json.get('approve_user')
         order.state = 1
+        order.contract = request_json.get('contract') or None
         #check equipments exist
         equips = request_json.get('equipments') or []
         for e in equips:

@@ -76,9 +76,14 @@ def new_enterprise():
                 a[item] = enterprise_json[item]
         accessory = json.dumps(a)
         enterprise = Enterprise(name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user)
-        db.session.add(enterprise)
-        db.session.commit()
+        try:
+            db.session.add(enterprise)
+            db.session.commit()
+        except Exception, e:
+            print e
+            db.session.rollback()
     except Exception, e:
+        print e
         return jsonify({
                 'error' : 2,
                 'msg' : 'fields not complete or error:name|register_capital|abbr|type|ever_name|legal_representor|location|estabilish_date|accessory',
@@ -143,4 +148,34 @@ def delete_enterprise(id):
             'error' : 0,
             'msg' : 'delete enterprise successful',
             'data' : {}
+            })
+
+@api.route('/enterprise/approve/<int:id>', methods=['GET', 'POST'])
+@permission_required(Permission.MODULE_PERMISSION_DICT['enterprise']['approve'])
+def approve_new_enterprise(id):
+    c = enterprise.query.get(id)
+    if c is None:
+        return bad_request('no such a customer')
+
+    try:
+        if request:
+            equip_json = request.get_json()
+            if equip_json.get('approve_user') is not None:
+                c.approve_user = equip_json['approve_user']
+        if c.approve_user is None:
+            c.approve_user = g.current_user.id
+    except Exception, e:
+        print e
+        return jsonify({
+                'error' : 1,
+                'msg' : 'approve_user cannot get',
+                'data' : ''
+                })
+
+    c.state = 1
+    db.session.commit()
+    return jsonify({
+            'error' : 0,
+            'msg' : '',
+            'data' : c.to_json()
             })

@@ -129,7 +129,7 @@ def new_purchase_order():
                 'error' : 2,
                 'msg' : e.message,
                 'data' : {}
-                }), 403
+                }), 400
 
     return jsonify({
             'error' : 0,
@@ -292,6 +292,8 @@ def purchase_can_store(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_one_equipment(id):
     p_equipment = PurchaseEquipment.query.get_or_404(id)
+    request_json = request.get_json()
+    print request_json
     if p_equipment.purchase_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
     if p_equipment.stored == 1:
@@ -302,6 +304,9 @@ def store_one_equipment(id):
     if stored_userid is None:
         stored_userid = g.current_user.id
     p_equipment.stored_user = stored_userid
+    p_equipment.store_message = request_json.get('store_message') or None
+    p_equipment.store_temperature = request_json.get('store_temperature') or None
+    p_equipment.store_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     equipments = p_equipment.purchase_order.purchase_equipments
     part_stored = False;
@@ -335,6 +340,8 @@ def store_one_equipment(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def receive_one_equipment(id):
     p_equipment = PurchaseEquipment.query.get_or_404(id)
+    request_json = request.get_json()
+    print request_json
     if p_equipment.purchase_order.state > -2:
         return bad_request('purchase order not at ready to receive ') 
     if p_equipment.received == 1:
@@ -345,6 +352,9 @@ def receive_one_equipment(id):
     if received_userid is None:
         received_userid = g.current_user.id
     p_equipment.received_user = received_userid
+    p_equipment.receive_message = request_json.get('receive_message') or None
+    p_equipment.receive_temperature = request_json.get('receive_temperature') or None
+    p_equipment.receive_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db.session.commit()
     return jsonify({
             'error' : 0,
@@ -356,6 +366,7 @@ def receive_one_equipment(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def inspect_one_equipment(id):
     p_equipment = PurchaseEquipment.query.get_or_404(id)
+    request_json = request.get_json()
     if p_equipment.purchase_order.state > -2:
         return bad_request('purchase order not at ready to inspect') 
     if p_equipment.inspected == 1:
@@ -365,6 +376,14 @@ def inspect_one_equipment(id):
     inspected_userid = int(request.args.get('inspected_userid')) if request.args.get('inspected_userid') is not None else None
     if inspected_userid is None:
         inspected_userid = g.current_user.id
+    inspect_ok_number = request_json.get('inspect_ok_number') or None
+    if inspect_ok_number is not None:
+        inspect_ok_number = int(inspect_ok_number)
+    else:
+        inspect_ok_number = p_equipment.quantity
+    p_equipment.inspect_ok_number = inspect_ok_number
+    p_equipment.inspect_message = request_json.get('inspect_message') or None
+    p_equipment.inspect_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     p_equipment.inspected_user = inspected_userid
     db.session.commit()
     return jsonify({
@@ -377,6 +396,8 @@ def inspect_one_equipment(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def store_all_equipments(id):
     p_order = PurchaseOrder.query.get_or_404(id)
+    request_json = request.get_json()
+    print request_json
     if p_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
 
@@ -394,6 +415,9 @@ def store_all_equipments(id):
         if stored_userid is None:
             stored_userid = g.current_user.id
         p_equipment.stored_user = stored_userid
+        p_equipment.store_message = request_json.get('store_message') or None
+        p_equipment.store_temperature = request_json.get('store_temperature') or None
+        p_equipment.store_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     p_order.total_stored = 2
     p_order.state = -4
     db.session.commit()
@@ -408,6 +432,8 @@ def store_all_equipments(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def receive_all_equipments(id):
     p_order = PurchaseOrder.query.get_or_404(id)
+    request_json = request.get_json()
+    print request_json
     if p_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
 
@@ -419,6 +445,9 @@ def receive_all_equipments(id):
         if received_userid is None:
             received_userid = g.current_user.id
         p_equipment.received_user = received_userid
+        p_equipment.receive_message = request_json.get('receive_message') or None
+        p_equipment.receive_temperature = request_json.get('receive_temperature') or None
+        p_equipment.receive_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db.session.commit()
 
     return jsonify({
@@ -431,6 +460,8 @@ def receive_all_equipments(id):
 @permission_required(Permission.MODULE_PERMISSION_DICT['store']['write'])
 def inspect_all_equipments(id):
     p_order = PurchaseOrder.query.get_or_404(id)
+    request_json = request.get_json()
+    print request_json
     if p_order.state > -2:
         return bad_request('purchase order not at ready to store state') 
 
@@ -442,6 +473,9 @@ def inspect_all_equipments(id):
         if inspected_userid is None:
             inspected_userid = g.current_user.id
         p_equipment.inspected_user = inspected_userid
+        p_equipment.inspect_ok_number = inspect_ok_number
+        p_equipment.inspect_message = request_json.get('inspect_message') or None
+        p_equipment.inspect_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db.session.commit()
 
     return jsonify({
