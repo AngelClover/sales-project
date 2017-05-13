@@ -20,7 +20,7 @@ class Equipment(db.Model):
     model = db.Column(db.String(256))#产品型号
     producer = db.Column(db.String(256))#产品厂家
     state = db.Column(db.Integer) #当前的状态 0:正常状态， 1:需要审批状态
-    accessory = db.Column(db.String(1024))#json
+    accessory = db.Column(db.String(10240))#json
 #create_person = db.relationship('User')
     create_user = db.Column(db.Integer)
     approve_user = db.Column(db.Integer)
@@ -137,9 +137,10 @@ class Enterprise(db.Model):
     legal_representor = db.Column(db.String(256))#法人代表
     location = db.Column(db.String(1024))#住所
     establish_date = db.Column(db.Date)#成立日期
-    accessory = db.Column(db.String(1024)) #json
+    accessory = db.Column(db.String(10240)) #json
     create_user = db.Column(db.Integer)
     approve_user = db.Column(db.Integer)
+    state = db.Column(db.Integer)
 #files = db.Column(db.String(256))#资质文件名
 
     def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
@@ -154,6 +155,7 @@ class Enterprise(db.Model):
         self.accessory = accessory
         self.create_user = create_user
         self.approve_user = approve_user
+        self.state = 0
     
     def to_json(self):
         create_user_name = self.create_user
@@ -238,35 +240,86 @@ class Enterprise(db.Model):
 #('location', u'住所'),
 #('establish_date', u'成立日期')
 #]
-        '''
 class Customer(db.Model):
-    __tablename__ = 'enterprise'
+    __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)#客户系统编号
     name = db.Column(db.String(256))#客户名称
-#register_capital = db.Column(db.Integer)#注册资金
+    capital = db.Column(db.String(256))#注册资金
     abbr = db.Column(db.String(256))#简称
     type = db.Column(db.String(256))#供应商类型(设备/试剂/耗材等)
-    ever_name = db.Column(db.String(256))#曾用名
-    legal_representor = db.Column(db.String(256))#法人代表
-    location = db.Column(db.String(1024))#住所
-    establish_date = db.Column(db.Date)#成立日期
-    accessory = db.Column(db.String(1024)) #json
+#name = db.Column(db.String(256))#名
+    legal = db.Column(db.String(256))#法人代表
+#date = db.Column(db.String(256))#成立
+#location = db.Column(db.String(256))#住所
+    establish_date = db.Column(db.String(256))#成立日期
+    c1 = db.Column(db.String(256))
+    c2 = db.Column(db.String(256))
+    c3 = db.Column(db.String(256))
+    c4 = db.Column(db.String(256))
+    c5 = db.Column(db.String(256))
+    c6 = db.Column(db.String(256))
+    c7 = db.Column(db.String(256))
+
+    a1 = db.Column(db.String(256))
+    a2 = db.Column(db.String(256))
+    a3 = db.Column(db.String(256))
+    a4 = db.Column(db.String(256))
+    a5 = db.Column(db.String(256))
+    a6 = db.Column(db.String(256))
+    a7 = db.Column(db.String(256))
+    a8 = db.Column(db.String(256))
+    
+    d1 = db.Column(db.String(256))
+    d2 = db.Column(db.String(256))
+    d3 = db.Column(db.String(256))
+    d4 = db.Column(db.String(256))
+    d5 = db.Column(db.String(256))
+    d6 = db.Column(db.String(256))
+    d7 = db.Column(db.String(256))
+#accessory = db.Column(db.String(1024)) #json
     create_user = db.Column(db.Integer)
     approve_user = db.Column(db.Integer)
 #files = db.Column(db.String(256))#资质文件名
+    state = db.Column(db.Integer)
 
-    def __init__(self, name, register_capital, abbr, type, ever_name, legal_representor, location, establish_date, accessory, create_user, approve_user):
+    def __init__(self, abbr, name, type, establish_date, capital, legal, c1, c2, c3, c4, c5, c6, c7, a1, a2, a3, a4, a5, a6, a7, a8, d1, d2, d3, d4, d5, d6, d7, create_user):
         self.name = name
-        self.register_capital = register_capital
         self.abbr = abbr
         self.type = type
-        self.ever_name = ever_name
-        self.legal_representor = legal_representor
-        self.location = location
+#self.ever_name = ever_name
+        self.legal = legal
+#self.location = location
         self.establish_date = establish_date
-        self.accessory = accessory
-        self.create_user = create_user
-        self.approve_user = approve_user
+        self.capital = capital
+#self.accessory = accessory
+#self.create_user = create_user
+#self.approve_user = approve_user
+        self.c1 = c1
+        self.c2 = c2
+        self.c3 = c3
+        self.c4 = c4
+        self.c5 = c5
+        self.c6 = c6
+        self.c7 = c7
+
+        self.d1 = d1
+        self.d2 = d2
+        self.d3 = d3
+        self.d4 = d4
+        self.d5 = d5
+        self.d6 = d6
+        self.d7 = d7
+
+        self.a1 = a1
+        self.a2 = a2
+        self.a3 = a3
+        self.a4 = a4
+        self.a5 = a5
+        self.a6 = a6
+        self.a7 = a7
+        self.a8 = a8
+
+        self.state = 0 
     
     def to_json(self):
         create_user_name = self.create_user
@@ -281,21 +334,68 @@ class Customer(db.Model):
                 approve_user_name = au.nickname or au.username
 
         enterprise_json = { 'id' : self.id,
-#'name' : self.name,
-#'register_capital' : self.register_capital,
-#'abbr' : self.abbr,
-#'type' : self.type,
+            'name' : self.name,
+            'capital' : self.capital,
+            'abbr' : self.abbr,
+            'type' : self.type,
 #'ever_name' : self.ever_name,
-#'legal_representor' : self.legal_representor,
+            'legal' : self.legal,
 #'location' : self.location,
-#'establish_date' : self.establish_date,
+            'establish_date' : self.establish_date,
+            'capital' : self.capital,
             'create_user' : create_user_name,
             'approve_user' : approve_user_name,
         }
-        if self.accessory:
-            obj = json.loads(self.accessory)
-            for item in obj:
-                enterprise_json[item] = obj[item]
+        if self.c1 is not None:
+            enterprise_json['c1'] = self.c1
+        if self.c2 is not None:
+            enterprise_json['c2'] = self.c2
+        if self.c3 is not None:
+            enterprise_json['c3'] = self.c3
+        if self.c4 is not None:
+            enterprise_json['c4'] = self.c4
+        if self.c5 is not None:
+            enterprise_json['c5'] = self.c5
+        if self.c6 is not None:
+            enterprise_json['c6'] = self.c6
+        if self.c7 is not None:
+            enterprise_json['c7'] = self.c7
+
+        if self.d1 is not None:
+            enterprise_json['d1'] = self.d1
+        if self.d2 is not None:
+            enterprise_json['d2'] = self.d2
+        if self.d3 is not None:
+            enterprise_json['d3'] = self.d3
+        if self.d4 is not None:
+            enterprise_json['d4'] = self.d4
+        if self.d5 is not None:
+            enterprise_json['d5'] = self.d5
+        if self.d6 is not None:
+            enterprise_json['d6'] = self.d6
+        if self.d7 is not None:
+            enterprise_json['d7'] = self.d7
+
+        if self.a1 is not None:
+            enterprise_json['a1'] = self.a1
+        if self.a2 is not None:
+            enterprise_json['a2'] = self.a2
+        if self.a3 is not None:
+            enterprise_json['a3'] = self.a3
+        if self.a4 is not None:
+            enterprise_json['a4'] = self.a4
+        if self.a5 is not None:
+            enterprise_json['a5'] = self.a5
+        if self.a6 is not None:
+            enterprise_json['a6'] = self.a6
+        if self.a7 is not None:
+            enterprise_json['a7'] = self.a7
+        if self.a8 is not None:
+            enterprise_json['a8'] = self.a8
+#if self.accessory:
+#           obj = json.loads(self.accessory)
+#           for item in obj:
+#               enterprise_json[item] = obj[item]
         return enterprise_json
     
     @staticmethod
@@ -320,36 +420,34 @@ class Customer(db.Model):
             ('abbr', '简称'),
             ('name', '名称'),
             ('type', '类型'),
-            ('状态', '成立日期'),
-            ('分类', '注册资金'),
-            ('', '法人')
-            ('联系人', '联系人'),
-            ('手机', '手机'),
-            ('电话', '电话'),
-            ('传真', '传真'),
-            ('地址', '地址'),
-            ('邮箱', '邮箱'),
-            ('网址', '网址'),
-            ('', '营业执照注册号'),
-            ('', '营业期限'),
-            ('', '组织机构代码证号码'),
-            ('', '有效期'),
-            ('', '开户许可证'),
-            ('', '医疗器械经营企业备案证书'),
-            ('', '医疗器械经营许可证'),
-            ('', '税务登记证'),
-            ('', '税号'),
-            ('', '是否一般纳税人'),
-            ('', '开户行'),
-            ('', '账户'),
-            ('', '开票地址'),
-            ('', '开票账户'),
-            ('备注', '备注'),
+            ('establish_date', '成立日期'),
+            ('capital', '注册资金'),
+            ('legal', '法人'),
+            ('c1', '联系人'),
+            ('c2', '手机'),
+            ('c3', '电话'),
+            ('c4', '传真'),
+            ('c5', '地址'),
+            ('c6', '邮箱'),
+            ('c7', '网址'),
+            ('a1', '营业执照注册号'),
+            ('a2', '营业期限'),
+            ('a3', '组织机构代码证号码'),
+            ('a4', '有效期'),
+            ('a5', '开户许可证'),
+            ('a6', '医疗器械经营企业备案证书'),
+            ('a7', '医疗器械经营许可证'),
+            ('a8', '税务登记证'),
+            ('d1', '税号'),
+            ('d2', '是否一般纳税人'),
+            ('d3', '开户行'),
+            ('d4', '账户'),
+            ('d5', '开票地址'),
+            ('d6', '开票账户'),
+            ('d7', '备注'),
             ('create_user', '创建人'),
             ('approve_user', '审核人'),
-            ('filenames', '资质文件'),
         ]
-        '''
 
 class PurchaseOrder(db.Model):
     __tablename__ = 'purchase_order'
@@ -818,6 +916,11 @@ class Permission:
          'write' : 0x400000,
          'approve' : 0x800000
          }),
+        ('customer', {
+         'read' : 0x1000000,
+         'write' : 0x2000000,
+         'approve' : 0x4000000
+         }),
         ('administer', 0xffffffff)
     ]
 
@@ -976,12 +1079,14 @@ class UploadFile(db.Model):
     filename = db.Column(db.String(256))
     displayName = db.Column(db.String(256))#此变量风格用错
     upload_time = db.Column(db.DateTime)
+    type = db.Column(db.String(256))
 
-    def __init__(self, userid, filename, displayName, todaytime):
+    def __init__(self, userid, filename, displayName, todaytime, type):
         self.userid = userid
         self.filename = filename
         self.displayName = displayName
         self.upload_time = todaytime
+        self.type = type
 
     def to_json(self):
         upload_user_name = self.userid
@@ -995,7 +1100,9 @@ class UploadFile(db.Model):
             'upload_user' : upload_user_name,
             'filename' : self.target_filename(), 
             'displayName' : self.displayName,
-            'upload_time' : self.upload_time.strftime('%Y-%m-%d %H:%M:%S') if self.upload_time is not None else None, }
+            'upload_time' : self.upload_time.strftime('%Y-%m-%d %H:%M:%S') if self.upload_time is not None else None,
+            'type' : self.type,
+        }
         return filejson
 
     def target_filename(self):
@@ -1004,10 +1111,11 @@ class UploadFile(db.Model):
     @staticmethod
     def get_ordered_headers():
         return [('id', u'文件编号', 'immutable'),
-        ('userid', u'上传用户编号', 'immutable'),
+        ('upload_user', u'上传用户', 'immutable'),
         ('filename', u'文件名', 'immutable'),
         ('displayName', u'原始文件名', 'immutable'),
         ('upload_time', u'上传时间', 'immutable'),
+        ('type', u'类型', 'immutable'),
         ]
 
 class AnonymousUser:

@@ -30,12 +30,13 @@ def get_random_filename(name):
 
 def get_right_filename(name):
 #print name
-    name = name.decode('string-escape')
-#print name
-    name = name.decode('utf-8')
-#print name
+#name = name.decode('string-escape')
+#   print name
+#name = name.decode('utf-8')
+#name = name.decode('')
+#   print name
     name = secure_filename(name)
-#print name
+#   print name
     if os.path.exists(target_filename(name)):
         a = os.path.splitext(name)
         index = 0
@@ -49,7 +50,7 @@ def get_right_filename(name):
     
 
 @api.route('/upload', methods=['POST'])
-#@auth.login_required
+@auth.login_required
 def upload_file():
 #file.save()
 #upload_json = request.get_json()
@@ -68,13 +69,15 @@ def upload_file():
         print filename
         target = target_filename(filename)
         print target
-        userid = int(request.args.get('userid')) if request.args.get('userid') is not None else None
+#TODO: bug that may get 0 for userid when use token
+        userid = int(request.form.get('userid')) if request.form.get('userid') is not None else None
         if userid is None:
             userid = g.current_user.id
-        print 'save file -> ', target, 'userid:', userid
+        type = request.form.get('type') if request.form.get('type') is not None else None
+        print 'save file -> ', target, 'userid:', userid, 'type:', type
         file.save(target)
         today = datetime.datetime.today()
-        uf = UploadFile(userid, filename, file.filename, today)
+        uf = UploadFile(userid, filename, file.filename, today, type)
         try:
             db.session.add(uf)
             db.session.commit()
@@ -98,7 +101,7 @@ def get_file_list():
     userid = int(request.args.get('userid')) if request.args.get('userid') is not None else None
     print 'userid:', userid
     files = []
-    if userid is None:
+    if userid is None or userid == 1:
         files = UploadFile.query.all()
     else:
         files = UploadFile.query.filter_by(userid=userid).all()
