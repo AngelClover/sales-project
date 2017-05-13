@@ -36,10 +36,10 @@
                         <Menu-item name=sourcecompany>
                             <p> <router-link to="/sourcecompany"> <Icon type="person-stalker"></Icon> 首营企业</router-link> </p>
                         </Menu-item>
+                    </Submenu>
                         <Menu-item name=sourcecustomer>
                             <p> <router-link to="/sourcecustomer"> <Icon type="person-stalker"></Icon> 客户管理</router-link> </p>
                         </Menu-item>
-                    </Submenu>
                     <Menu-item v-show="userInfo.module.indexOf('purchase') >= 0" name=buy>
                         <div class="title">
                             <p> <router-link to="/buy"><Icon type="archive"></Icon> 采购订单管理 </router-link> </p>
@@ -73,6 +73,11 @@
                     <Menu-item v-show="userInfo.module.indexOf('administer') >= 0" name=administer>
                         <div class="title">
                             <p> <router-link to="/userauth"> <Icon type="person"></Icon> 用户权限管理 </router-link> </p>
+                        </div>
+                    </Menu-item>
+                    <Menu-item name=upload>
+                        <div class="title">
+                            <p> <router-link to="/upload"> <Icon type="file"></Icon> 上传文件管理 </router-link> </p>
                         </div>
                     </Menu-item>
                     </div>

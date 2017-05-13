@@ -32,7 +32,7 @@
                         <Button class="filelistbutton" @click=deleteFileIndex(index)>删除</Button>
                     </div>
                 </div>
-                <Uploader v-model=currentFileListtmp>
+                <Uploader v-model=currentFileListtmp filetype="填表用">
                 </Uploader>
             </div>
             <div v-else class="input">

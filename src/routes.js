@@ -35,7 +35,6 @@ import printer from './components/printer/printer.vue'
 
 var routes = [
     //{path: '/', component: App},
-    {path: '/upload', component  : uploadd},
     {path: '/login', component: Login},
     {path: '/register', component: Register}, 
     {path: '/cacheclear', component: CacheClear},
@@ -55,10 +54,11 @@ var routes = [
             {path: '/sale', name: 'sale',  component:  SaleOrder},
             {path: '/sinkcompany', name: 'sinkcompany',  component:  SinkCompany},
             {path: '/sourcecompany', name: 'sourcecompany',  component:  SourceCompany},
-//            {path: '/sourcecustomer', name: 'sourcecustomer',  component:  SourceCustomer},
+            {path: '/sourcecustomer', name: 'sourcecustomer',  component:  SourceCustomer},
             {path: '/equipment', name: 'equipment',  component:  SourceEquipment},
             {path: '/storehouse', name: 'storehouse', component: StoreHouse},
             {path: '/userauth', name: 'userauth', component: UserAuth},
+            {path: '/upload', component  : uploadd},
             { path: '*', component: NotFound }
         ]
     },

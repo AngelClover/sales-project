@@ -50,8 +50,11 @@ function pipe(obj){
         obj['type'] = 'date'
     }
     if (obj['item'] && obj['displayName'].search('文件') >= 0 ||
-            obj['displayName'] && obj['displayName'].search('材料')  >= 0){
-        obj['type'] = 'file'
+            obj['displayName'] && obj['displayName'].search('材料')  >= 0 ||
+            obj['displayName'] && obj['displayName'].search('证') >= 0){
+        if (obj['displayName'].search('日期') < 0){
+            obj['type'] = 'file'
+        }
     }
     
     switch (obj['displayName']){

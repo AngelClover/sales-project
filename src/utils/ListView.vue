@@ -6,7 +6,7 @@
                 <i class="search icon"></i>
         </div>
             <br/>
-            <div class="filter label" v-show="this.filteredList.length > 0">
+            <div class="filter label" v-show="filteredList && this.filteredList.length > 0">
                 <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
                 </Button>
@@ -35,7 +35,7 @@
                 <!--
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
-        <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
+        <div v-if="titleKey && titleKey.length > 0 && filteredContent && filteredContent.length > 0">
             <Table width=auto stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
             </Table>
         </div>
@@ -228,7 +228,7 @@ address: '深圳市南山区深南大道'
             var _this = this
             var tmp = this.labelFiltercb
             console.log('filteredList size: ', this.filteredList)
-            if (this.filteredList.length > 0){
+            if (this.filteredList && this.filteredList.length > 0){
                 console.log('label filter change the data from', data.length, '=>')
                 data = data.filter(function (row){
                     console.log('consider row', row)
@@ -334,10 +334,11 @@ address: '深圳市南山区深南大道'
            this.cbset.delete(item)
        },
        filterByLabel(obj){
-           console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
+           if(this.filteredList)console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
            this.labelFiltercb = obj.filtercb
        },
        mounted(){
+            console.log("mounted")
            $('table').tablesort()
        },
    }

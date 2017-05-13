@@ -6,8 +6,8 @@
                 <i class="search icon"></i>
         </div>
             <br/>
-            <div class="filter label" v-show="this.filteredList.length > 0">
-                <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
+            <div class="filter label" v-show="filteredList && filteredList.length > 0">
+                <Button v-for="item in filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
                 </Button>
             </div>
@@ -35,7 +35,7 @@
                 <!--
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
-        <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
+        <div v-if="titleKey && titleKey.length > 0 && filteredContent && filteredContent.length > 0">
             <div style="margin: 10px;overflow: hidden">
                 <div style="float: left;">
                     <Page :total="filteredContent.length" :current="currentPage" :pae-size="currentPageSize" @on-change="changePage" @on-page-size-change="changePageSize" show-elevator show-total></Page>
@@ -46,7 +46,7 @@
         </div>
 
         <br/>
-        <div class="ui buttom" align=center>
+        <div class="ui buttom" align=left style="margin:30px">
             <Button @click=createAction > 新建 </Button>
             <Button @click=showPrefs > 偏好设置 </Button>
             <Button @click=showLogTips > 变更记录 </Button>
@@ -66,7 +66,7 @@
         -->
 
 
-        <div v-show=debug>
+        <div v-if=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
         <!--
@@ -256,7 +256,7 @@ address: '深圳市南山区深南大道'
             var _this = this
             var tmp = this.labelFiltercb
             console.log('filteredList size: ', this.filteredList)
-            if (this.filteredList.length > 0){
+            if (this.filteredList && this.filteredList.length > 0){
                 console.log('label filter change the data from', data.length, '=>')
                 data = data.filter(function (row){
                     console.log('consider row', row)
@@ -362,7 +362,7 @@ address: '深圳市南山区深南大道'
            this.cbset.delete(item)
        },
        filterByLabel(obj){
-           console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
+           if (this.filteredList) console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
            this.labelFiltercb = obj.filtercb
        },
        mounted(){

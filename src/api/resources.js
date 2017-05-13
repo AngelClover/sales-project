@@ -47,8 +47,8 @@ export const LogEquipmentResource = Vue.resource(API_ROOT + apiBase + 'log/equip
 export const SourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'enterprise{/action}{/id}')
 export const LogSourceCompanyResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecompany')
 
-export const SourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'sourcecustomer')
-export const LogSourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'log/sourcecustomer')
+export const SourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'customer{/action}{/id}')
+export const LogSourceCustomerResource = Vue.resource(API_ROOT + apiBase + 'log/customer')
 
 
 export const SaleOrderResource = Vue.resource(API_ROOT + apiBase + 'sale{/action}{/id}')
@@ -71,5 +71,7 @@ export const AuthResource = Vue.resource(API_ROOT + apiBase + 'auth')
 export const UserResource = Vue.resource(API_ROOT + apiBase + 'users{/id}')
 
 export const PermissionResource = Vue.resource(API_ROOT + apiBase + 'permission{/action}{/id}')
+
+export const FileResource = Vue.resource(API_ROOT + apiBase + 'upload{/id}')
 
 

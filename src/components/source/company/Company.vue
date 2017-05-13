@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="sourcecompany">
+        <ListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="sourcecompany" :filterList="labelFilterSet">
         <h3 slot="titlename" align=center> 首营公司管理 </h3>
         </ListView>
     </div>
@@ -15,12 +15,38 @@ export default {
     data (){
         return {
             cbSet : {
-            get: this.getSourceCompanyList,
-            update: this.updateSourceCompany,
-            save: this.saveSourceCompany,
-            remove: this.removeSourceCompany,
-            approve: this.approveSourceCompany
-        }
+                get: this.getSourceCompanyList,
+                update: this.updateSourceCompany,
+                save: this.saveSourceCompany,
+                remove: this.removeSourceCompany,
+                approve: this.approveSourceCompany
+            },
+            labelFilterSet : [
+            {
+                displayName : "一月过期提醒",
+                filtercb : function(obj){
+                    if (typeof(obj) != undefined && typeof(obj['产品注册证到期日']) != undefined && obj['产品注册证到期日'] != "NULL"){
+                        var d = Date.parse(obj['产品注册证到期日'])
+                            var now = new Date()
+                            var future = new Date().setMonth((new Date().getMonth()-1))
+                            if (now <= d && d <= future)return true
+                    }
+                    return false
+                },
+            },
+            {
+                displayName : "过期提醒",
+                filtercb : function(obj){
+                    if (typeof(obj) != undefined && typeof(obj['产品注册证到期日期']) != undefined && obj['产品注册证到期日期'] != "NULL"){
+                        var d = Date.parse(obj['产品注册证到期日期'])
+                            var now = new Date()
+                            //var future = new Date().setMonth((new Date().getMonth()-1))
+                            if (d <= now)return true
+                    }
+                    return false
+                },
+            }
+            ]
         }
     },
     components : {
