@@ -237,7 +237,8 @@ export default {
     },
 
     getFileList: function(payload){
-        return FileResource.get({params: payload})
+        console.log('getFileList api', payload)
+        return FileResource.get(payload)
     },
     removeFile: function(payload){
         return FileResource.remove({id:payload.id})
