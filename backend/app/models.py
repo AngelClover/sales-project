@@ -82,6 +82,42 @@ class Equipment(db.Model):
             ret = self.info
 
         return ret
+
+    def get_producer_name(self):
+        ret = ""
+        if self.accessory is not None:
+            x = json.loads(self.accessory)
+            for key,value in x.items():
+                if key == u'生产厂商' and value is not None and len(value) > 0:
+                    ret = value
+        if self.producer is not None and len(self.producer) > 0 and ret == "":
+            ret = self.producer
+
+        return ret
+
+    def get_spec(self):
+        ret = ""
+        if self.accessory is not None:
+            x = json.loads(self.accessory)
+            for key,value in x.items():
+                if key == u'产品规格' and value is not None and len(value) > 0:
+                    ret = value
+        if self.spec is not None and len(self.spec) > 0 and ret == "":
+            ret = self.spec
+
+        return ret
+        
+    def get_model(self):
+        ret = ""
+        if self.accessory is not None:
+            x = json.loads(self.accessory)
+            for key,value in x.items():
+                if key == u'产品型号' and value is not None and len(value) > 0:
+                    ret = value
+        if self.model is not None and len(self.model) > 0 and ret == "":
+            ret = self.model
+
+        return ret
     
     @staticmethod
     def get_headers():
@@ -516,7 +552,7 @@ class PurchaseOrder(db.Model):
     def to_json(self):
         total_price = 0
         equipments = []
-#print "IV.I", self.purchase_equipments
+# print "IV.I", self.purchase_equipments
         for e in self.purchase_equipments:
             total_price += e.total_price
             ru = e.received_user
@@ -534,20 +570,33 @@ class PurchaseOrder(db.Model):
                 su = User.query.get(su)
                 if su is not None:
                     su = su.nickname or su.username
+#print "get equipment_id ", e.equipment_id 
+            id_out = ""
+            producer_out = ""
+            name_out = ""
+            spec_out = ""
+            model_out = ""
+            if e.equipment_id is not None:
+                equip_model = Equipment.query.get(e.equipment_id)
+                id_out = equip_model.id
+                producer_out = equip_model.get_producer_name()
+                name_out = equip_model.get_name()
+                spec_out = equip_model.get_spec()
+                model_out = equip_model.get_model()
             equipments.append({
                     'id' : e.id,
-                    'equipment_id' : e.equipment.id,
+                    'equipment_id' : id_out,
                     'warranty_period' : e.warranty_period,
                     'install_require' : e.install_require,
                     'measurement_unit' : e.measurement_unit,
                     'unit_price' : e.unit_price,
                     'quantity' : e.quantity,
                     'total_price' : e.total_price,
-                    'producer' : e.equipment.producer,
+                    'producer' : producer_out,
                     'product_configure' : e.product_configure,
-                    'product_name' : e.equipment.get_name(),# or json.loads(e.equipment.accessory)['名称'],
-                    'spec' : e.equipment.spec,
-                    'model' : e.equipment.model,
+                    'product_name' : name_out,# or json.loads(e.equipment.accessory)['名称'],
+                    'spec' : spec_out,
+                    'model' : model_out,
                     'received' : e.received,
                     'received_user' : ru,
                     'inspected' : e.inspected,
