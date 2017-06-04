@@ -246,7 +246,8 @@ export default {
 >>>>>>> 5fc53220f7a32e867a4df71296a969aac06ca987
 */
         //params decide the data transporting method, using request.args in flask
-        return FileResource.get({params: payload})
+        console.log('getFileList api', payload)
+        return FileResource.get(payload)
     },
     removeFile: function(payload){
         return FileResource.remove({id:payload.id})
