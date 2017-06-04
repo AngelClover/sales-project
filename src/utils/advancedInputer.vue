@@ -36,7 +36,7 @@
                 </Uploader>
             </div>
             <div v-else class="input">
-                <Input v-model="currentString" style="width: 300px" @on-change="handleInput">
+                <Input v-model="currentString" style="width: 300px" :placeholder="placeholder" @on-change="handleInput">
                 </Input>
             </div>
             <div v-if="debug">
@@ -63,7 +63,7 @@ export default {
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
         }
     },
-    props : ['value', 'header'],
+    props : ['value', 'header', 'placeholder'],
     components : {
         Uploader
     },
