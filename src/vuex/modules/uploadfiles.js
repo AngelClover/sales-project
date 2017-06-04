@@ -74,7 +74,7 @@ const failBack = ({commit, dispatch}, content, mutation=GET_UPLOADFILE_LIST_FAIL
 export const getFileList = (store, payload) => {
     var failMessage = "请求失败"
         console.log('getFileList', payload)
-    api.getFileList({userid:payload.userid}).then(response => { //TODO: id or userid?
+    api.getFileList({userid:payload.id}).then(response => { //TODO: id or userid?
         console.log('response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
