@@ -27,6 +27,7 @@
                     <Menu-item class=title name=home>
                         <p> <router-link to="/home"> Home </router-link> </p>
                     </Menu-item>
+                    <div v-if="userInfo.module">
                     <Submenu v-show="userInfo.module.indexOf('equipment') >= 0" name="source">
                         <template slot="title"> <p>首营审批</p> </template>
                         <Menu-item name=equipment>
@@ -36,6 +37,9 @@
                             <p> <router-link to="/sourcecompany"> <Icon type="person-stalker"></Icon> 首营企业</router-link> </p>
                         </Menu-item>
                     </Submenu>
+                        <Menu-item name=sourcecustomer>
+                            <p> <router-link to="/sourcecustomer"> <Icon type="person-stalker"></Icon> 客户管理</router-link> </p>
+                        </Menu-item>
                     <Menu-item v-show="userInfo.module.indexOf('purchase') >= 0" name=buy>
                         <div class="title">
                             <p> <router-link to="/buy"><Icon type="archive"></Icon> 采购订单管理 </router-link> </p>
@@ -71,6 +75,12 @@
                             <p> <router-link to="/userauth"> <Icon type="person"></Icon> 用户权限管理 </router-link> </p>
                         </div>
                     </Menu-item>
+                    <Menu-item name=upload>
+                        <div class="title">
+                            <p> <router-link to="/upload"> <Icon type="file"></Icon> 上传文件管理 </router-link> </p>
+                        </div>
+                    </Menu-item>
+                    </div>
                     <!--
                 </div>
                     -->

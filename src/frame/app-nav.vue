@@ -6,10 +6,11 @@
             </div>
             <div class="layout-ceiling-main">
                 <span>
+                    {{displayName}} | 
                     <router-link to='/register'>注册</router-link> |
                     <router-link to='/login'>登录</router-link> | 
-                <a @click=logout>注销</a>
-                <span>
+                    <a @click=logout>注销</a>
+                </span>
             </div>
         </div>
     <!--
@@ -128,6 +129,7 @@ color: #ffffff;
 .layout-ceiling-main{
 float: right;
 margin-right: 15px;
+    color: #ffffff;
 }
 .layout-ceiling-main a{
 color: #ffffff;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Upload :action=uploadAPI type="drag" :on-success=Succ :on-error=Error :on-remove=fileRemove :on-preview=filePreview :on-progress=Progress :before-upload=before :max-size=fileMaxSize :on-format-error=formatError :on-exceeded-size=sizeError>
+        <Upload :action=uploadAPI type="drag" :on-success=Succ :on-error=Error :on-remove=fileRemove :on-preview=filePreview :on-progress=Progress :before-upload=before :max-size=fileMaxSize :on-format-error=formatError :on-exceeded-size=sizeError :data=computedData>
         <!--
         <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
         -->
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-    props : ['value'],
+    props : ['value', 'filetype', 'cb'],
     data: function() {
         return {
             uploadAPI : "http://angelclover.win:9000/" + "api/v1.0/" + "upload",
@@ -39,6 +39,18 @@ export default {
             this.$emit('input', ret)
         }
     },
+    computed : {
+        user(){
+            console.log('print user', this.$store.getters.getMe)
+            return this.$store.getters.getMe || {id:0}
+        },
+        computedData(){
+            return {
+                userid: this.user.id,
+                type: this.filetype
+            }
+        }
+    },
     methods : {
         before(file){
             console.log('before', file)
@@ -51,6 +63,7 @@ export default {
                     'uid' : file.uid,
                 })
             }
+            this.cb()
         },
         Error(err, response, file){
             console.log('error', err, response, file)

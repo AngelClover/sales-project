@@ -34,16 +34,43 @@
             <table>
                 <tbody>
                     <tr v-for="(v, key) in subtitle">
-                        <td>{{v.displayName}}</td>
-                        <td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>{{v.displayName}}</td>
+
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>
                             <advancedInputer v-model=newAdder[v.item] :header=v>
+                            </advancedInputer>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>单价</td>
+                        <td>
+                            <advancedInputer v-model=newUnitPrice :header=newUnitPriceHeader>
+                            </advancedInputer>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>数量</td>
+                        <td>
+                            <advancedInputer v-model=newNumber :header=newNumberHeader>
+                            </advancedInputer>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>总价</td>
+                        <td>
+                            <advancedInputer v-model=computedNewTotalPrice :header=newTotalPriceHeader>
                             </advancedInputer>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <center>
             <Button @click=addItem> 添加 </Button>
             <Button @click=clearItem> 清空 </Button>
+            </center>
         </div>
 
         <div class="name" v-if="debug">
@@ -70,6 +97,19 @@ export default {
             debug : false,
             titleKey : [],
             tmpID : -1,
+            newUnitPrice : 0,
+            newNumber : 0,
+//            newTotalPrice : 0,
+            newUnitPriceHeader : {
+                type : 'number',
+            },
+            newNumberHeader : {
+                type : 'number',
+            },
+            newTotalPriceHeader : {
+                type : 'number',
+                immutable : true,
+            },
         }
     },
     props : ['value', 'subtitle'],
@@ -100,7 +140,13 @@ export default {
         },
         newAdder : function(x){
             console.log("newAdder -> ", x)
-        }
+        },
+        newUnitPrice : function(x){
+            this.newAdder.unit_price = x
+        },
+        newNumber : function(x){
+            this.newAdder.quantity = x
+        },
     },
     computed : {
         titleKeyComputed : function(){
@@ -139,7 +185,10 @@ export default {
         },
         equipList : function(){
             return this.$store.getters.equipmentContent
-        }
+        },
+        computedNewTotalPrice : function(){
+            return this.newAdder.total_price = this.newUnitPrice * this.newNumber
+        },
     },
     methods : {
         check() {
@@ -183,10 +232,19 @@ export default {
             for (var i in this.equipList){
                 if (this.equipList[i].id == id){
                     this.newAdder.product_name = this.equipList[i].info || this.equipList[i]['名称'] || this.equipList[i]['简称']
+                    this.newAdder.spec = this.equipList[i]["规格"]
+                    this.newAdder.model = this.equipList[i]["型号"]
+                    this.newAdder.measurement_unit = this.equipList[i]["单位"]
+                    this.newAdder.producer = this.equipList[i]["厂商"]
                     this.newAdder.unit_price = 0
-                    this.newAdder.quantity = 1
+                    this.newAdder.quantity = 0
                     //TODO :  change to the right price
                     this.newAdder.total_price = 0
+//                    this.newAdder.product_configure = "产品配置单"
+//                    this.newAdder.warranty_period = "保修期限"
+//                    this.newAdder.install_require = "安装调试要求"
+                    this.newUnitPrice = 0
+                    this.newNumber = 0
                     return
                 }
             }
@@ -194,7 +252,7 @@ export default {
         newAdderRemove(ind){
             console.log("newadder remove", ind)
             this.newContent.splice(ind, 1)
-        }
+       }
     }
 }
 </script>

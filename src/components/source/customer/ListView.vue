@@ -6,8 +6,8 @@
                 <i class="search icon"></i>
         </div>
             <br/>
-            <div class="filter label" v-show="this.filteredList.length > 0">
-                <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
+            <div class="filter label" v-show="filteredList && filteredList.length > 0">
+                <Button v-for="item in filteredList" class="ui button"  @click=filterByLabel(item)>
                     {{item.displayName}}
                 </Button>
             </div>
@@ -35,13 +35,18 @@
                 <!--
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
-        <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
-            <Table width=auto stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
+        <div v-if="titleKey && titleKey.length > 0 && filteredContent && filteredContent.length > 0">
+            <div style="margin: 10px;overflow: hidden">
+                <div style="float: left;">
+                    <Page :total="filteredContent.length" :current="currentPage" :pae-size="currentPageSize" @on-change="changePage" @on-page-size-change="changePageSize" show-elevator show-total></Page>
+                </div>
+            </div>
+            <Table width=auto stripe :columns="titleKey" :data="filteredPageContent" @on-row-click="clickItem">
             </Table>
         </div>
 
         <br/>
-        <div class="ui buttom" align=center>
+        <div class="ui buttom" align=left style="margin:30px">
             <Button @click=createAction > 新建 </Button>
             <Button @click=showPrefs > 偏好设置 </Button>
             <Button @click=showLogTips > 变更记录 </Button>
@@ -49,17 +54,19 @@
 
         <br/>
 
-        <SaleDetail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
-        </SaleDetail>
+        <detail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
+        </detail>
 
         <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;" :detailSubtitle=subtitle :location=location>
         </Creator>
 
+        <!--
         <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
         </Preference>
+        -->
 
 
-        <div v-show=debug>
+        <div v-if=debug>
         <p> -----------for debug below-------------- </p>
         <p> This is list view page.  </p>
         <!--
@@ -90,14 +97,14 @@
 </template>
 
 <script>
-import SaleDetail from './saleDetail.vue'
-import Preference from './Preference.vue'
+import Detail from './Detail.vue'
+//import Preference from './Preference.vue'
 import Creator from './Creator.vue'
 
 export default {
     components : {
-        SaleDetail,
-        Preference,
+        Detail,
+//        Preference,
         Creator
     },
     props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores', 'subtitle'],
@@ -110,11 +117,13 @@ export default {
             detailContent : {},
             debug : false,
             showPref : false,
-            clearCache : false,
+            clearCache : true,
             allListObj : {
                 displayName : "全部",
                 filtercb : obj => {return true},
             },
+            currentPage : 1,
+            currentPageSize : 10,
             labelFiltercb : obj => {return true},
             clickedIndex : -1,
             showCreator : false,
@@ -170,6 +179,17 @@ address: '深圳市南山区深南大道'
             console.log('titleKey', ret)
             return ret
         },
+        listTitle : function(){
+            var ret = []
+            for (var it of this.title){
+                console.log("listTitle", it)
+                if (typeof (it.displayInList) != undefined  && it.displayInList){
+                    ret.push(it)
+                }
+            }
+            console.log("listTitle", ret)
+            return ret;
+        },
         preference : function(){
             if (this.clearCache)localStorage.removeItem(this.location)
             var shw = this.showPref
@@ -181,10 +201,10 @@ address: '深圳市南山区深南大道'
             var ret = []
             console.log("preference list prefarray", prefarray)
             if (typeof(prefarray) == undefined || prefarray.length == 0){
-                console.log('preference in listview branch 1', this.title)
-                if (this.title && Object.values(this.title).length >= 1){ //To be better
-                    for (var item in this.title){
-                        ret.push(this.title[item].item)
+                console.log('preference in listview branch 1', this.listTitle)
+                if (this.listTitle && Object.values(this.listTitle).length >= 1){ //To be better
+                    for (var item in this.listTitle){
+                        ret.push(this.listTitle[item].item)
                     }
                     console.log('preference in listview branch 2')
                 }
@@ -209,6 +229,20 @@ address: '深圳市南山区深南大道'
             console.log('computed titleMap', ret)
             return ret
         },
+        filteredPageContent : function(){
+//            page = this.currentPage
+//            up = this.filteredContent.length
+//            sz = this.currentPageSize
+            var l = (this.currentPage - 1) * this.currentPageSize
+            var r = (this.currentPage) * this.currentPageSize
+            if (l < 0) l = 0
+            if (l > this.filteredContent.length) l = this.filteredContent.length - 1
+            if (r > this.filteredContent.length) r = this.filteredContent.length
+            if (r < 0) r = 0
+            //[l, r)
+            console.log("filteredPageContent", l, r)
+            return this.filteredContent.slice(l, r)
+        },
         filteredContent : function() {
             console.log('filteredContent computed')
             var sortKey = this.sortKey
@@ -222,7 +256,7 @@ address: '深圳市南山区深南大道'
             var _this = this
             var tmp = this.labelFiltercb
             console.log('filteredList size: ', this.filteredList)
-            if (this.filteredList.length > 0){
+            if (this.filteredList && this.filteredList.length > 0){
                 console.log('label filter change the data from', data.length, '=>')
                 data = data.filter(function (row){
                     console.log('consider row', row)
@@ -301,7 +335,7 @@ address: '深圳市南山区深南大道'
             console.log('on-row-click',  item)
             this.detailContent = item //this.filteredContent[index]
             var i = -1;
-             for (var ind in this.filteredContent){
+             for (var ind in this.filteredPageContent){
                 if (this.filteredContent[ind].id == item.id){
                 i = ind
              break
@@ -328,12 +362,20 @@ address: '深圳市南山区深南大道'
            this.cbset.delete(item)
        },
        filterByLabel(obj){
-           console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
+           if (this.filteredList) console.log('filterByLabel', obj, 'filteredList.length : ', this.filteredList.length)
            this.labelFiltercb = obj.filtercb
        },
        mounted(){
            $('table').tablesort()
        },
+       changePage(page){
+           console.log("changePage", this.currentPage, page)
+               this.currentPage = page
+       },
+       changePageSize(sz){
+             console.log("changePageSize", this.currentPageSize, sz)
+                 this.currentPageSize = sz
+         }
    }
 }
 </script>

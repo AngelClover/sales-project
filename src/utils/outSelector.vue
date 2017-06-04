@@ -1,77 +1,77 @@
 <template>
     <div v-if="showOutStore">
         <Modal v-model="showContent" witdh=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
-                    <div class="outstore-header">
-                        销售订单详情
-                    </div>
-                    <div v-if="detailTitle && detailTitle.length > 0">
-                        <Table :columns=detailColumn :data=detailData>
-                        </Table>
-                    <!--
-                    <table border="1">
-                        <tr><th v-for="(attr,index) in orderAttr">{{index}}</th></tr>
-                        <tr><td v-for="attr in orderAttr">{{attr}}</td></tr>
-                    </table>
-                    -->
-                    </div>
-                    <div class="outstore-header">
-                        设备清单： 
-                    </div>
-                    <div  v-if="equipmentList && equipmentList.length > 0">
-                        <Table width=auto :columns=subColumn :data=subData @on-row-click="clickEquipment">
-                            <!--
-                        <tr> <th v-for="(attr, index) in equipmentList[0]">{{index}}</th></tr>
-                        <tr v-for="eq in equipmentList" @click="clickEquipment(eq)">
-                            <td v-for="attr in eq">{{attr}}</td>
-                        </tr>
-                            -->
-                        </Table>
-                    </div>
-                    <div class="outstore-header">
-                        可选在库设备:
-                        <br/>
-                    </div>
-                        <br/>
-                        <!--
-                            TODO: decorate
-                        -->
-                    <div v-if="availableList && availableList.length > 0">
-                        <!--
-                        <Table width=auto  :columns=optionColumn :data=optionData> 
-                        </Table>
-                        -->
-                        <table border=2>
-                        <tr>
-                            <th v-for="(attr, index) in optionTitle">{{attr.displayName}}</th>
-                            <th>本次出库数量</th>
-                        </tr>
-                        <tr v-for="(item,index) in availableList">
-                            <td v-for="attr in optionTitle">{{item[attr.item]}}</td>
-                            <td><Input-number :min="0" :max="item.store_number" v-model="selectedSet[index]"><Input-number></td>
-                        </tr>
-                        <table>
-                    </div>
-                    <br/>
-                    <div v-show=debug>
-                        <p> showOutStore : {{showOutStore}} </p> <br/>
-                        <!--
-                        <p> outContent : {{outContent}} </p> <br/>
-                        <p> storeForEquipment : {{storeForEquipment}} </p> <br/>
-                        <p> stores : {{stores}} </p> <br/>
-                        <p> targetEquipment : {{targetEquipment}} </p> <br/>
-                        -->
-                        <p> availableList : {{availableList}} </p> <br/>
-                        <p> optionTitle : {{optionTitle}} </p> <br/>
-                        <p> optionColumn : {{optionColumn}} </p> <br/>
-                    </div>
-                    <div slot="footer">
-                    <Button @click="$emit('close')">
-                        close
-                    </Button>
-                    <Button @click="outStore">
-                        出货
-                    </Button>
-                    </div>
+        <div class="outstore-header">
+            销售订单详情
+        </div>
+        <div v-if="detailTitle && detailTitle.length > 0">
+            <Table :columns=detailColumn :data=detailData>
+            </Table>
+            <!--
+                <table border="1">
+                <tr><th v-for="(attr,index) in orderAttr">{{index}}</th></tr>
+                <tr><td v-for="attr in orderAttr">{{attr}}</td></tr>
+                </table>
+            -->
+        </div>
+        <div class="outstore-header">
+            设备清单： 
+        </div>
+        <div  v-if="equipmentList && equipmentList.length > 0">
+            <Table width=auto :columns=subColumn :data=subData @on-row-click="clickEquipment">
+                <!--
+                    <tr> <th v-for="(attr, index) in equipmentList[0]">{{index}}</th></tr>
+                    <tr v-for="eq in equipmentList" @click="clickEquipment(eq)">
+                    <td v-for="attr in eq">{{attr}}</td>
+                    </tr>
+                -->
+            </Table>
+        </div>
+        <div class="outstore-header">
+            可选在库设备:
+            <br/>
+        </div>
+        <br/>
+        <!--
+            TODO: decorate
+        -->
+        <div v-if="availableList && availableList.length > 0">
+            <!--
+                <Table width=auto  :columns=optionColumn :data=optionData> 
+                </Table>
+            -->
+            <table border=2>
+                <tr>
+                    <th v-for="(attr, index) in optionTitle">{{attr.displayName}}</th>
+                    <th>本次出库数量</th>
+                </tr>
+                <tr v-for="(item,index) in availableList">
+                    <td v-for="attr in optionTitle">{{item[attr.item]}}</td>
+                    <td><Input-number :min="0" :max="item.store_number" v-model="selectedSet[index]"></Input-number></td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <div v-show=debug>
+            <p> showOutStore : {{showOutStore}} </p> <br/>
+            <!--
+                <p> outContent : {{outContent}} </p> <br/>
+                <p> storeForEquipment : {{storeForEquipment}} </p> <br/>
+                <p> stores : {{stores}} </p> <br/>
+                <p> targetEquipment : {{targetEquipment}} </p> <br/>
+            -->
+            <p> availableList : {{availableList}} </p> <br/>
+            <p> optionTitle : {{optionTitle}} </p> <br/>
+            <p> optionColumn : {{optionColumn}} </p> <br/>
+        </div>
+        <div slot="footer">
+            <Button @click="$emit('close')">
+                close
+            </Button>
+            <Button @click="outStore">
+                出货
+            </Button>
+        </div>
         </Modal>
     </div>
 </template>

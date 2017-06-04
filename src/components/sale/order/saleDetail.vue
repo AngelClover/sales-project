@@ -7,85 +7,87 @@
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
         -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" >
-                    <div slot="header">
-                        详细信息
-                    </div>
-                    <div class="detail-container" >
-                        <div class="detail-body">
-                            <!--
-                            <table border=1>
-                                <tbody>
-                                    <tr v-for="(value, key) in detailTitle">
-                                        <td><p>{{value.displayName}}</p>
-                                        </td>
-                                        <td><p>{{detailContent[value.item]}}</p></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            -->
-                            <Steps :current="currentState">
-                                <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
-                            </Steps>
-                            <br/>
-                            <Form :label-width=100>
-                                <div v-for="(value, key) in detailTitle">
-                                <Form-item :label=value.displayName class="formitem">
-                                    <div v-if="value.type != 'file'">
-                                        <Label>{{detailContent[value.item]}}</Label>
-                                    </div>
-                                    <div v-if="value.type === 'file'">
-                                        <div v-if="detailContent[value.item] instanceof Array">
-                                            <div v-for="item in detailContent[value.item]">
-                                                <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
-                                            </div>
-                                        </div>
-                                        <div v-else-if="detailContent[value.item] != null">
-                                            <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
-                                        </div>
-                                    </div>
-                                </Form-item>
-                            </Form>
-        <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
-        </EquipDetail>
-                            <div style='margin:20px'>
-                                <center>
-                            <button class="ui primary  button" @click="approve" > 审批 </button>
-                            <button class="ui primary button" @click="saleOrderConfirm" > 订单确认 </button>
-                            <button class="ui primary button" @click="storeOut" > 出库 </button>
-                            <button class="ui primary button" > <p> <router-link :to="printerPath" > 打印单 </ruoter-link> </p></button>
-                                </center>
-                            </div>
-
-        <div v-show=debug>
-            <p> -----------Detail debug below----------- </p>
-            <p> showDetails : {{showDetails}} </p>
-            <p> location : {{location}} </p>
-            <p> detailTitle : {{detailTitle}} </p>
-            <p> detailContent : {{detailContent}} </p>
+        <div slot="header">
+            详细信息
         </div>
-                        </div>
+        <div class="detail-container" >
+            <div class="detail-body">
+                <!--
+                    <table border=1>
+                    <tbody>
+                    <tr v-for="(value, key) in detailTitle">
+                    <td><p>{{value.displayName}}</p>
+                    </td>
+                    <td><p>{{detailContent[value.item]}}</p></td>
+                    </tr>
+                    </tbody>
+                    </table>
+                -->
+                <Steps :current="currentState">
+                <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
+                </Steps>
+                <br/>
+                <Form :label-width=100>
+                    <div v-for="(value, key) in detailTitle">
+                        <Form-item :label=value.displayName class="formitem">
+                            <div v-if="value.type != 'file'">
+                                <Label>{{detailContent[value.item]}}</Label>
+                            </div>
+                            <div v-if="value.type === 'file'">
+                                <div v-if="detailContent[value.item] instanceof Array">
+                                    <div v-for="item in detailContent[value.item]">
+                                        <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
+                                    </div>
+                                </div>
+                                <div v-else-if="detailContent[value.item] != null">
+                                    <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
+                                </div>
+                            </div>
+                        </Form-item>
                     </div>
-                        <div slot="footer">
-                            <center>
-                            <button class="ui secondary button" @click="$emit('close')"> OK </button>
-                            <button class="ui primary button" @click="modifier"> 修改 </button>
-                            <Button @click="handleDelete"> 删除 </Button>
-                                <!--
-                            <button class="ui green button" @click="storeInOne" >
-                                单个入库
-                            </button>
-                                -->
-                            </center>
-                        </div>
-                    <!--
+                </Form>
+                <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
+                </EquipDetail>
+                <div style='margin:20px'>
+                    <center>
+                        <button class="ui primary  button" @click="approve" > 审批 </button>
+                        <button class="ui primary button" @click="saleOrderConfirm" > 订单确认 </button>
+                        <button class="ui primary button" @click="storeOut" > 出库 </button>
+                        <button class="ui primary button" > <p> <router-link :to="printerPath" > 打印单 </router-link> </p></button>
+                    </center>
+                </div>
+
+                <div v-show=debug>
+                    <p> -----------Detail debug below----------- </p>
+                    <p> showDetails : {{showDetails}} </p>
+                    <p> location : {{location}} </p>
+                    <p> detailTitle : {{detailTitle}} </p>
+                    <p> detailContent : {{detailContent}} </p>
                 </div>
             </div>
-        </transition>
+            <div slot="footer">
+                <center>
+                    <button class="ui secondary button" @click="$emit('close')"> OK </button>
+                    <button class="ui primary button" @click="modifier"> 修改 </button>
+                    <Button @click="handleDelete"> 删除 </Button>
+                    <!--
+                        <button class="ui green button" @click="storeInOne" >
+                        单个入库
+                        </button>
                     -->
+                </center>
+            </div>
+        </div>
+            <!--
+                </div>
+                </div>
+                </transition>
+            -->
         </Modal>
         <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
         </Modifier>
         <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
+        </OutSelector>
     </div>
 </template>
 

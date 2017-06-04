@@ -1,8 +1,15 @@
+/*
+import {
+    GET_UPLOADFILE_LIST_SUCCESS,
+    GET_UPLOADFILE_LIST_FAILURE
+} from '../types'
+*/
+//import {getFileList} from '../actions'
 import api from '../../api'
 import hp from '../../utils/HeaderParser'
 
-const GET_SOURCE_COMPANY_LIST_SUCCESS = "GET_SOURCE_COMPANY_LIST_SUCCESS"
-const GET_SOURCE_COMPANY_LIST_FAILURE = "GET_SOURCE_COMPANY_LIST_FAILURE"
+const GET_UPLOADFILE_LIST_SUCCESS = "GET_UPLOADFILE_LIST_SUCCESS"
+const GET_UPLOADFILE_LIST_FAILURE = "GET_UPLOADFILE_LIST_FAILURE"
 
 const state = {
     title : [],
@@ -12,33 +19,37 @@ const state = {
 }
 
 const mutations = {
-    [GET_SOURCE_COMPANY_LIST_FAILURE](state){
+    [GET_UPLOADFILE_LIST_FAILURE](state){
         /*
         state.title = []
         state.content = []
         state.preference = []
         */
     },
-    [GET_SOURCE_COMPANY_LIST_SUCCESS](state, response_data){
+    [GET_UPLOADFILE_LIST_SUCCESS](state, response_data){
         //console.log('response_data in mutation', response_data)
-        state.content = response_data.enterprises
+        state.content = response_data.files
         //state.preference = response_data.preference
-        //state.title = response_data.title
-        state.title = []
+        //state.title = response_data.headers
+        state.title = []//response_data.headers
         for (var item in response_data.headers){
             /*
             var d = {}
             d['item'] = response_data.headers[item][0]
             d['displayName'] = response_data.headers[item][1]
             if (response_data.headers.length >= 3){
+                //TODO: specify
             }
+            state.title.push(d)
             */
             var header = hp.HeaderParser(response_data.headers[item])
-            header.displayInList = true
-            console.log('header in vuex', header)
+//            for (var it in headers){
+//            console.log('header in vuex', header)
+//            }
             state.title.push(header)
         }
-    }
+        //console.log(state.title)
+    },
 }
 
 /*
@@ -49,25 +60,27 @@ const getters = {
 }
 */
 const getters = {
-    sourceCompanyTitle : (state) => state.title,
-    sourceCompanyContent :  (state) => state.content, 
-    sourceCompanyPreference : (state) => state.preference,
+    uploadfilesTitle : (state) => state.title,
+    uploadfilesContent :  (state) => state.content, 
+    uploadfilesPreference : (state) => state.preference,
 }
 
-const failBack = ({commit, dispatch}, content, mutation=GET_SOURCE_COMPANY_LIST_FAILURE) => {
+const failBack = ({commit, dispatch}, content, mutation=GET_UPLOADFILE_LIST_FAILURE) => {
     console.log('response fail', content)
     commit(mutation, content)
     dispatch('showMsg', '请求失败', 'error')
 }
-export const getSourceCompanyList = (store) => {
+
+export const getFileList = (store, payload) => {
     var failMessage = "请求失败"
-    console.log('getSourceCompanyList dispatched')
-    api.getSourceCompanyList().then(response => {
+        console.log('getFileList', payload)
+    api.getFileList({userid:payload.userid}).then(response => {
+        console.log('response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                failBack(store, failMessage + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
-                store.commit(GET_SOURCE_COMPANY_LIST_SUCCESS, response.data.data)
+                store.commit(GET_UPLOADFILE_LIST_SUCCESS, response.data.data)
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -77,25 +90,26 @@ export const getSourceCompanyList = (store) => {
     })
 }
 
-const updateSourceCompany = (store, payload) => {
-    api.updateSourceCompany(payload).then(response => {
+const updateFile = (store, payload) => {
+    var failMessage = "更新失败"
+    api.updateFile(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
-                failBack(store, "更新失败" + response.data.error + response.data.msg)
+                failBack(store, failMessage + response.data.error + response.data.msg)
             } else{
                 store.dispatch('showMsg', '修改成功', 'success')
             }
         } else{
-            failBack(store, "更新失败" + response.status + response.statusText)
+            failBack(store, failMessage + response.status + response.statusText)
         }
     }, response => {
-        failBack(store, "更新失败" + response.status + response.statusText)
+        failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const saveSourceCompany = (store, payload) => {
+const saveFile = (store, payload) => {
     var failMessage = "添加失败"
-    api.saveSourceCompany(payload).then(response => {
+    api.saveFile(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
@@ -110,15 +124,16 @@ const saveSourceCompany = (store, payload) => {
         failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const removeSourceCompany = (store, payload) => {
+const removeFile = (store, payload) => {
     var failMessage = "删除失败"
-    api.removeSourceCompany(payload).then(response => {
+    api.removeFile(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
                 failBack(store, failMessage + response.data.error + response.data.msg)
             }else{
                 store.dispatch('showMsg', '删除成功', 'success')
+                store.dispatch('getFileList', payload)
             }
         }else{
             failBack(store, failMessage + response.status + response.statusText)
@@ -127,9 +142,10 @@ const removeSourceCompany = (store, payload) => {
         failBack(store, failMessage + response.status + response.statusText)
     })
 }
-const approveSourceCompany = (store, payload) => {
+/*
+const approveFile = (store, payload) => {
     var failMessage = "审批失败"
-    api.approveSourceCompany(payload).then(response => {
+    api.approveFile(payload).then(response => {
         console.log('save response succ', response)
         if (response.status == 200){
             if (response.data.error != 0){
@@ -144,19 +160,20 @@ const approveSourceCompany = (store, payload) => {
         failBack(store, failMessage + response.status + response.statusText)
     })
 }
+*/
 
 const actions = {
-    getSourceCompanyList,
-    updateSourceCompany,
-    saveSourceCompany,
-    removeSourceCompany,
-    approveSourceCompany
+    getFileList,
+    updateFile,
+    saveFile,
+    removeFile,
+//    approveFile,
     /*
-    getEquipmentList : async ({commit}) => {
+    getFileList : async ({commit}) => {
         console.log('angel commit in module dispatch')
         //commit()
-        const res = await api.getEquipmentList()
-        commit('GET_EQUIPMENT_LIST_SUCCESS', res)
+        const res = await api.getFileList()
+        commit('GET_UPLOADFILE_LIST_SUCCESS', res)
     }
     */
 }
@@ -167,4 +184,5 @@ export default{
     getters,
     actions
 }
+
 

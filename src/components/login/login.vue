@@ -1,7 +1,7 @@
 <template>
 <div class="ui middle aligned three columns center aligned grid">
   <div class="column">
-    <h2 class="header">
+    <h2 class="login-header">
       <div class="content">
           用户登录
       </div>
@@ -124,6 +124,9 @@ export default {
 <style>
 a, .reg{
     color: #fff;
+}
+.login-header{
+    margin: 20px;
 }
 </style>
 

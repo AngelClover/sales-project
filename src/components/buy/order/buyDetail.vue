@@ -1,93 +1,119 @@
 <template>
     <div v-if="showDetails">
         <!--
-        <transition name="detail">
+            <transition name="detail">
             <div class="detail-mask">
-                <div class="detail-wrapper">
-        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
+            <div class="detail-wrapper">
+            <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
         -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')">
-                    <div slot="header">
-                        详细信息
-                    </div>
-                    <div class="detail-container" >
-                        <div class="detail-body">
-                            <!--
-                            <table border=1>
-                                <tbody>
-                                    <tr v-for="(value, key) in detailTitle">
-                                        <td><p>{{value.displayName}}</p>
-                                        </td>
-                                        <td><p>{{detailContent[value.item]}}</p></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            -->
-                            <Steps :current="currentState">
-                                <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
-                            </Steps>
-                            <br/>
-                            <Form :label-width=100>
-                                <div v-for="(value, key) in detailTitle">
-                                <Form-item :label=value.displayName class="formitem">
-                                    <div v-if="value.type != 'file'">
-                                        <Label>{{detailContent[value.item]}}</Label>
-                                    </div>
-                                    <div v-if="value.type === 'file'">
-                                        <div v-if="detailContent[value.item] instanceof Array">
-                                            <div v-for="item in detailContent[value.item]">
-                                                <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
-                                            </div>
-                                        </div>
-                                        <div v-else-if="detailContent[value.item] != null">
-                                            <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
-                                        </div>
-                                    </div>
-                                </Form-item>
-                            </Form>
-        <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle :cbset=cbset>
-        </EquipDetail>
-        <div style="margin:20px">
-            <center>
-                <button class="ui primary button" v-if="location=='buyorder'" @click="receiveInAll" > 全部接收 </button>
-                <button class="ui primary button" v-if="location=='buyorder'" @click="inspectInAll" > 全部检验通过 </button>
-                <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 全部入库 </button>
-            </center>
+        <div slot="header">
+            详细信息
         </div>
+        <div class="detail-container" >
+            <div class="detail-body">
+                <!--
+                    <table border=1>
+                    <tbody>
+                    <tr v-for="(value, key) in detailTitle">
+                    <td><p>{{value.displayName}}</p>
+                    </td>
+                    <td><p>{{detailContent[value.item]}}</p></td>
+                    </tr>
+                    </tbody>
+                    </table>
+                -->
+                <Steps :current="currentState">
+                <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
+                </Steps>
+                <br/>
+                <Form :label-width=100>
+                    <div v-for="(value, key) in detailTitle">
+                        <Form-item :label=value.displayName class="formitem">
+                            <div v-if="value.type != 'file'">
+                                <Label>{{detailContent[value.item]}}</Label>
+                            </div>
+                            <div v-if="value.type === 'file'">
+                                <div v-if="detailContent[value.item] instanceof Array">
+                                    <div v-for="item in detailContent[value.item]">
+                                        <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
+                                    </div>
+                                </div>
+                                <div v-else-if="detailContent[value.item] != null">
+                                    <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
+                                </div>
+                            </div>
+                        </Form-item>
+                    </div>
+                </Form>
+                <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle :cbset=cbset>
+                </EquipDetail>
+                <div style="margin:100px">
+                    <center>
+                        <button class="ui primary button" v-if="location=='buyorder'" @click="receiveInAll" > 全部接收 </button>
+                        <button class="ui primary button" v-if="location=='buyorder'" @click="inspectInAll" > 全部检验通过 </button>
+                        <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 全部入库 </button>
+                    </center>
+                    <center>
+                        <Row>
+                        <Label>接收温度:</Label>
+                        <Input v-model=receive_temperature style="width:100px">
+                        </Input>
+                        <Label>接收备注:</Label>
+                        <Input v-model=receive_message style="width:100px">
+                        </Input>
+                        <br/>
+                        <Label>检验合格数量:</Label>
+                        <InputNumber v-model=inspect_ok_number style="width:100px">
+                        </InputNumber>
+                        <Label>检验备注:</Label>
+                        <Input v-model=inspect_message style="width:100px">
+                        </Input>
+                        <br/>
+                        <Label>入库温度:</Label>
+                        <Input v-model=store_temperature style="width:100px">
+                        </Input>
+                        <Label>入库备注:</Label>
+                        <Input v-model=store_message style="width:100px">
+                        </Input>
+                        </Row>
+                    </center>
+                </div>
 
-        <div v-show=debug>
-            <p> -----------Detail debug below----------- </p>
-            <p> showDetails : {{showDetails}} </p>
-            <p> location : {{location}} </p>
-            <p> detailTitle : {{detailTitle}} </p>
-            <p> detailContent : {{detailContent}} </p>
-        </div>
-                        </div>
-                    </div>
-                        <div slot="footer">
-                            <center>
-                            <button class="ui secondary button" @click="$emit('close')"> OK </button>
-                            <button class="ui primary button" @click="modifier"> 修改 </button>
-                            <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
-                            <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
-                            <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
-                            <Button @click="handleDelete"> 删除 </Button>
-                                <!--
-                            <button class="ui green button" @click="storeInOne" >
-                                单个入库
-                            </button>
-                                -->
-                            </center>
-                        </div>
-                    <!--
+                <div v-show=debug>
+                    <p> -----------Detail debug below----------- </p>
+                    <p> showDetails : {{showDetails}} </p>
+                    <p> location : {{location}} </p>
+                    <p> detailTitle : {{detailTitle}} </p>
+                    <p> detailContent : {{detailContent}} </p>
                 </div>
             </div>
-        </transition>
+            <div slot="footer">
+                <center>
+                    <button class="ui secondary button" @click="$emit('close')"> OK </button>
+                    <button class="ui primary button" @click="modifier"> 修改 </button>
+                    <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
+                    <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
+                    <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
+                    <Button @click="handleDelete"> 删除 </Button>
+                    <!--
+                        <button class="ui green button" @click="storeInOne" >
+                        单个入库
+                        </button>
                     -->
+                </center>
+            </div>
+        </div>
+        <!--
+            </div>
+            </div>
+            </transition>
+        -->
         </Modal>
         <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
         </Modifier>
         <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
+        </OutSelector>
     </div>
 </template>
 
@@ -118,6 +144,12 @@ export default {
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
             stateSet : ['待审核', '审核通过', '待入库', '入库中', '已入库'],
             stateDescription : ['待审核','待采购','接收、检验、入库','部分已入库','入库完成'],
+            receive_message : "",
+            receive_temperature : "",
+            inspect_message : "",
+            inspect_ok_number : 0,
+            store_message : "",
+            store_temperature : "",
         }
     },
     watch : {
@@ -180,13 +212,28 @@ export default {
             this.cbset.transfer(this.detailContent)
         },
         receiveInAll : function(){
-            this.cbset.receiveInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                receive_message: this.receive_message,
+                receive_temperature: this.receive_temperature,
+            }
+            this.cbset.receiveInAll(tmp)
         },
         inspectInAll : function(){
-            this.cbset.inspectInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                inspect_message: this.inspect_message,
+                inspect_ok_number: this.inspect_ok_number,
+            }
+            this.cbset.inspectInAll(tmp)
         },
         storeInAll : function(){
-            this.cbset.storeInAll(this.detailContent)
+            var tmp = {
+                id: this.detailContent.id,
+                store_message: this.store_message,
+                store_temperature: this.store_temperature,
+            }
+            this.cbset.storeInAll(tmp)
         },
         storeOut : function(){
             this.showOutStore = true;

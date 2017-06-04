@@ -76,6 +76,9 @@ export default {
         if (this.$store.state.buyOrderList.title.length < 1){
             this.getBuyOrderList()
         }
+        if (this.$store.state.sourceCompanyList.title.length < 1){
+//            this.$store.dispatch('getSourceCompanyList')
+        }
     },
     methods : {
         getBuyOrderList (){
@@ -102,22 +105,22 @@ export default {
             this.$store.dispatch('transferBuyOrder', {id:content.id})
         },
         receiveInAllBuyOrder(content){
-            this.$store.dispatch('receiveInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('receiveInAllBuyOrder', content)
         },
         inspectInAllBuyOrder(content){
-            this.$store.dispatch('inspectInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('inspectInAllBuyOrder', content)
         },
         storeInAllBuyOrder(content){
-            this.$store.dispatch('storeInAllBuyOrder', {id:content.id})
+            this.$store.dispatch('storeInAllBuyOrder', content)
         },
         receiveInOneBuyOrder(content){
-            this.$store.dispatch('receiveInOneBuyOrder', {id:content.id})
+            this.$store.dispatch('receiveInOneBuyOrder', content)
         },
         inspectInOneBuyOrder(content){
-            this.$store.dispatch('inspectInOneuyOrder', {id:content.id})
+            this.$store.dispatch('inspectInOneBuyOrder', content)
         },
         storeInOneBuyOrder(content){
-            this.$store.dispatch('storeInOneBuyOrder', {id:content.id})
+            this.$store.dispatch('storeInOneBuyOrder', content)
         },
     },
 

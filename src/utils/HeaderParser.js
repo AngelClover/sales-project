@@ -1,8 +1,12 @@
 
 function normalizeList(obj){
+    //console.log('normalize', typeof(obj))
+    return obj
+        /*
     if (typeof(obj) == Array)return obj
     else if (typeof(obj) == Object)return [obj]
     else return null
+    */
 }
 /* immutable 放在服务端，客户端暂时不做
  */
@@ -14,7 +18,7 @@ function pipe(obj){
             obj['type'] = 'star'; break;
         case '单位':
             obj['type'] = 'option';
-            obj['selectOptions'] = ['', '盒', '瓶'];
+            obj['selectOptions'] = ['台', '盒', '瓶', '套', '张'];
             break;
             /*
         case '厂商':
@@ -46,22 +50,76 @@ function pipe(obj){
         obj['type'] = 'date'
     }
     if (obj['item'] && obj['displayName'].search('文件') >= 0 ||
-            obj['displayName'] && obj['displayName'].search('材料')  >= 0){
-        obj['type'] = 'file'
+            obj['displayName'] && obj['displayName'].search('材料')  >= 0 ||
+            obj['displayName'] && obj['displayName'].search('证') >= 0){
+        if (obj['displayName'].search('日期') < 0){
+            obj['type'] = 'file'
+        }
     }
     
     switch (obj['displayName']){
         case '单价':
-            obj['type'] = 'number';
+            obj['type'] = 'price';
+            obj['invisable'] = true;
             break;
         case '数量':
             obj['type'] = 'number';
+            obj['invisable'] = true;
             break;
         case '总价':
-            obj['type'] = 'number';
+            obj['type'] = 'price';
+            obj['immutable'] = true;
+            obj['invisable'] = true;
             break;
         case '在库数字':
             obj['type'] = 'number';
+            break;
+        case '审核人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '创建人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否接收':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否检验':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '是否入库':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '接收人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '检验人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '入库人':
+            obj['immutable'] = true;
+            obj['invisable'] = true;
+            break;
+        case '供应商名称、地址、电话':
+            obj['immutable'] = true;
+            break;
+        case '发票类型':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['无', '普票', '增值税专用发票'];
+            break;
+        case '运费承担方':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['供方承担','需方承担'];
+            break;
+        case '付款方式':
+            obj['type'] = 'option';
+            obj['selectOptions'] = ['', '现金', '打款'];
             break;
         default : 
             break;
@@ -77,8 +135,9 @@ function HeaderParser(a){
     for (var i = 2; i < a.length; ++i){
         if (a[i] == 'option'){
             i++
-            obj['type'] = 'select'
+            obj['type'] = 'option'
             obj['selectOptions'] = normalizeList(a[i])
+            console.log('optionstest', a[i])
         }
         if (a[i] == 'number'){
             obj['type'] = 'number'

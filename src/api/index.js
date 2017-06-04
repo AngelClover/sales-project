@@ -1,5 +1,5 @@
 import {EquipmentResource, SourceCompanyResource, SourceCustomerResource, SaleOrderResource, BuyOrderResource, StoreHouseResource, RepairResource, LogisticResource} from './resources'
-import {LogEquipmentResource, LogSourceCompanyResource, LogSourceCustomerResource, LogSaleOrderResource, LogBuyOrderResource, LogStoreHouseResource, LogRepairResource, LogLogisticResource} from './resources'
+import {LogEquipmentResource, LogSourceCompanyResource, LogSourceCustomerResource, LogSaleOrderResource, LogBuyOrderResource, LogStoreHouseResource, LogRepairResource, LogLogisticResource, FileResource} from './resources'
 import {UserResource, AuthResource, PermissionResource} from './resources'
 
 export default {
@@ -44,6 +44,18 @@ export default {
     //Customer
     getSourceCustomerList: function(){
         return SourceCustomerResource.get()
+    },
+    updateSourceCustomer: function(payload){
+        return SourceCustomerResource.update({id:payload.id}, payload)
+    },
+    saveSourceCustomer: function(payload){
+        return SourceCustomerResource.save(payload)
+    },
+    approveSourceCustomer: function(payload){
+        return SourceCustomerResource.get({id:payload.id, action:"approve"},payload)
+    },
+    removeSourceCustomer: function(payload){
+        return SourceCustomerResource.remove({id:payload.id})
     },
 
     //SaleOrder
@@ -222,6 +234,19 @@ export default {
     },
     removePermission: function(payload){
         return PermissionResource.save({id:payload.id, action:"unauthorize"}, payload)
+    },
+
+    getFileList: function(payload){
+        return FileResource.get({params: payload})
+    },
+    removeFile: function(payload){
+        return FileResource.remove({id:payload.id})
+    },
+    saveFile: function(payload){
+        return FileResource.save(payload)
+    },
+    updateFile: function(payload){
+        return FileResource.update(payload)
     },
     
 

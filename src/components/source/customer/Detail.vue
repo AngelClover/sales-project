@@ -1,9 +1,9 @@
 <template>
     <div v-if="showDetails">
         <!--
-            <transition name="detail">
+        <transition name="detail">
             <div class="detail-mask">
-            <div class="detail-wrapper">
+                <div class="detail-wrapper">
         -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
         <div slot="header">
@@ -94,7 +94,7 @@ import Modifier from './Modifier.vue'
 import EquipDetail from './EquipDetail.vue'
 export default {
     components : {
-//        OutSelector,
+        //        OutSelector,
         advancedInputer,
         Modifier,
         EquipDetail,
@@ -125,28 +125,28 @@ export default {
         },
         showModifier : function(x){
             console.log("showModifier", x, " -> showContent", this.showContent)
-            //this.showContent = (x == false)
+                //this.showContent = (x == false)
         },
         showDetails : function(x){
             this.showModifier = false
-            this.showContent = true
+                this.showContent = true
         }
     },
     methods : {
         modifier: function(){
             this.newContent = JSON.parse(JSON.stringify(this.detailContent))//this.deepCopy(this.detailContent)
-            //console.log('deep copy', this.newContent, this.detailContent)
-            this.showContent = false
-            this.showModifier = true
-            console.log("click to modifier ")
-            this.$store.dispatch('getEquipmentList')
+                //console.log('deep copy', this.newContent, this.detailContent)
+                this.showContent = false
+                this.showModifier = true
+                console.log("click to modifier ")
+                this.$store.dispatch('getEquipmentList')
         },
         /*
-        closeModifier(){
-            this.showContent = true
-            setTimeout(this.newContent = {}, 1000)
-        },
-        */
+           closeModifier(){
+           this.showContent = true
+           setTimeout(this.newContent = {}, 1000)
+           },
+         */
         deepCopy : function(source) { 
             //console.log('utils for deepcopy', utils)
             return utils.deepCopy(source)

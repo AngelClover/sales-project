@@ -1,7 +1,9 @@
 <template>
     <div>
         <span>
-            <div v-if="header.immutable" class="input">
+            <div v-if="header.invisable" class="">
+            </div>
+            <div v-else-if="header.immutable" class="input">
                 <label>{{currentValue}}</label>
             </div>
             <div v-else-if="header.type==='option'" class="ui compact menu input">
@@ -20,6 +22,9 @@
             <div v-else-if="header.type==='number'" class="input">
                 <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
             </div>
+            <div v-else-if="header.type==='price'" class="input">
+                <Input-number v-model="currentNumber" @on-change="handleNumber"></Input-number>
+            </div>
             <div v-else-if="header.type==='file'" class="input">
                 <div v-if="currentFileList.length > 0">
                     <div v-for="(item, index) in currentFileList">
@@ -27,7 +32,7 @@
                         <Button class="filelistbutton" @click=deleteFileIndex(index)>删除</Button>
                     </div>
                 </div>
-                <Uploader v-model=currentFileListtmp>
+                <Uploader v-model=currentFileListtmp filetype="填表用">
                 </Uploader>
             </div>
             <div v-else class="input">
@@ -97,8 +102,9 @@ export default {
             this.$emit('input', x)
         },
         currentFileListtmp: function(x){
-            console.log('currentFileList ->', x)
-            this.currentFileList = this.currentFileList.concat(this.currentFileList)
+            console.log('currentFileListtmp ->', x)
+            this.currentFileList = x //this.currentFileList.concat(this.currentFileList)
+//            this.$emit('input', this.currentFileList)
         }
     },
     methods : {

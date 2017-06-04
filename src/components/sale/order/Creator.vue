@@ -17,9 +17,19 @@
             </div>
             <table>
                 <tbody>
-                    <tr v-for="(v, key) in detailTitle">
-                        <td>{{v.displayName}}</td>
+                    <tr>
+                        <td>客户选择</td>
                         <td>
+                            <Select v-model="tmpCustomerID" placeholder="请选择客户">
+                                <Option v-for="item in customerList" :value=item.id :key="item" @on-change=selectCustomer> {{item.id}} | {{item['简称'] || item['名称']}} </Option>
+                            </Select>
+                        </td>
+                    </tr>
+                    <tr v-for="(v, key) in detailTitle">
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>{{v.displayName}}</td>
+                        <td v-if="v.invisable"> </td>
+                        <td v-else>
                             <advancedInputer v-model="newContent[v.item]" :header=v>
                             </advancedInputer>
                         <!--
@@ -112,9 +122,13 @@ export default {
     data: function() {
         return {
             showOutStore : false,
-            newContent : {},
+            newContent : {
+                sign_date : this.getDateString(new Date()),
+                arrive_date : this.getTimeString(new Date()),
+            },
             //showCC : false,
             tmpID : -1,
+            tmpCustomerID : -1,
             formData : {
                 name : '',
                 abbr : '',
@@ -146,6 +160,9 @@ export default {
         },
         equipList : function(){
             return this.$store.getters.equipmentContent
+        },
+        customerList : function(){
+            return this.$store.getters.sourceCustomerContent
         }
     },
     watch : {
@@ -154,6 +171,21 @@ export default {
             this.newContent.equipment_id = x
             this.selectEquip(x)
         },
+        /*
+        newContent : function(x, old){
+            console.log('newConent refresh')
+            if (old.number != x.numbder || x.unit_price != old.unit_price){
+                console.log('price', x.unit_price, x.number)
+                newContent.total_price = x.unit_price * x.number
+            }
+        }
+        */
+    },
+    created : function(){
+        console.log('created this', this)
+        if (this.$store.state.sourceCustomerList.title.length < 1){
+            this.$store.dispatch('getSourceCustomerList')
+        }
     },
     methods : {
         realCreate(){
@@ -178,6 +210,8 @@ export default {
         },
         mounted(){
             this.$store.dispatch('getEquipmentList')
+            this.$store.dispatch('getSourceCustomerList')
+            //this.newContent.sign_date = ""
         },
         selectEquip : function(id){
             console.log("on-change select")
@@ -187,6 +221,44 @@ export default {
                     return
                 }
             }
+        },
+        selectCustomer : function(id){
+            console.log("on-change customer select")
+            for (var i in this.customerList){
+                if (this.companyList[i].id == id){
+                    this.newContent.provider_info = this.companyList[i]['name'] + '|' + this.companyList[i]['c5']  + '|' + this.companyList[i]['c3']  
+                    //xxxx
+                }
+            }
+        },
+        getDateString(date){
+            console.log('date now', date)
+            var y = 1900 + date.getYear()
+            var m = 1 + date.getMonth()
+            var mm = ""
+            if (m < 10)mm = '0' + m
+            else mm = m
+            var d = date.getDate()
+            return  y + '-' + mm + '-' + d
+        },
+        getTimeString(date){
+            console.log('time now', date)
+            var y = date.getFullYear()
+            var m = 1 + date.getMonth()
+            var d = date.getDate()
+            var h = date.getHours()
+            var mm = date.getMinutes()
+            var s = date.getSeconds()
+            var hh = ""
+            if (h < 10) hh = "0" + h
+            else hh = h
+            var mmm = ""
+            if (mm < 10) mmm = "0" + mm
+            else mmm = mm
+            var ss = ""
+            if (s < 10) ss = "0" + s
+            else ss = s
+            return  y + '-' + m + '-' + d + ' ' + hh + ':' + mmm + ':' + ss
         },
     }
 }

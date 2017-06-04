@@ -98,7 +98,7 @@ export default {
             this.getUserInfoList()
         },
         getPerList(){
-            var dat = {"equipment":"设备", "enterprise":"企业", "purchase":"采购", "sale":"销售", "store":"库管", "logistic":"物流", "repair":"维修", "finance":"财务" }
+            var dat = {"equipment":"设备", "enterprise":"企业", "purchase":"采购", "sale":"销售", "store":"库管", "logistic":"物流", "repair":"维修", "finance":"财务", "customer": "客户" }
             var ret = []
             for (var key in dat){
                 ret.push({
