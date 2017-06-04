@@ -9,8 +9,8 @@
                     {{displayName}} | 
                     <router-link to='/register'>注册</router-link> |
                     <router-link to='/login'>登录</router-link> | 
-                <a @click=logout>注销</a>
-                <span>
+                    <a @click=logout>注销</a>
+                </span>
             </div>
         </div>
     <!--

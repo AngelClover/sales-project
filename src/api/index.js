@@ -237,8 +237,15 @@ export default {
     },
 
     getFileList: function(payload){
+        /*TODO: 妈蛋
+<<<<<<< HEAD
         console.log('getFileList api', payload)
         return FileResource.get(payload)
+=======
+        return FileResource.get({params: payload})
+>>>>>>> 5fc53220f7a32e867a4df71296a969aac06ca987
+*/
+        return FileResource.get({params: payload})
     },
     removeFile: function(payload){
         return FileResource.remove({id:payload.id})

@@ -96,7 +96,7 @@ def upload_file():
             'data' : dataContent,
             })
 
-@api.route('/upload', methods=['GET'])
+@api.route('/upload', methods=['GET', 'POST'])
 def get_file_list():
     userid = int(request.args.get('userid')) if request.args.get('userid') is not None else None
     print 'userid:', userid
@@ -115,7 +115,7 @@ def get_file_list():
             })
 
 
-@api.route('/upload/<int:id>', methods=['GET'])
+@api.route('/upload/<int:id>', methods=['GET', 'POST'])
 def get_file(id):
     f = UploadFile.query.get_or_404(id)
     return jsonify({
