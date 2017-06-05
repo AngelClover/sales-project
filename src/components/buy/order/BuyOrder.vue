@@ -1,7 +1,7 @@
 <template>
     <div>
-        <BuyListView msg="asd" :title=title :content=content :pref=preference :cbset=cbSet location="buyorder" :filterList="labelFilterSet" :subtitle=subtitle>
-            <h3 slot="titlename" align=center> 采购订单管理 </h3>
+        <BuyListView msg="asd" :title="title" :content="content" :pref="preference" :cbset="cbSet" location="buyorder" :filterList="labelFilterSet" :subtitle="subtitle">
+            <h3 slot="titlename" align="center"> 采购订单管理 </h3>
         </BuyListView>
     </div>
 </template>

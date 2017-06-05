@@ -6,7 +6,7 @@
             <div class="detail-wrapper">
             <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
         -->
-        <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')">
+        <Modal v-model="showContent" width="auto" @on-ok="$emit('close')" @on-cancel="$emit('close')">
         <!--
 <<<<<<< HEAD
                     <div slot="header">
@@ -98,9 +98,9 @@
                 <Step v-for="(state, index) in stateSet" :title="state" :content="stateDescription[index]"></Step>
                 </Steps>
                 <br/>
-                <Form :label-width=100>
+                <Form :label-width="100">
                     <div v-for="(value, key) in detailTitle">
-                        <Form-item :label=value.displayName class="formitem">
+                        <Form-item :label="value.displayName" class="formitem">
                             <div v-if="value.type != 'file'">
                                 <Label>{{detailContent[value.item]}}</Label>
                             </div>
@@ -117,7 +117,7 @@
                         </Form-item>
                     </div>
                 </Form>
-                <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle :cbset=cbset>
+                <EquipDetail v-if="showEquipmentLists" @close="showEquipmentLists=false" :equipList="detailContent.equipments" :subtitle="detailSubtitle" :cbset="cbset">
                 </EquipDetail>
                 <div style="margin:100px">
                     <center>
@@ -127,31 +127,46 @@
                     </center>
                     <center>
                         <Row>
-                        <Label>接收温度:</Label>
-                        <Input v-model=receive_temperature style="width:100px">
-                        </Input>
-                        <Label>接收备注:</Label>
-                        <Input v-model=receive_message style="width:100px">
-                        </Input>
-                        <br/>
-                        <Label>检验合格数量:</Label>
-                        <InputNumber v-model=inspect_ok_number style="width:100px">
-                        </InputNumber>
-                        <Label>检验备注:</Label>
-                        <Input v-model=inspect_message style="width:100px">
-                        </Input>
-                        <br/>
-                        <Label>入库温度:</Label>
-                        <Input v-model=store_temperature style="width:100px">
-                        </Input>
-                        <Label>入库备注:</Label>
-                        <Input v-model=store_message style="width:100px">
-                        </Input>
+                            <Label>接收温度:</Label>
+                            <Input v-model="receive_temperature" style="width:100px">
+                            </Input>
+                            <Label>接收湿度:</Label>
+                            <Input v-model="receive_humidity" style="width:100px">
+                            </Input>
+                            <Label>接收备注:</Label>
+                            <Input v-model="receive_message" style="width:100px">
+                            </Input>
+                            <br/>
+                            <Label>检验温度:</Label>
+                            <Input v-model="inspect_temperature" style="width:100px">
+                            </Input>
+                            <Label>检验湿度:</Label>
+                            <Input v-model="inspect_humidity" style="width:100px">
+                            </Input>
+                            <Label>抽检数量:</Label>
+                            <InputNumber v-model="inspect_number" style="width:100px">
+                            </InputNumber>
+                            <Label>检验合格数量:</Label>
+                            <InputNumber v-model="inspect_ok_number" style="width:100px">
+                            </InputNumber>
+                            <Label>检验备注:</Label>
+                            <Input v-model="inspect_message" style="width:100px">
+                            </Input>
+                            <br/>
+                            <Label>入库温度:</Label>
+                            <Input v-model="store_temperature" style="width:100px">
+                            </Input>
+                            <Label>入库湿度:</Label>
+                            <Input v-model="store_humidity" style="width:100px">
+                            </Input>
+                            <Label>入库备注:</Label>
+                            <Input v-model="store_message" style="width:100px">
+                            </Input>
                         </Row>
                     </center>
                 </div>
 
-                <div v-show=debug>
+                <div v-show="debug">
                     <p> -----------Detail debug below----------- </p>
                     <p> showDetails : {{showDetails}} </p>
                     <p> location : {{location}} </p>
@@ -181,9 +196,9 @@
             </transition>
         -->
         </Modal>
-        <Modifier :detailTitle=detailTitle :cbset=cbset :stores=stores :location=location :detailContent=detailContent :showModifier=showModifier @close="showModifier=false;showContent=true" :newContent=newContent :detailSubtitle=detailSubtitle>
+        <Modifier :detailTitle="detailTitle" :cbset="cbset" :stores="stores" :location="location" :detailContent="detailContent" :showModifier="showModifier" @close="showModifier=false;showContent=true" :newContent="newContent" :detailSubtitle="detailSubtitle">
         </Modifier>
-        <OutSelector :showOutStore=showOutStore :outContent=detailContent @close="showOutStore=false;" :stores=stores>
+        <OutSelector :showOutStore="showOutStore" :outContent="detailContent" @close="showOutStore=false;" :stores="stores">
         </OutSelector>
     </div>
 </template>
@@ -215,12 +230,17 @@ export default {
             uploadPrefix : 'http://angelclover.win:8088/uploadfiles/',
             stateSet : ['待审核', '审核通过', '待入库', '入库中', '已入库'],
             stateDescription : ['待审核','待采购','接收、检验、入库','部分已入库','入库完成'],
-            receive_message : "",
             receive_temperature : "",
-            inspect_message : "",
+            receive_humidity : "",
+            receive_message : "",
+            inspect_temperature : "",
+            inspect_humidity : "",
+            inspect_number : 0,
             inspect_ok_number : 0,
-            store_message : "",
+            inspect_message : "",
             store_temperature : "",
+            store_humidity : "",
+            store_message : "",
         }
     },
     watch : {
