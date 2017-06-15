@@ -129,7 +129,7 @@ export default {
                 width: 150,
                 align: 'center',
                 render: function(h, object) {
-                    console.log('CHEN', "1:",object.row)
+                    console.log('CHEN', "接收:", object.row)
                     if (object.row.received && object.row.received == 1){
                         var ret = object.row.received_user 
                         if (object.row.receive_temperature) ret += '<br/>' + object.row.receive_temperature

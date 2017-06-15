@@ -48,10 +48,10 @@
         </div>
 
         <br/>
-
-        <BuyDetail :showDetails="showDetails" :detailTitle="title" :detailContent="detailContent" @close="showDetails = false" :cbset="cbset" :storeForEquipment="stores" :location="location" :detailSubtitle="subtitle">
+        <!-- temp
+        <BuyDetail :showDetails="showDetails" :detailTitle="title" :detailContent="detailContent" @close="showDetails=false;" :cbset="cbset" :storeForEquipment="stores" :location="location" :detailSubtitle="subtitle">
         </BuyDetail>
-
+        -->
         <Creator :detailTitle="title" :showCreator="showCreator" :cbset="cbset" @close="showCreator=false;" :detailSubtitle="subtitle" :location="location">
         </Creator>
 
@@ -107,7 +107,6 @@ export default {
             sortKey : '',
             sortOrders : {},
             searchQuery : '',
-            showDetails : false,
             detailContent : {},
             debug : false,
             showPref : false,
@@ -117,46 +116,10 @@ export default {
                 filtercb : obj => {return true},
             },
             labelFiltercb : obj => {return true},
-            clickedIndex : -1,
             showCreator : false,
-            /*
-            testTitle : [
-                {
-                title: '姓名',
-                key: 'name'
-                },
-                {
-                title: '年龄',
-                key: 'age'
-                },
-                {
-                title: '地址',
-                key: 'address'
-                }
-            ],
-            testData : [
-                {
-                name: '王小明',
-                age: 18,
-                address: '北京市朝阳区芍药居'
-                },
-                {
-                name: '张小刚',
-                age: 25,
-                address: '北京市海淀区西二旗'
-                },
-                {
-                name: '李小红',
-                age: 30,
-                address: '上海市浦东新区世纪大道'
-                },
-                {
-                name: '周小伟',
-                age: 26,
-                address: '深圳市南山区深南大道'
-                }
-            ]
-            */
+            
+            showDetails : false,
+            clickedIndex : -1,
         }
     },
     computed : {
@@ -344,12 +307,12 @@ export default {
         }
     },
    methods: {
-       sortBy: function (key) {
+        sortBy : function(key) {
            //console.log('sortBy', key)
            this.sortKey = key
            this.sortOrders[key] = this.sortOrders[key] * -1
-       },
-       initSortOrders : function(){
+        },
+        initSortOrders : function() {
             var sortOrders = {}
             //console.log('listview method initSortOrders', Object.keys(this.title))
             var _this = this
@@ -362,8 +325,8 @@ export default {
             //this.$set('sortOrders', sortOrders)
             this.sortOrders = sortOrders
             return sortOrders
-       },
-         clickItem : function(item){ //item, index
+        },
+        clickItem : function(item) { //item, index
             console.log('on-row-click 1',  item)
             this.detailContent = item //this.filteredContent[index]
             var i = -1;
@@ -376,6 +339,10 @@ export default {
             this.clickedIndex = i
             console.log('on-row-click 2', this.clickedIndex,  item)
             this.showDetails = true
+
+            //---- "separate BuyDetail from BuyListView's modal" : emit clickShowDetail-event when click item
+            this.$emit('clickShowDetail', item)
+            //---- by CHEN 17.6.6
        },
        createAction(){
            this.detailContent = {}
