@@ -11,32 +11,47 @@
         </div>
         -->
         <div v-if="titleForTable.length > 0 && equipList && equipList.length > 0">
-            <Table :columns=titleForTable :data=equipList>
+            <Table :columns="titleForTable" :data="equipList">
             </Table>
         </div>
         <center>
-        <Row>
-            <Label>接收温度:</Label>
-            <Input v-model=receive_temperature style="width:100px">
-            </Input>
-            <Label>接收备注:</Label>
-            <Input v-model=receive_message style="width:100px">
-            </Input>
-            <br/>
-        <Label>检验合格数量:</Label>
-            <InputNumber v-model=inspect_ok_number style="width:100px">
-            </InputNumber>
-            <Label>检验备注:</Label>
-            <Input v-model=inspect_message style="width:100px">
-            </Input>
-            <br/>
-            <Label>入库温度:</Label>
-            <Input v-model=store_temperature style="width:100px">
-            </Input>
-            <Label>入库备注:</Label>
-            <Input v-model=store_message style="width:100px">
-            </Input>
-        </Row>
+            <Row>
+                <Label>接收温度:</Label>
+                <Input v-model="receive_temperature" style="width:100px">
+                </Input>
+                <Label>接收湿度:</Label>
+                <Input v-model="receive_humidity" style="width:100px">
+                </Input>
+                <Label>接收备注:</Label>
+                <Input v-model="receive_message" style="width:100px">
+                </Input>
+                <br/>
+                <Label>检验温度:</Label>
+                <Input v-model="inspect_temperature" style="width:100px">
+                </Input>
+                <Label>检验湿度:</Label>
+                <Input v-model="inspect_humidity" style="width:100px">
+                </Input>
+                <Label>抽检数量:</Label>
+                <InputNumber v-model="inspect_number" style="width:100px">
+                </InputNumber>
+                <Label>检验合格数量:</Label>
+                <InputNumber v-model="inspect_ok_number" style="width:100px">
+                </InputNumber>
+                <Label>检验备注:</Label>
+                <Input v-model="inspect_message" style="width:100px">
+                </Input>
+                <br/>
+                <Label>入库温度:</Label>
+                <Input v-model="store_temperature" style="width:100px">
+                </Input>
+                <Label>入库湿度:</Label>
+                <Input v-model="store_humidity" style="width:100px">
+                </Input>
+                <Label>入库备注:</Label>
+                <Input v-model="store_message" style="width:100px">
+                </Input>
+            </Row>
         </center>
         <!--
         <Modal v-if=showReceive class="zmodel" @on-ok="receive" @on-cancel="showReceive=false">
@@ -66,12 +81,17 @@ export default {
             debug : false,
             showReceive : false,
             receive_id : -1,
-            receive_message : "",
             receive_temperature : "",
-            inspect_message : "",
+            receive_humidity : "",
+            receive_message : "",
+            inspect_temperature : "",
+            inspect_humidity : "",
+            inspect_number : 0,
             inspect_ok_number : 0,
-            store_message : "",
+            inspect_message : "",
             store_temperature : "",
+            store_humidity : "",
+            store_message : "",
         }
     },
     props : ['equipList', 'subtitle', 'cbset'],
@@ -108,7 +128,32 @@ export default {
                 fixed: 'right',
                 width: 150,
                 align: 'center',
+                render: function(h, object) {
+                    console.log('CHEN', "接收:", object.row)
+                    if (object.row.received && object.row.received == 1){
+                        var ret = object.row.received_user 
+                        if (object.row.receive_temperature) ret += '<br/>' + object.row.receive_temperature
+                        if (object.row.receive_time) ret += '<br/>' + object.row.receive_time
+                        if (object.row.receive_message) ret += '<br/>' + object.row.receive_message
+                        
+                        return h('div',[
+                            h('p', object.row.receive_temperature),
+                            h('p', object.row.receive_time),
+                            h('p', object.row.receive_message)
+                        ]) 
+                        
+                    }else 
+                    {
+                        console.log('CHEN', "not")
+                        return `<ToolTip content="请先填写接收温度及备注"> <i-button type="primary" size="small" @click="receive(${index})">接收</i-button> </ToolTip>`;
+                
+                        return h('strong', "aaaaa")
+                    }
+                        //return '<ToolTip content="请先填写接收温度及备注"> <i-button type="primary" size="small" @click="receive(${index})">接收</i-button> </ToolTip>';
+                }
+                /*
                 render (row, column, index) {
+                    console.log('CHEN', "1:",row,",2:",column,",3:",index)
                     if (row.received && row.received == 1){
                         var ret = row.received_user 
                         if (row.receive_temperature)ret += '<br/>' + row.receive_temperature
@@ -118,6 +163,7 @@ export default {
                     }else 
                         return `<ToolTip content="请先填写接收温度及备注"> <i-button type="primary" size="small" @click="receive(${index})">接收</i-button> </ToolTip>`;
                 }
+                */
             })
             ret.push({
                 title: '检验',

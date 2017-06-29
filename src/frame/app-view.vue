@@ -1,27 +1,27 @@
 <template>
-    <div >
+    <div>
         <Row>
-        <div class="layout-breadcrumb">
-            <Breadcrumb>
-            <Breadcrumb-item href="#">首页</Breadcrumb-item>
-            <Breadcrumb-item>{{displayLocationName}}</Breadcrumb-item>
-            </Breadcrumb>
-        </div>
-        </Row>
-        <br/>
-        <Row type=flex>
-        <app-content> </app-content>
-        </Row>
-        <br/>
-        <Row>
-            <Col span=24>
-        <center>
-            <div class="layout-copy">
-                <p>
-                2017 &copy; 天津市汇天利商贸有限公司
-                </p>
+            <div class="layout-breadcrumb">
+                <Breadcrumb>
+                    <Breadcrumb-item href="#">首页</Breadcrumb-item>
+                    <Breadcrumb-item>{{displayLocationName}}</Breadcrumb-item>
+                </Breadcrumb>
             </div>
-        </center>
+        </Row>
+        <br/>
+        <Row><!-- replaced <Row type=flex> by CHEN 17.6.4 -->
+            <app-content> </app-content>
+        </Row>
+        <br/>
+        <Row>
+            <Col span="24">
+                <center>
+                    <div class="layout-copy">
+                        <p>
+                        2017 &copy; 天津市汇天利商贸有限公司
+                        </p>
+                    </div>
+                </center>
             </Col>
         </Row>
     </div>

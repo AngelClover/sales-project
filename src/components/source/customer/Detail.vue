@@ -6,70 +6,71 @@
                 <div class="detail-wrapper">
         -->
         <Modal v-model="showContent" width=auto @on-ok="$emit('close')" @on-cancel="$emit('close')" class-name="vertical-center-modal">
-                    <div slot="header">
-                        详细信息
-                    </div>
-                    <div class="detail-container" >
-                        <div class="detail-body">
-                            <!--
-                            <table border=1>
-                                <tbody>
-                                    <tr v-for="(value, key) in detailTitle">
-                                        <td><p>{{value.displayName}}</p>
-                                        </td>
-                                        <td><p>{{detailContent[value.item]}}</p></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            -->
-                            <Form :label-width=100>
-                                <div v-for="(value, key) in detailTitle">
-                                <Form-item :label=value.displayName class="formitem">
-                                    <div v-if="value.type != 'file'">
-                                        <Label>{{detailContent[value.item]}}</Label>
-                                    </div>
-                                    <div v-if="value.type === 'file'">
-                                        <div v-if="detailContent[value.item] instanceof Array">
-                                            <div v-for="item in detailContent[value.item]">
-                                                <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
-                                            </div>
-                                        </div>
-                                        <div v-else-if="detailContent[value.item] != null">
-                                            <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
+            <div slot="header">
+                详细信息
+            </div>
+            <div class="detail-container" >
+                <div class="detail-body">
+                    <!--
+                    <table border=1>
+                        <tbody>
+                            <tr v-for="(value, key) in detailTitle">
+                                <td><p>{{value.displayName}}</p>
+                                </td>
+                                <td><p>{{detailContent[value.item]}}</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    -->
+                    <Form :label-width=100>
+                        <div v-for="(value, key) in detailTitle">
+                            <Form-item :label=value.displayName class="formitem">
+                                <div v-if="value.type != 'file'">
+                                    <Label>{{detailContent[value.item]}}</Label>
+                                </div>
+                                <div v-if="value.type === 'file'">
+                                    <div v-if="detailContent[value.item] instanceof Array">
+                                        <div v-for="item in detailContent[value.item]">
+                                            <p><a :href="uploadPrefix + item" target="_blank">file:{{item}}</a></p>
                                         </div>
                                     </div>
-                                </Form-item>
-                            </Form>
-        <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
-        </EquipDetail>
+                                    <div v-else-if="detailContent[value.item] != null">
+                                        <p><a :href="uploadPrefix + detailContent[value.item]" target="_blank">file:{{detailContent[value.item]}}</a></p>
+                                    </div>
+                                </div>
+                            </Form-item>
+                        </div>
+                    </Form>
+                    <EquipDetail v-if=showEquipmentLists @close="showEquipmentLists=false" :equipList=detailContent.equipments :subtitle=detailSubtitle>
+                    </EquipDetail>
 
-        <div v-show=debug>
-            <p> -----------Detail debug below----------- </p>
-            <p> showDetails : {{showDetails}} </p>
-            <p> location : {{location}} </p>
-            <p> detailTitle : {{detailTitle}} </p>
-            <p> detailContent : {{detailContent}} </p>
-        </div>
-                        </div>
+                    <div v-show=debug>
+                        <p> -----------Detail debug below----------- </p>
+                        <p> showDetails : {{showDetails}} </p>
+                        <p> location : {{location}} </p>
+                        <p> detailTitle : {{detailTitle}} </p>
+                        <p> detailContent : {{detailContent}} </p>
                     </div>
-                        <div slot="footer">
-                            <center>
-                            <button class="ui secondary button" @click="$emit('close')"> OK </button>
-                            <button class="ui primary button" @click="modifier"> 修改 </button>
-                            <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
-                            <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
-                            <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
-                            <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 入库 </button>
-                            <button class="ui primary button" v-if="location=='saleorder'"@click="saleOrderConfirm" > 订单确认 </button>
-                            <button class="ui primary button" v-if="location=='saleorder'"@click="storeOut" > 出库 </button>
-                            <Button @click="handleDelete"> 删除 </Button>
-                                <!--
-                            <button class="ui green button" @click="storeInOne" >
-                                单个入库
-                            </button>
-                                -->
-                            </center>
-                        </div>
+                </div>
+            </div>
+            <div slot="footer">
+                <center>
+                    <button class="ui secondary button" @click="$emit('close')"> OK </button>
+                    <button class="ui primary button" @click="modifier"> 修改 </button>
+                    <button class="ui primary  button" @click="approve" v-if="location!='repair'&&location!='logistic'"> 审批 </button>
+                    <button class="ui primary  button" @click="complete" v-if="location=='repair'||location=='logistic'"> 完成 </button>
+                    <button class="ui primary button" v-if="location=='buyorder'" @click="transfer" > 采购 </button>
+                    <button class="ui primary button" v-if="location=='buyorder'" @click="storeInAll" > 入库 </button>
+                    <button class="ui primary button" v-if="location=='saleorder'"@click="saleOrderConfirm" > 订单确认 </button>
+                    <button class="ui primary button" v-if="location=='saleorder'"@click="storeOut" > 出库 </button>
+                    <Button @click="handleDelete"> 删除 </Button>
+                    <!--
+                    <button class="ui green button" @click="storeInOne" >
+                        单个入库
+                    </button>
+                    -->
+                </center>
+            </div>
                     <!--
                 </div>
             </div>

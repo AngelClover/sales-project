@@ -2,17 +2,17 @@
     <div>
         <slot name="titlename"> </slot>
         <div class="ui transparent left icon input">
-                <input name="query" v-model="searchQuery" placeholder="Search.." type="text">
-                <i class="search icon"></i>
+            <input name="query" v-model="searchQuery" placeholder="Search.." type="text">
+            <i class="search icon"></i>
         </div>
-            <br/>
-            <div class="filter label" v-show="this.filteredList.length > 0">
-                <Button v-for="item in this.filteredList" class="ui button"  @click=filterByLabel(item)>
-                    {{item.displayName}}
-                </Button>
-            </div>
-            <br/>
-                <!--
+        <br/>
+        <div class="filter label" v-show="this.filteredList.length > 0">
+            <Button v-for="item in this.filteredList" class="ui button"  @click="filterByLabel(item)">
+                {{item.displayName}}
+            </Button>
+        </div>
+        <br/>
+        <!--
         <table class="ui selected striped padded very basic compact table">
             <thead>
                 <tr>
@@ -36,48 +36,48 @@
                 <td><Icon type="close-round" @click=handleDelete(item,index)></Icon></td>
                 -->
         <div v-if="titleKey.length > 0 && filteredContent && filteredContent.length > 0">
-            <Table width=auto stripe :columns="titleKey" :data="filteredContent" @on-row-click="clickItem">
+            <Table width="auto" :columns="titleKey" :data="filteredContent"> <!-- "put NO-Pref columns into expand" : remove @on-row-click="clickItem" by CHEN 17.6.5 --> 
             </Table>
         </div>
 
         <br/>
         <div class="ui buttom" align=center>
-            <Button @click=createAction > 新建 </Button>
-            <Button @click=showPrefs > 偏好设置 </Button>
-            <Button @click=showLogTips > 变更记录 </Button>
+            <Button @click="createAction" > 新建 </Button>
+            <Button @click="showPrefs" > 偏好设置 </Button>
+            <Button @click="showLogTips" > 变更记录 </Button>
         </div>
 
         <br/>
-
-        <BuyDetail :showDetails=showDetails :detailTitle=title :detailContent=detailContent @close="showDetails = false" :cbset=cbset :storeForEquipment=stores :location=location :detailSubtitle=subtitle>
+        <!-- temp
+        <BuyDetail :showDetails="showDetails" :detailTitle="title" :detailContent="detailContent" @close="showDetails=false;" :cbset="cbset" :storeForEquipment="stores" :location="location" :detailSubtitle="subtitle">
         </BuyDetail>
-
-        <Creator :detailTitle=title :showCreator=showCreator :cbset=cbset @close="showCreator=false;" :detailSubtitle=subtitle :location=location>
+        -->
+        <Creator :detailTitle="title" :showCreator="showCreator" :cbset="cbset" @close="showCreator=false;" :detailSubtitle="subtitle" :location="location">
         </Creator>
 
-        <Preference :showPref=showPref :oriTitle=title :location=location @close="showPref=false;">
+        <Preference :showPref="showPref" :oriTitle="title" :location="location" @close="showPref=false;">
         </Preference>
 
 
-        <div v-show=debug>
-        <p> -----------for debug below-------------- </p>
-        <p> This is list view page.  </p>
-        <!--
-        <p> msg : {{msg}} </p>
-        <p> title : {{title}} </p>
-        <p> content : {{content}} </p>
-        <p> pref(pass in from props) : {{pref}} </p>
-        <p> preference(final effects) : {{preference}} </p>
-        <p> sortOrders : {{sortOrders}} </p>
-        <p> sortKey : {{sortKey}} </p>
-        <p> searchQuery : {{searchQuery}} </p>
-        -->
-        <p> filteredContent : {{filteredContent.length}} </p>
-        <p> detailContent : {{detailContent.length}} </p>
-        <p> showDetails : {{showDetails}} </p>
-        <p> location : {{location}} </p>
-        <p> showCreator : {{showCreator}} </p>
-        <p> titleKey : {{titleKey}}</p>
+        <div v-show="debug">
+            <p> -----------for debug below-------------- </p>
+            <p> This is list view page.  </p>
+            <!--
+            <p> msg : {{msg}} </p>
+            <p> title : {{title}} </p>
+            <p> content : {{content}} </p>
+            <p> pref(pass in from props) : {{pref}} </p>
+            <p> preference(final effects) : {{preference}} </p>
+            <p> sortOrders : {{sortOrders}} </p>
+            <p> sortKey : {{sortKey}} </p>
+            <p> searchQuery : {{searchQuery}} </p>
+            -->
+            <p> filteredContent : {{filteredContent.length}} </p>
+            <p> detailContent : {{detailContent.length}} </p>
+            <p> showDetails : {{showDetails}} </p>
+            <p> location : {{location}} </p>
+            <p> showCreator : {{showCreator}} </p>
+            <p> titleKey : {{titleKey}}</p>
         </div>
         <!--
         <Table stripe :columns="testTitle" :data="testData">
@@ -85,7 +85,6 @@
         <Table stripe :columns="titleKey" :data="filteredContent">
         </Table>
         -->
-
     </div>
 </template>
 
@@ -93,12 +92,14 @@
 import BuyDetail from './buyDetail.vue'
 import Preference from '../../../utils/Preference.vue'
 import Creator from './Creator.vue'
+import TableExpandRow from '../../../utils/TableExpandRow.vue'
 
 export default {
     components : {
         BuyDetail,
         Preference,
-        Creator
+        Creator,
+        TableExpandRow
     },
     props: ['location', 'msg', 'title', 'content', 'initdata', 'pref', 'cbset', 'filterList', 'stores', 'subtitle'],
     data : function(){
@@ -106,7 +107,6 @@ export default {
             sortKey : '',
             sortOrders : {},
             searchQuery : '',
-            showDetails : false,
             detailContent : {},
             debug : false,
             showPref : false,
@@ -116,58 +116,81 @@ export default {
                 filtercb : obj => {return true},
             },
             labelFiltercb : obj => {return true},
-            clickedIndex : -1,
             showCreator : false,
-            testTitle : [
-{
-title: '姓名',
-key: 'name'
-},
-{
-title: '年龄',
-key: 'age'
-},
-{
-title: '地址',
-key: 'address'
-}
-                ],
-                testData : [
-{
-name: '王小明',
-age: 18,
-address: '北京市朝阳区芍药居'
-},
-{
-name: '张小刚',
-age: 25,
-address: '北京市海淀区西二旗'
-},
-{
-name: '李小红',
-age: 30,
-address: '上海市浦东新区世纪大道'
-},
-{
-name: '周小伟',
-age: 26,
-address: '深圳市南山区深南大道'
-}
-                    ]
+            
+            showDetails : false,
+            clickedIndex : -1,
         }
     },
     computed : {
+        //---- "put NO-Pref columns into expand" : add expandKey for TableExpandRow template
+        expandKey : function () {
+            var ret = []
+            var readStr = localStorage.getItem(this.location)//! conflict with computed state, cant update
+            var prefobj = JSON.parse(readStr || "{}") 
+            var prefarray = prefobj["pref"] || []
+            for (var i in prefarray) {
+                if (prefarray[i].value == false) {//only NO-Pref item get into expand
+                    ret.push({
+                        key : prefarray[i].item,
+                        name : prefarray[i].displayName
+                    })
+                }
+            }
+            return ret
+        },
+        //---- by CHEN 17.6.5
         titleKey : function(){
             var ret = []
+            //---- "put NO-Pref columns into expand" : add expand
+            ret.push({
+                type: 'expand',
+                width: 70,
+                render: (h, params) => {
+                    return h(TableExpandRow, {
+                        props: {
+                            expandKey : this.expandKey,
+                            row : params.row
+                        }
+                    })
+                }
+            })
+            //---- by CHEN 17.6.5
             for (var i in this.preference){
                 var t = {}
                 t.key = this.preference[i]
                 t.title = this.titleMap[t.key]
-                t.width = 100
+                //t.width = 100
                 t.sortable = true
                 ret.push(t)
             }
-            console.log('titleKey', ret)
+            //---- "put NO-Pref columns into expand" : add detail-button
+            ret.push({
+                title: '操作',
+                key: 'action',
+                width: 80,
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.clickItem(params.row)
+                                }
+                            }
+                        }, '查看')
+                    ])
+                }
+            })
+            //---- by CHEN 17.6.5
+            //console.log('titleKey', ret)
             return ret
         },
         preference : function(){
@@ -284,12 +307,12 @@ address: '深圳市南山区深南大道'
         }
     },
    methods: {
-       sortBy: function (key) {
+        sortBy : function(key) {
            //console.log('sortBy', key)
            this.sortKey = key
            this.sortOrders[key] = this.sortOrders[key] * -1
-       },
-       initSortOrders : function(){
+        },
+        initSortOrders : function() {
             var sortOrders = {}
             //console.log('listview method initSortOrders', Object.keys(this.title))
             var _this = this
@@ -302,9 +325,9 @@ address: '深圳市南山区深南大道'
             //this.$set('sortOrders', sortOrders)
             this.sortOrders = sortOrders
             return sortOrders
-       },
-         clickItem : function(item){ //item, index
-            console.log('on-row-click',  item)
+        },
+        clickItem : function(item) { //item, index
+            console.log('on-row-click 1',  item)
             this.detailContent = item //this.filteredContent[index]
             var i = -1;
              for (var ind in this.filteredContent){
@@ -314,8 +337,12 @@ address: '深圳市南山区深南大道'
                  }
              }
             this.clickedIndex = i
-            console.log('on-row-click', this.clickedIndex,  item)
+            console.log('on-row-click 2', this.clickedIndex,  item)
             this.showDetails = true
+
+            //---- "separate BuyDetail from BuyListView's modal" : emit clickShowDetail-event when click item
+            this.$emit('clickShowDetail', item)
+            //---- by CHEN 17.6.6
        },
        createAction(){
            this.detailContent = {}
